@@ -5,6 +5,41 @@ void main() {
   runApp(MyApp());
 }
 
+class MyFirstWidget extends StatelessWidget {
+  int _buildCallCounter = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    print(
+        'Метод build() у StatelessWidget был вызван ${++_buildCallCounter} раз');
+    return Container(
+        child: Center(
+      child: Text('Hello!'),
+    ));
+  }
+}
+
+class MySecondWidget extends StatefulWidget {
+  MySecondWidget({Key key}) : super(key: key);
+
+  @override
+  _MySecondWidgetState createState() => _MySecondWidgetState();
+}
+
+class _MySecondWidgetState extends State<MySecondWidget> {
+  int _buildCallCounter = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    print(
+        'Метод build() у StatefulWidget был вызван ${++_buildCallCounter} раз');
+    return Container(
+        child: Center(
+      child: Text('Hello!'),
+    ));
+  }
+}
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -27,7 +62,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MySecondWidget(), //MySecondWidget //MyFirstWidget
     );
   }
 }
