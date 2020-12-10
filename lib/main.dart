@@ -2,16 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  const App({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: MaterialApp(
+        home: MySecondWidget(),
+        title: "Some text",
+      ),
+    );
+  }
 }
 
 class MyFirstWidget extends StatelessWidget {
   int _buildCallCounter = 0;
+  // Type getContextType() => context.runtimeType;
 
   @override
   Widget build(BuildContext context) {
     print(
         'Метод build() у StatelessWidget был вызван ${++_buildCallCounter} раз');
+
     return Container(
         child: Center(
       child: Text('Hello!'),
@@ -28,11 +44,15 @@ class MySecondWidget extends StatefulWidget {
 
 class _MySecondWidgetState extends State<MySecondWidget> {
   int _buildCallCounter = 0;
+  Type getContextType() => context.runtimeType;
 
   @override
   Widget build(BuildContext context) {
     print(
         'Метод build() у StatefulWidget был вызван ${++_buildCallCounter} раз');
+
+    print(getContextType());
+
     return Container(
         child: Center(
       child: Text('Hello!'),
