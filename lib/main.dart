@@ -21,13 +21,13 @@ class App extends StatelessWidget {
 
 class MyFirstWidget extends StatelessWidget {
   int _buildCallCounter = 0;
-  // Type getContextType() => context.runtimeType;
+  //Type getContextType() => context.runtimeType;
 
   @override
   Widget build(BuildContext context) {
     print(
         'Метод build() у StatelessWidget был вызван ${++_buildCallCounter} раз');
-
+    print(context.runtimeType);
     return Container(
         child: Center(
       child: Text('Hello!'),
@@ -37,6 +37,7 @@ class MyFirstWidget extends StatelessWidget {
 
 class MySecondWidget extends StatefulWidget {
   MySecondWidget({Key key}) : super(key: key);
+  //Type getContextType() => context.runtimeType;
 
   @override
   _MySecondWidgetState createState() => _MySecondWidgetState();
@@ -50,7 +51,6 @@ class _MySecondWidgetState extends State<MySecondWidget> {
   Widget build(BuildContext context) {
     print(
         'Метод build() у StatefulWidget был вызван ${++_buildCallCounter} раз');
-
     print(getContextType());
 
     return Container(
