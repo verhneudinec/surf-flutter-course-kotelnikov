@@ -5,44 +5,35 @@ import 'package:flutter/material.dart';
 class SightListScreen extends StatefulWidget {
   SightListScreen({Key key}) : super(key: key);
 
-  final String title = "Итересные места";
+  final String title = "Список\nинтересных мест";
 
   @override
   _SightListScreenState createState() => _SightListScreenState();
 }
 
 class _SightListScreenState extends State<SightListScreen> {
-  String _currentRoot = "Главная страница";
-
-  // Тестовая функция для смены маршрута роутера
-  void _setRoot(String currentRoot) {
-    setState(() {
-      _currentRoot = currentRoot;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-          child: Text("$_currentRoot", style: TextStyle(fontSize: 20)),
+      appBar: AppBar(
+        // AppBar settings
+        toolbarHeight: 136, // heigh 72px + top margin 64px
+        backgroundColor: Colors.transparent,
+        elevation: 0.0, // remove shadow
+
+        // Title text
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF3B3E5B),
+          ),
+          textAlign: TextAlign.left,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
-        appBar: AppBar(
-          title: Text(widget.title),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.person),
-              onPressed: () => _setRoot("Выбран профиль"),
-            )
-          ],
-          backgroundColor: Colors.lightGreen[300],
-        ),
-        bottomNavigationBar: BottomNavigationBar(currentIndex: 1, items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), title: Text("Закладки")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), title: Text("Главная")),
-          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Карта")),
-        ]));
+      ),
+    );
   }
 }
