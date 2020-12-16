@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-
 // Экран со списком интересных мест
+
+import 'package:flutter/material.dart';
+import 'package:places/res/localization.dart';
+import 'package:places/res/text_styles.dart';
 
 class SightListScreen extends StatefulWidget {
   SightListScreen({Key key}) : super(key: key);
-
-  final String title = "Список\nинтересных мест";
 
   @override
   _SightListScreenState createState() => _SightListScreenState();
@@ -23,12 +23,8 @@ class _SightListScreenState extends State<SightListScreen> {
 
         // Title text
         title: Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF3B3E5B),
-          ),
+          APPBAR_TITLE,
+          style: APPBAR_TEXT_STYLE,
           textAlign: TextAlign.left,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
