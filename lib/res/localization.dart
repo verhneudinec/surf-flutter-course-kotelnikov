@@ -1,1 +1,1 @@
-const String APPBAR_TITLE = "Список\nинтересных мест";
+const String appBarTitle = "Список\nинтересных мест";
