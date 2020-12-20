@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:places/ui/screen/sight_list_screen.dart';
+// ignore: unused_import
 import 'package:places/ui/screen/sight_details.dart';
+// ignore: unused_import
 import 'package:places/mocks.dart';
 
 void main() {
@@ -13,7 +16,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SightDetails(sight: mocks[0]),
+      home: SightListScreen(),
+      // home: SightDetails(sight: mocks[0]),
       theme: ThemeData(primarySwatch: Colors.green, fontFamily: "Roboto"),
     );
   }
