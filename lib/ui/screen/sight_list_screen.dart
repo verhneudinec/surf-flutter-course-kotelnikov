@@ -17,24 +17,7 @@ class _SightListScreenState extends State<SightListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 136),
-        child: SafeArea(
-            child: Padding(
-          padding: EdgeInsets.only(
-            top: 40,
-            left: 16,
-            bottom: 16,
-          ),
-          child: Text(
-            appBarTitle,
-            style: AppTextStyles.appBarTitle,
-            textAlign: TextAlign.left,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        )),
-      ),
+      appBar: CustomAppBar(),
       // appBar: AppBar(
       //   // AppBar settings
       //   toolbarHeight: 136, // heigh 72px + top margin 64px
@@ -57,4 +40,33 @@ class _SightListScreenState extends State<SightListScreen> {
       ),
     );
   }
+}
+
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 40,
+            left: 16,
+            bottom: 16,
+          ),
+          child: Text(
+            appBarTitle,
+            style: AppTextStyles.appBarTitle,
+            textAlign: TextAlign.left,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size(double.infinity, 136);
 }
