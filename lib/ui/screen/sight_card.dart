@@ -87,12 +87,16 @@ class SightCardBody extends StatelessWidget {
     return Container(
       color: Color(0xFFF5F5F5),
       height: 92,
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.start,
         textDirection: TextDirection.ltr,
         children: [
+          // Отступ
+          SizedBox(
+            height: 16,
+          ),
+
           // Название места
           Container(
             child: Text(
