@@ -94,7 +94,7 @@ class SightCardBody extends StatelessWidget {
         children: [
           // Отступ
           SizedBox(
-            height: 16,
+            height: 18,
           ),
 
           // Название места
