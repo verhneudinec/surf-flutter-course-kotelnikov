@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/res/colors.dart';
 
 class SightCard extends StatelessWidget {
   final Sight sight;
@@ -8,23 +9,28 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: 16,
-      ),
-      child: Container(
-        height: 188,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+    return AspectRatio(
+      aspectRatio: 3 / 2,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: 16,
         ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            SightCardHeader(sight: sight),
-            SightCardBody(sight: sight),
-          ],
+        child: Container(
+          constraints: BoxConstraints(maxHeight: 210),
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SightCardHeader(sight: sight),
+              SightCardBody(sight: sight),
+            ],
+          ),
         ),
       ),
     );
@@ -41,10 +47,9 @@ class SightCardHeader extends StatelessWidget {
       children: [
         // Главное фото места
         Container(
-          height: 92,
+          height: 96,
           child: Image.network(
             sight.url,
-            height: double.infinity,
             width: double.infinity,
             fit: BoxFit.cover,
           ),
@@ -85,36 +90,42 @@ class SightCardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFF5F5F5),
-      height: 92,
+      constraints: BoxConstraints(maxHeight: 114),
       padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        textDirection: TextDirection.ltr,
         children: [
           // Отступ
-          SizedBox(
+          const SizedBox(
             height: 18,
           ),
 
           // Название места
           Container(
+            color: AppColors.sightCardName,
+            constraints: const BoxConstraints(
+              maxWidth: 151,
+              maxHeight: 62,
+            ),
+            padding: EdgeInsets.only(left: 3, right: 9),
             child: Text(
               sight.name,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.sightCardTitle,
             ),
           ),
 
-          // Описание места
+          const SizedBox(
+            height: 2,
+          ),
+
+          // Время работы
           Container(
-            margin: EdgeInsets.only(top: 2),
             child: Text(
-              sight.details,
-              maxLines: 2,
+              sight.workingTime,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.sightCardDescription,
+              style: AppTextStyles.sightCardWorkingTime,
             ),
           ),
         ],
