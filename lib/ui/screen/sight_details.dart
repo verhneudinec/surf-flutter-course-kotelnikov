@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightDetails extends StatelessWidget {
   final Sight sight;
@@ -38,7 +39,12 @@ class SightDetailsHeader extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 360,
-          color: Colors.green[200],
+          child: Image.network(
+            sight.url,
+            fit: BoxFit.cover,
+            loadingBuilder: imageLoaderBuilder,
+            errorBuilder: imageErrorBuilder,
+          ),
         ),
 
         // Кнопка "Вернуться назад"
