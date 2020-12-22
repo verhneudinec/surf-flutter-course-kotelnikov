@@ -78,6 +78,9 @@ class AppTextStyles {
   static final sightCardDescription = _small.copyWith(
     color: AppColors.secondary2,
   );
+  static final sightCardWorkingTime = _small.copyWith(
+    color: AppColors.secondary2,
+  );
 
   // Страница с описанием места
   static final sightDetailsTitle = _title;

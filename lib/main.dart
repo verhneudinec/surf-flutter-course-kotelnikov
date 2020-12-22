@@ -16,6 +16,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: SightListScreen(),
       // home: SightDetails(sight: mocks[0]),
       theme: ThemeData(primarySwatch: Colors.green, fontFamily: "Roboto"),
