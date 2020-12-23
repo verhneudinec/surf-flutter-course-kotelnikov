@@ -24,42 +24,42 @@ flutter:
   uses-material-design: true
 
   assets:
-    - res/
+    - assets/icons/
 
   fonts:
     - family: Roboto
       fonts:
-        - asset: res/fonts/Roboto/Roboto-Thin.ttf
+        - asset: assets/fonts/Roboto/Roboto-Thin.ttf
           weight: 100
-        - asset: res/fonts/Roboto/Roboto-ThinItalic.ttf
+        - asset: assets/fonts/Roboto/Roboto-ThinItalic.ttf
           style: italic
           weight: 100
 
-        - asset: res/fonts/Roboto/Roboto-Light.ttf
+        - asset: assets/fonts/Roboto/Roboto-Light.ttf
           weight: 300
-        - asset: res/fonts/Roboto/Roboto-LightItalic.ttf
+        - asset: assets/fonts/Roboto/Roboto-LightItalic.ttf
           style: italic
           weight: 300
 
-        - asset: res/fonts/Roboto/Roboto-Regular.ttf
-        - asset: res/fonts/Roboto/Roboto-Italic.ttf
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto/Roboto-Italic.ttf
           style: italic
         
-        - asset: res/fonts/Roboto/Roboto-Medium.ttf
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
           weight: 500
-        - asset: res/fonts/Roboto/Roboto-MediumItalic.ttf
+        - asset: assets/fonts/Roboto/Roboto-MediumItalic.ttf
           style: italic
           weight: 500
 
-        - asset: res/fonts/Roboto/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
           weight: 700
 
-        - asset: res/fonts/Roboto/Roboto-BoldItalic.ttf
+        - asset: assets/fonts/Roboto/Roboto-BoldItalic.ttf
           style: italic
           weight: 700
 
-        - asset: res/fonts/Roboto/Roboto-Black.ttf
+        - asset: assets/fonts/Roboto/Roboto-Black.ttf
           weight: 900
-        - asset: res/fonts/Roboto/Roboto-BlackItalic.ttf
+        - asset: assets/fonts/Roboto/Roboto-BlackItalic.ttf
           style: italic
           weight: 900

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/colors.dart';
+import 'package:places/res/decorations.dart';
+import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightCard extends StatelessWidget {
   final Sight sight;
@@ -9,28 +12,22 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 3 / 2,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          bottom: 16,
-        ),
-        child: Container(
-          constraints: BoxConstraints(maxHeight: 210),
-          decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SightCardHeader(sight: sight),
-              SightCardBody(sight: sight),
-            ],
-          ),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: 16,
+      ),
+      child: Container(
+        width: double.infinity,
+        decoration: AppDecorations.sightCardContainer,
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SightCardHeader(sight: sight),
+            SightCardBody(sight: sight),
+          ],
         ),
       ),
     );
@@ -47,12 +44,21 @@ class SightCardHeader extends StatelessWidget {
       children: [
         // Главное фото места
         Container(
+          width: double.infinity,
           height: 96,
           child: Image.network(
             sight.url,
-            width: double.infinity,
             fit: BoxFit.cover,
+            loadingBuilder: imageLoaderBuilder,
+            errorBuilder: imageErrorBuilder,
           ),
+        ),
+
+        // Контейнер для создания эффекта градиента
+        Container(
+          decoration: AppDecorations.sightCardImageGradient,
+          width: double.infinity,
+          height: 96,
         ),
 
         // Тип места
@@ -69,13 +75,10 @@ class SightCardHeader extends StatelessWidget {
         Positioned(
           top: 16,
           right: 16,
-          child: Container(
-            width: 20,
-            height: 18,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
+          child: SvgPicture.asset(
+            "assets/icons/Heart.svg",
+            width: 24,
+            height: 24,
           ),
         ),
       ],
@@ -90,7 +93,6 @@ class SightCardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: 114),
       padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,15 +104,10 @@ class SightCardBody extends StatelessWidget {
 
           // Название места
           Container(
-            color: AppColors.sightCardName,
-            constraints: const BoxConstraints(
-              maxWidth: 151,
-              maxHeight: 62,
-            ),
-            padding: EdgeInsets.only(left: 3, right: 9),
+            constraints: BoxConstraints(maxWidth: 296),
             child: Text(
               sight.name,
-              maxLines: 3,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.sightCardTitle,
             ),
