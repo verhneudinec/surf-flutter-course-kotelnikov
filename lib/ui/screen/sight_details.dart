@@ -1,8 +1,13 @@
-// Экран с подробной информацией о месте
+/// Экран с подробной информацией о месте
+/// [SightDetails] содержит в себе шапку [SightDetailsHeader]
+/// и тело [SightDetailsBody] с основной информацией о месте
 
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/res/colors.dart';
+import 'package:places/res/localization.dart';
+import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightDetails extends StatelessWidget {
@@ -39,12 +44,20 @@ class SightDetailsHeader extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 360,
+          decoration: AppDecorations.sightCardImageGradient,
           child: Image.network(
             sight.url,
             fit: BoxFit.cover,
             loadingBuilder: imageLoaderBuilder,
             errorBuilder: imageErrorBuilder,
           ),
+        ),
+
+        // Контейнер для создания эффекта градиента
+        Container(
+          decoration: AppDecorations.sightCardImageGradient,
+          width: double.infinity,
+          height: 96,
         ),
 
         // Кнопка "Вернуться назад"
@@ -57,13 +70,24 @@ class SightDetailsHeader extends StatelessWidget {
             child: Container(
               width: 32,
               height: 32,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+              decoration: AppDecorations.goBackButton,
+              child: Center(
+                child: Image.asset("assets/icons/arrow-left.png"),
               ),
             ),
           ),
         ),
+
+        // Ползунок галереи
+        Positioned(
+          left: -8,
+          bottom: 0,
+          child: Container(
+            width: 152,
+            height: 7.57,
+            decoration: AppDecorations.galleryIndicator,
+          ),
+        )
       ],
     );
   }
@@ -128,9 +152,21 @@ class SightDetailsBody extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 24),
             width: double.infinity,
             height: 48,
-            decoration: BoxDecoration(
-              color: Colors.green[300],
-              borderRadius: BorderRadius.circular(10),
+            decoration: AppDecorations.ploteRouteButton,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/icons/go.png",
+                  width: 20,
+                  height: 22,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  AppTextStrings.ploteRouteButton.toUpperCase(),
+                  style: AppTextStyles.sightDetailsPloteRouteButton,
+                ),
+              ],
             ),
           ),
 
@@ -147,8 +183,20 @@ class SightDetailsBody extends StatelessWidget {
               Expanded(
                 child: Container(
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.blue[300],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/icons/calendar.png",
+                        width: 22,
+                        height: 19,
+                      ),
+                      SizedBox(width: 9),
+                      Text(
+                        AppTextStrings.planningButton,
+                        style: AppTextStyles.sightDetailsPlanningButton,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -157,8 +205,21 @@ class SightDetailsBody extends StatelessWidget {
               Expanded(
                 child: Container(
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.blue[100],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/icons/heart.png",
+                        color: AppColors.secondary,
+                        width: 20,
+                        height: 18,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        AppTextStrings.favoritesButton,
+                        style: AppTextStyles.sightDetailsFavoritesButton,
+                      ),
+                    ],
                   ),
                 ),
               ),

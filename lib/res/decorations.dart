@@ -17,4 +17,28 @@ class AppDecorations {
       ],
     ),
   );
+
+  /// Ползунок галереи в [SightDetails]
+  static final galleryIndicator = BoxDecoration(
+    color: AppColors.main,
+    borderRadius: BorderRadius.circular(10),
+  );
+
+  /// Кнопка "Вернуться назад" для [SightDetails]
+  static final goBackButton = BoxDecoration(
+    color: AppColors.white,
+    borderRadius: BorderRadius.circular(10),
+  );
+
+  /// Кнопка "Построить маршрут" для [SightDetails]
+  static final ploteRouteButton = BoxDecoration(
+    color: AppColors.green,
+    borderRadius: BorderRadius.circular(10),
+  );
+
+  /// Кнопка "Построить маршрут" для [SightDetails]
+  static final planningButton = BoxDecoration(
+    color: AppColors.green,
+    borderRadius: BorderRadius.circular(10),
+  );
 }

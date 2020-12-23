@@ -93,6 +93,16 @@ class AppTextStyles {
 
   static final sightDetailsDescription = _small;
 
+  static final sightDetailsPloteRouteButton = _button.copyWith(
+    color: AppColors.white,
+  );
+
+  static final sightDetailsPlanningButton = _small.copyWith(
+    color: AppColors.inactiveBlack,
+  );
+
+  static final sightDetailsFavoritesButton = _small;
+
   // Другие стили
   static final subtitle = _subtitle;
 
