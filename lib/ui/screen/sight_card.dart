@@ -43,26 +43,22 @@ class SightCardHeader extends StatelessWidget {
     return Stack(
       children: [
         // Главное фото места
-        Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 96,
-              child: Image.network(
-                sight.url,
-                fit: BoxFit.cover,
-                loadingBuilder: imageLoaderBuilder,
-                errorBuilder: imageErrorBuilder,
-              ),
-            ),
+        Container(
+          width: double.infinity,
+          height: 96,
+          child: Image.network(
+            sight.url,
+            fit: BoxFit.cover,
+            loadingBuilder: imageLoaderBuilder,
+            errorBuilder: imageErrorBuilder,
+          ),
+        ),
 
-            // Контейнер для создания эффекта градиента
-            Container(
-              decoration: AppDecorations.sightCardImageGradient,
-              width: double.infinity,
-              height: 96,
-            ),
-          ],
+        // Контейнер для создания эффекта градиента
+        Container(
+          decoration: AppDecorations.sightCardImageGradient,
+          width: double.infinity,
+          height: 96,
         ),
 
         // Тип места

@@ -17,8 +17,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: SightListScreen(),
-      home: SightDetails(sight: mocks[0]),
+      home: SightListScreen(),
+      // home: SightDetails(sight: mocks[1]),
       theme: ThemeData(primarySwatch: Colors.green, fontFamily: "Roboto"),
     );
   }
