@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/colors.dart';
@@ -78,10 +79,10 @@ class SightCardHeader extends StatelessWidget {
         Positioned(
           top: 16,
           right: 16,
-          child: Container(
-            width: 20,
-            height: 18,
-            child: Image.asset("assets/icons/heart.png"),
+          child: SvgPicture.asset(
+            "assets/icons/Heart.svg",
+            width: 24,
+            height: 24,
           ),
         ),
       ],

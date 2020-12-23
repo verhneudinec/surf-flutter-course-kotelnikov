@@ -3,6 +3,7 @@
 /// и тело [SightDetailsBody] с основной информацией о месте
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/colors.dart';
@@ -72,7 +73,11 @@ class SightDetailsHeader extends StatelessWidget {
               height: 32,
               decoration: AppDecorations.goBackButton,
               child: Center(
-                child: Image.asset("assets/icons/arrow-left.png"),
+                child: SvgPicture.asset(
+                  "assets/icons/Arrow.svg",
+                  width: 24,
+                  height: 24,
+                ),
               ),
             ),
           ),
@@ -156,10 +161,10 @@ class SightDetailsBody extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  "assets/icons/go.png",
-                  width: 20,
-                  height: 22,
+                SvgPicture.asset(
+                  "assets/icons/Go.svg",
+                  width: 24,
+                  height: 24,
                 ),
                 SizedBox(width: 10),
                 Text(
@@ -186,10 +191,10 @@ class SightDetailsBody extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        "assets/icons/calendar.png",
-                        width: 22,
-                        height: 19,
+                      SvgPicture.asset(
+                        "assets/icons/Calendar.svg",
+                        width: 24,
+                        height: 24,
                       ),
                       SizedBox(width: 9),
                       Text(
@@ -208,11 +213,11 @@ class SightDetailsBody extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        "assets/icons/heart.png",
+                      SvgPicture.asset(
+                        "assets/icons/Heart.svg",
                         color: AppColors.secondary,
-                        width: 20,
-                        height: 18,
+                        width: 24,
+                        height: 24,
                       ),
                       SizedBox(width: 10),
                       Text(
