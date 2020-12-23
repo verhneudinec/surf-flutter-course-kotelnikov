@@ -81,19 +81,7 @@ class SightCardHeader extends StatelessWidget {
           child: Container(
             width: 20,
             height: 18,
-            child: Stack(
-              children: [
-                Image.asset("assets/icons/heart.png"),
-                Positioned(
-                  top: 4,
-                  right: 3,
-                  child: Container(
-                      width: 3,
-                      height: 5,
-                      child: Image.asset("assets/icons/heart-child.png")),
-                ),
-              ],
-            ),
+            child: Image.asset("assets/icons/heart.png"),
           ),
         ),
       ],
