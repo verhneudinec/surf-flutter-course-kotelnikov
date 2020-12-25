@@ -48,9 +48,8 @@ class AppDecorations {
     borderRadius: BorderRadius.circular(40),
   );
 
-  /// Контейнер индикатора табов
-  static final tabIndicatorContainerElement = BoxDecoration(
-    color: AppColors.background,
+  /// Кнопка таба
+  static final tabIndicatorContainerElement = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(40),
   );
 }

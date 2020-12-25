@@ -32,6 +32,12 @@ class _VisitingScreenState extends State<VisitingScreen>
   }
 
   @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,

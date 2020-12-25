@@ -27,21 +27,26 @@ class TabIndicator extends StatelessWidget {
                   margin: EdgeInsets.only(
                     right: i % 2 == 0 ? 1 : 0,
                   ),
-                  decoration:
-                      AppDecorations.tabIndicatorContainerElement.copyWith(
+                  child: FlatButton(
+                    onPressed: () {
+                      tabController.index = i;
+                    },
+                    highlightColor: AppColors.inactiveBlack,
+                    splashColor: AppColors.inactiveBlack,
+                    height: 40,
+                    shape: AppDecorations.tabIndicatorContainerElement,
                     color: tabController.index == i
                         ? AppColors.secondary
                         : AppColors.background,
-                  ),
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                      i == 0
-                          ? AppTextStrings.visitedTab
-                          : AppTextStrings.toVisitTab,
-                      style: tabController.index == i
-                          ? AppTextStyles.visitingScreenActiveTab
-                          : AppTextStyles.visitingScreenInactiveTab,
+                    child: Center(
+                      child: Text(
+                        i == 0
+                            ? AppTextStrings.visitedTab
+                            : AppTextStrings.toVisitTab,
+                        style: tabController.index == i
+                            ? AppTextStyles.visitingScreenActiveTab
+                            : AppTextStyles.visitingScreenInactiveTab,
+                      ),
                     ),
                   ),
                 ),
@@ -51,11 +56,4 @@ class TabIndicator extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget tabBar() {
-  return PreferredSize(
-    preferredSize: Size(double.infinity, 52),
-    child: Container(height: 52, child: TabBar(tabs: null)),
-  );
 }
