@@ -5,7 +5,6 @@ class AppTextStyles {
   ///
   /// Основные стили
   ///
-  ///
   static const _largeTitle = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.bold,
@@ -68,9 +67,17 @@ class AppTextStyles {
   ///
   static final appBarTitle = _largeTitle;
 
+  static final appBarMiniTitle = _subtitle;
+
   // Карточка места
   static final sightCardTitle = _text.copyWith(
     color: AppColors.secondary,
+  );
+  static final sightCardScheduledDate = _small.copyWith(
+    color: AppColors.green,
+  );
+  static final sightCardGoalAchieved = _small.copyWith(
+    color: AppColors.secondary2,
   );
   static final sightCardType = _smallBold.copyWith(
     color: AppColors.white,
@@ -102,6 +109,25 @@ class AppTextStyles {
   );
 
   static final sightDetailsFavoritesButton = _small;
+
+  // Страница "Избранное"
+  static final visitingScreenActiveTab = _smallBold.copyWith(
+    color: AppColors.white,
+  );
+
+  static final visitingScreenInactiveTab = _smallBold.copyWith(
+    color: AppColors.inactiveBlack,
+  );
+
+  // Блок "Ничего не найдено"
+
+  static final emptyPageTitle = _subtitle.copyWith(
+    color: AppColors.inactiveBlack,
+  );
+
+  static final emptyPageSubtitle = _small.copyWith(
+    color: AppColors.inactiveBlack,
+  );
 
   // Другие стили
   static final subtitle = _subtitle;

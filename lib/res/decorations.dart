@@ -41,4 +41,16 @@ class AppDecorations {
     color: AppColors.green,
     borderRadius: BorderRadius.circular(10),
   );
+
+  /// Контейнер индикатора табов
+  static final tabIndicatorContainer = BoxDecoration(
+    color: AppColors.background,
+    borderRadius: BorderRadius.circular(40),
+  );
+
+  /// Контейнер индикатора табов
+  static final tabIndicatorContainerElement = BoxDecoration(
+    color: AppColors.background,
+    borderRadius: BorderRadius.circular(40),
+  );
 }
