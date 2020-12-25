@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
-import 'package:places/res/colors.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightCard extends StatelessWidget {
   final Sight sight;
-  const SightCard({Key key, this.sight}) : super(key: key);
+  final dynamic cardType;
+  const SightCard({Key key, this.sight, this.cardType = "default"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +27,8 @@ class SightCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SightCardHeader(sight: sight),
-            SightCardBody(sight: sight),
+            SightCardHeader(sight: sight, cardType: cardType),
+            SightCardBody(sight: sight, cardType: cardType),
           ],
         ),
       ),
@@ -36,7 +38,8 @@ class SightCard extends StatelessWidget {
 
 class SightCardHeader extends StatelessWidget {
   final Sight sight;
-  const SightCardHeader({Key key, this.sight}) : super(key: key);
+  final String cardType;
+  const SightCardHeader({Key key, this.sight, this.cardType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +75,52 @@ class SightCardHeader extends StatelessWidget {
         ),
 
         // Добавить в избранное
-        Positioned(
-          top: 16,
-          right: 16,
-          child: SvgPicture.asset(
-            "assets/icons/Heart.svg",
-            width: 24,
-            height: 24,
+        if (cardType == "default")
+          Positioned(
+            top: 16,
+            right: 16,
+            child: SvgPicture.asset(
+              "assets/icons/Heart.svg",
+              width: 24,
+              height: 24,
+            ),
           ),
-        ),
+
+        // Кнопка "Удалить из списка"
+        if (cardType != "default")
+          Positioned(
+            top: 16,
+            right: 16,
+            child: SvgPicture.asset(
+              "assets/icons/Delete.svg",
+              width: 24,
+              height: 24,
+            ),
+          ),
+
+        // Кнопка "Изменить запланированное время посещения"
+        if (cardType == "toVisit")
+          Positioned(
+            top: 16,
+            right: 56,
+            child: SvgPicture.asset(
+              "assets/icons/Calendar.svg",
+              width: 24,
+              height: 24,
+            ),
+          ),
+
+        // Кнопка "Поделиться"
+        if (cardType == "visited")
+          Positioned(
+            top: 16,
+            right: 56,
+            child: SvgPicture.asset(
+              "assets/icons/Share.svg",
+              width: 24,
+              height: 24,
+            ),
+          ),
       ],
     );
   }
@@ -88,7 +128,8 @@ class SightCardHeader extends StatelessWidget {
 
 class SightCardBody extends StatelessWidget {
   final Sight sight;
-  const SightCardBody({Key key, this.sight}) : super(key: key);
+  final String cardType;
+  const SightCardBody({Key key, this.sight, this.cardType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +145,8 @@ class SightCardBody extends StatelessWidget {
 
           // Название места
           Container(
-            constraints: BoxConstraints(maxWidth: 296),
+            constraints: BoxConstraints(
+                maxWidth: cardType == "default" ? 296 : double.infinity),
             child: Text(
               sight.name,
               maxLines: 2,
@@ -112,6 +154,32 @@ class SightCardBody extends StatelessWidget {
               style: AppTextStyles.sightCardTitle,
             ),
           ),
+
+          // Запланированная дата
+          if (cardType == "toVisit")
+            Container(
+              height: 28,
+              child: Text(
+                AppTextStrings.scheduledDate,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.sightCardScheduledDate,
+              ),
+            ),
+
+          const SizedBox(
+            height: 2,
+          ),
+
+          // Дата достигнута
+          if (cardType == "visited")
+            Container(
+              height: 28,
+              child: Text(
+                AppTextStrings.goalAchieved,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.sightCardGoalAchieved,
+              ),
+            ),
 
           const SizedBox(
             height: 2,
