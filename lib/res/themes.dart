@@ -112,7 +112,7 @@ final darkTheme = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: TextButton.styleFrom(
-      backgroundColor: lmGreenColor,
+      backgroundColor: dmGreenColor,
       primary: whiteColor,
       minimumSize: Size(
         double.infinity,
