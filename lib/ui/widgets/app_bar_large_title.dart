@@ -17,7 +17,9 @@ class AppBarLargeTitle extends StatelessWidget implements PreferredSizeWidget {
           ),
           child: Text(
             AppTextStrings.appBarTitle,
-            style: AppTextStyles.appBarTitle,
+            style: AppTextStyles.appBarTitle.copyWith(
+              color: Theme.of(context).textTheme.headline1.color,
+            ),
             textAlign: TextAlign.left,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -28,5 +30,8 @@ class AppBarLargeTitle extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size(double.infinity, 136);
+  Size get preferredSize => Size(
+        double.infinity,
+        136,
+      );
 }

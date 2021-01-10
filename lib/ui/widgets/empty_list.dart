@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/res/colors.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 
@@ -26,13 +25,15 @@ class EmptyList extends StatelessWidget {
                 : "assets/icons/Go.svg",
             width: 64,
             height: 64,
-            color: AppColors.inactiveBlack,
+            color: Theme.of(context).disabledColor,
           ),
           const SizedBox(height: 24),
           Text(
             AppTextStrings.emptyPageTitle,
             textAlign: TextAlign.center,
-            style: AppTextStyles.emptyPageTitle,
+            style: AppTextStyles.emptyPageTitle.copyWith(
+              color: Theme.of(context).disabledColor,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -40,7 +41,9 @@ class EmptyList extends StatelessWidget {
                 ? AppTextStrings.emptyPageSubtitle
                 : AppTextStrings.emptyPageSubtitleVisited,
             textAlign: TextAlign.center,
-            style: AppTextStyles.emptyPageSubtitle,
+            style: AppTextStyles.emptyPageSubtitle.copyWith(
+              color: Theme.of(context).disabledColor,
+            ),
           )
         ],
       ),

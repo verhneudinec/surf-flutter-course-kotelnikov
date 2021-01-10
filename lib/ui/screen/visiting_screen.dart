@@ -43,17 +43,33 @@ class _VisitingScreenState extends State<VisitingScreen>
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-        appBar: appBarMini(
-          title: AppTextStrings.visitingScreenTitle,
-          tabBarIndicator: TabIndicator(
-            tabController: tabController,
-          ),
-        ),
-        body: TabBarView(
-          controller: tabController,
+        // appBar: AppBarMini(
+        //   title: AppTextStrings.visitingScreenTitle,
+        //   tabBarIndicator: TabIndicator(
+        //     tabController: tabController,
+        //   ),
+        // ),
+        body: ListView(
           children: [
-            SightList(cardType: "toVisit"),
-            SightList(cardType: "visited"),
+            AppBarMini(
+              title: AppTextStrings.visitingScreenTitle,
+              tabBarIndicator: TabIndicator(
+                tabController: tabController,
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height,
+                // TODO Резиновый размер для TabBarView
+              ),
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  SightList(cardType: "toVisit"),
+                  SightList(cardType: "visited"),
+                ],
+              ),
+            ),
           ],
         ),
         bottomNavigationBar: AppBottomNavigationBar(),
