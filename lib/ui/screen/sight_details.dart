@@ -5,8 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/res/text_styles.dart';
 import 'package:places/res/colors.dart';
+import 'package:places/res/text_styles.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
@@ -18,9 +18,11 @@ class SightDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
+          padding: EdgeInsets.only(
+            bottom: 30, // TODO Нижние отступы в приложении
+          ),
           child: Column(
             children: [
               SightDetailsHeader(sight: sight),
@@ -71,12 +73,15 @@ class SightDetailsHeader extends StatelessWidget {
             child: Container(
               width: 32,
               height: 32,
-              decoration: AppDecorations.goBackButton,
+              decoration: AppDecorations.goBackButton.copyWith(
+                color: Theme.of(context).backgroundColor,
+              ),
               child: Center(
                 child: SvgPicture.asset(
                   "assets/icons/Arrow.svg",
                   width: 24,
                   height: 24,
+                  color: Theme.of(context).iconTheme.color,
                 ),
               ),
             ),
@@ -90,7 +95,9 @@ class SightDetailsHeader extends StatelessWidget {
           child: Container(
             width: 152,
             height: 7.57,
-            decoration: AppDecorations.galleryIndicator,
+            decoration: AppDecorations.galleryIndicator.copyWith(
+              color: Theme.of(context).iconTheme.color,
+            ),
           ),
         )
       ],
@@ -117,7 +124,9 @@ class SightDetailsBody extends StatelessWidget {
             child: Text(
               sight.name,
               maxLines: 2,
-              style: AppTextStyles.sightDetailsTitle,
+              style: AppTextStyles.sightDetailsTitle.copyWith(
+                color: Theme.of(context).textTheme.headline2.color,
+              ),
             ),
           ),
 
@@ -128,7 +137,9 @@ class SightDetailsBody extends StatelessWidget {
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
                   sight.type,
-                  style: AppTextStyles.sightDetailsType,
+                  style: AppTextStyles.sightDetailsType.copyWith(
+                    color: Theme.of(context).textTheme.bodyText2.color,
+                  ),
                 ),
               ),
 
@@ -136,7 +147,9 @@ class SightDetailsBody extends StatelessWidget {
               Container(
                 child: Text(
                   "закрыто до 09:00",
-                  style: AppTextStyles.sightDetailsWorkingTime,
+                  style: AppTextStyles.sightDetailsWorkingTime.copyWith(
+                    color: Theme.of(context).textTheme.caption.color,
+                  ),
                 ),
               ),
             ],
@@ -148,36 +161,41 @@ class SightDetailsBody extends StatelessWidget {
             margin: EdgeInsets.only(top: 24),
             child: Text(
               sight.details,
-              style: TextStyle(),
+              style: AppTextStyles.sightDetailsDescription.copyWith(
+                color: Theme.of(context).textTheme.bodyText1.color,
+              ),
             ),
           ),
 
           // Кнопка построения маршрута
           Container(
             margin: EdgeInsets.symmetric(vertical: 24),
-            width: double.infinity,
-            height: 48,
-            decoration: AppDecorations.ploteRouteButton,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/icons/Go.svg",
-                  width: 24,
-                  height: 24,
+            child: ElevatedButton.icon(
+              onPressed: null,
+              icon: SvgPicture.asset(
+                "assets/icons/Go.svg",
+                width: 24,
+                height: 24,
+              ),
+              label: Text(
+                AppTextStrings.ploteRouteButton.toUpperCase(),
+                style: AppTextStyles.sightDetailsPloteRouteButton.copyWith(
+                  color:
+                      whiteColor, // TODO Взять цвет из Theme.of(context).elevatedButtonTheme
                 ),
-                SizedBox(width: 10),
-                Text(
-                  AppTextStrings.ploteRouteButton.toUpperCase(),
-                  style: AppTextStyles.sightDetailsPloteRouteButton,
-                ),
-              ],
+              ),
             ),
           ),
 
           // Разделитель
-          Divider(
-            color: Color(0xFFEDEEF0),
+          Container(
+            margin: EdgeInsets.only(
+              bottom: 8,
+            ),
+            child: Divider(
+              color: Theme.of(context).dividerColor,
+              height: 0.8,
+            ),
           ),
 
           // Кнопки действий
@@ -186,8 +204,8 @@ class SightDetailsBody extends StatelessWidget {
             children: [
               // Кнопка "Запланировать поход"
               Expanded(
-                child: Container(
-                  height: 40,
+                child: TextButton(
+                  onPressed: null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -195,11 +213,15 @@ class SightDetailsBody extends StatelessWidget {
                         "assets/icons/Calendar.svg",
                         width: 24,
                         height: 24,
+                        color: Theme.of(context).iconTheme.color,
                       ),
                       SizedBox(width: 9),
                       Text(
                         AppTextStrings.planningButton,
-                        style: AppTextStyles.sightDetailsPlanningButton,
+                        style:
+                            AppTextStyles.sightDetailsPlanningButton.copyWith(
+                          color: Theme.of(context).textTheme.bodyText1.color,
+                        ),
                       ),
                     ],
                   ),
@@ -208,21 +230,24 @@ class SightDetailsBody extends StatelessWidget {
 
               // Кнопка "Добавить в избранное"
               Expanded(
-                child: Container(
-                  height: 40,
+                child: TextButton(
+                  onPressed: null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         "assets/icons/Heart.svg",
-                        color: AppColors.secondary,
                         width: 24,
                         height: 24,
+                        color: Theme.of(context).iconTheme.color,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 9),
                       Text(
                         AppTextStrings.favoritesButton,
-                        style: AppTextStyles.sightDetailsFavoritesButton,
+                        style:
+                            AppTextStyles.sightDetailsFavoritesButton.copyWith(
+                          color: Theme.of(context).textTheme.bodyText1.color,
+                        ),
                       ),
                     ],
                   ),

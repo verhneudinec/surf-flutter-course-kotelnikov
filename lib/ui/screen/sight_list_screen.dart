@@ -20,9 +20,16 @@ class _SightListScreenState extends State<SightListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarLargeTitle(),
       bottomNavigationBar: AppBottomNavigationBar(),
-      body: SightList(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppBarLargeTitle(),
+            SightList(),
+          ],
+        ),
+      ),
     );
   }
 }

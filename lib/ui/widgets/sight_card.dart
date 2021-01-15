@@ -3,14 +3,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/res/themes.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightCard extends StatelessWidget {
   final Sight sight;
   final dynamic cardType;
-  const SightCard({Key key, this.sight, this.cardType = "default"})
-      : super(key: key);
+  const SightCard({
+    Key key,
+    this.sight,
+    this.cardType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +26,15 @@ class SightCard extends StatelessWidget {
       ),
       child: Container(
         width: double.infinity,
-        decoration: AppDecorations.sightCardContainer,
+        decoration: AppDecorations.sightCardContainer.copyWith(
+          color: Theme.of(context).cardColor,
+        ),
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SightCardHeader(sight: sight, cardType: cardType),
-            SightCardBody(sight: sight, cardType: cardType),
+            SightCardHeader(sight: sight, cardType: cardType ?? "default"),
+            SightCardBody(sight: sight, cardType: cardType ?? "default"),
           ],
         ),
       ),
@@ -70,7 +76,9 @@ class SightCardHeader extends StatelessWidget {
           left: 16,
           child: Text(
             sight.type,
-            style: AppTextStyles.sightCardType,
+            style: AppTextStyles.sightCardType.copyWith(
+              color: Theme.of(context).colorScheme.sightCardTypeColor,
+            ),
           ),
         ),
 
@@ -146,14 +154,22 @@ class SightCardBody extends StatelessWidget {
           // Название места
           Container(
             constraints: BoxConstraints(
-                maxWidth: cardType == "default" ? 296 : double.infinity),
+              maxWidth: cardType == "default" ? 296 : double.infinity,
+            ),
             child: Text(
               sight.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.sightCardTitle,
+              style: AppTextStyles.sightCardTitle.copyWith(
+                color: Theme.of(context).textTheme.headline4.color,
+              ),
             ),
           ),
+
+          if (cardType != "default")
+            const SizedBox(
+              height: 2,
+            ),
 
           // Запланированная дата
           if (cardType == "toVisit")
@@ -162,22 +178,22 @@ class SightCardBody extends StatelessWidget {
               child: Text(
                 AppTextStrings.scheduledDate,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.sightCardScheduledDate,
+                style: AppTextStyles.sightCardScheduledDate.copyWith(
+                  color: Theme.of(context).textTheme.subtitle1.color,
+                ),
               ),
             ),
 
-          const SizedBox(
-            height: 2,
-          ),
-
-          // Дата достигнута
+          // Цель достигнута
           if (cardType == "visited")
             Container(
               height: 28,
               child: Text(
                 AppTextStrings.goalAchieved,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.sightCardGoalAchieved,
+                style: AppTextStyles.sightCardGoalAchieved.copyWith(
+                  color: Theme.of(context).textTheme.subtitle2.color,
+                ),
               ),
             ),
 
@@ -190,7 +206,9 @@ class SightCardBody extends StatelessWidget {
             child: Text(
               sight.workingTime,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.sightCardWorkingTime,
+              style: AppTextStyles.sightCardWorkingTime.copyWith(
+                color: Theme.of(context).textTheme.subtitle1.color,
+              ),
             ),
           ),
         ],

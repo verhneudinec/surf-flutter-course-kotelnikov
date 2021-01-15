@@ -31,19 +31,17 @@ class DisplaySights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 32,
-            ),
-            Column(
-              children: mocks
-                  .map((item) => SightCard(sight: item, cardType: cardType))
-                  .toList(),
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 32,
+          ),
+          Column(
+            children: mocks
+                .map((item) => SightCard(sight: item, cardType: cardType))
+                .toList(),
+          ),
+        ],
       ),
     );
   }

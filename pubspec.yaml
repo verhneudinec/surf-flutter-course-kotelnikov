@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  shared_preferences: ^0.5.12+4
+
   cupertino_icons: ^1.0.0
 
   flutter_svg: 0.18.0
