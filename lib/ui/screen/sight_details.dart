@@ -70,18 +70,31 @@ class SightDetailsHeader extends StatelessWidget {
               left: 16,
               top: 12,
             ),
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: AppDecorations.goBackButton.copyWith(
-                color: Theme.of(context).backgroundColor,
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/icons/Arrow.svg",
-                  width: 24,
-                  height: 24,
-                  color: Theme.of(context).iconTheme.color,
+            child: InkWell(
+              onTap: () => print("go back button"),
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: AppDecorations.goBackButton.copyWith(
+                  color: Theme.of(context).backgroundColor,
+                ),
+                child: Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(16),
+                  ),
+                  color: Theme.of(context).backgroundColor,
+                  child: IconButton(
+                    onPressed: () => print("go back button"),
+                    icon: SvgPicture.asset(
+                      "assets/icons/Arrow.svg",
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    iconSize: 24,
+                    constraints: BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                    splashRadius: 18,
+                    splashColor: Theme.of(context).splashColor.withOpacity(0.5),
+                  ),
                 ),
               ),
             ),
@@ -171,7 +184,7 @@ class SightDetailsBody extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(vertical: 24),
             child: ElevatedButton.icon(
-              onPressed: null,
+              onPressed: () => print("plote route button"),
               icon: SvgPicture.asset(
                 "assets/icons/Go.svg",
                 width: 24,
@@ -179,10 +192,6 @@ class SightDetailsBody extends StatelessWidget {
               ),
               label: Text(
                 AppTextStrings.ploteRouteButton.toUpperCase(),
-                style: AppTextStyles.sightDetailsPloteRouteButton.copyWith(
-                  color:
-                      whiteColor, // TODO Взять цвет из Theme.of(context).elevatedButtonTheme
-                ),
               ),
             ),
           ),
@@ -205,7 +214,7 @@ class SightDetailsBody extends StatelessWidget {
               // Кнопка "Запланировать поход"
               Expanded(
                 child: TextButton(
-                  onPressed: null,
+                  onPressed: () => print("plan button"),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -230,31 +239,21 @@ class SightDetailsBody extends StatelessWidget {
 
               // Кнопка "Добавить в избранное"
               Expanded(
-                child: TextButton(
-                  onPressed: null,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/icons/Heart.svg",
-                        width: 24,
-                        height: 24,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      SizedBox(width: 9),
-                      Text(
-                        AppTextStrings.favoritesButton,
-                        style:
-                            AppTextStyles.sightDetailsFavoritesButton.copyWith(
-                          color: Theme.of(context).textTheme.bodyText1.color,
-                        ),
-                      ),
-                    ],
+                child: TextButton.icon(
+                  onPressed: () => print("to favorites button"),
+                  icon: SvgPicture.asset(
+                    "assets/icons/Heart.svg",
+                    width: 24,
+                    height: 24,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  label: Text(
+                    AppTextStrings.favoritesButton,
                   ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

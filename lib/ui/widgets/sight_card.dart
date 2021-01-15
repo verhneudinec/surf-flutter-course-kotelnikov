@@ -13,7 +13,7 @@ class SightCard extends StatelessWidget {
   const SightCard({
     Key key,
     this.sight,
-    this.cardType,
+    this.cardType, // TODO Default value
   }) : super(key: key);
 
   @override
@@ -87,10 +87,9 @@ class SightCardHeader extends StatelessWidget {
           Positioned(
             top: 16,
             right: 16,
-            child: SvgPicture.asset(
-              "assets/icons/Heart.svg",
-              width: 24,
-              height: 24,
+            child: _iconButton(
+              iconPath: "assets/icons/Heart.svg",
+              consoleText: "heart button",
             ),
           ),
 
@@ -99,10 +98,9 @@ class SightCardHeader extends StatelessWidget {
           Positioned(
             top: 16,
             right: 16,
-            child: SvgPicture.asset(
-              "assets/icons/Delete.svg",
-              width: 24,
-              height: 24,
+            child: _iconButton(
+              iconPath: "assets/icons/Delete.svg",
+              consoleText: "delete button",
             ),
           ),
 
@@ -111,10 +109,9 @@ class SightCardHeader extends StatelessWidget {
           Positioned(
             top: 16,
             right: 56,
-            child: SvgPicture.asset(
-              "assets/icons/Calendar.svg",
-              width: 24,
-              height: 24,
+            child: _iconButton(
+              iconPath: "assets/icons/Calendar.svg",
+              consoleText: "calendar button",
             ),
           ),
 
@@ -123,10 +120,9 @@ class SightCardHeader extends StatelessWidget {
           Positioned(
             top: 16,
             right: 56,
-            child: SvgPicture.asset(
-              "assets/icons/Share.svg",
-              width: 24,
-              height: 24,
+            child: _iconButton(
+              iconPath: "assets/icons/Share.svg",
+              consoleText: "share button",
             ),
           ),
       ],
@@ -215,4 +211,20 @@ class SightCardBody extends StatelessWidget {
       ),
     );
   }
+}
+
+/// TODO ddd
+Widget _iconButton({iconPath, consoleText}) {
+  return Material(
+    type: MaterialType.transparency,
+    child: IconButton(
+      onPressed: () => print(consoleText),
+      padding: EdgeInsets.zero,
+      splashRadius: 12,
+      constraints: BoxConstraints(),
+      icon: SvgPicture.asset(
+        iconPath,
+      ),
+    ),
+  );
 }

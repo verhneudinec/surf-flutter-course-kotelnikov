@@ -28,9 +28,9 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: widget.isDarkMode ? darkTheme : lightTheme,
-      // home: VisitingScreen(),
+      home: VisitingScreen(),
       // home: SightListScreen(),
-      home: SightDetails(sight: mocks[0]),
+      // home: SightDetails(sight: mocks[0]),
     );
   }
 }

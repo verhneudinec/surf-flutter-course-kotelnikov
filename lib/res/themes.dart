@@ -15,6 +15,7 @@ final lightTheme = ThemeData(
   brightness: Brightness.light,
   buttonColor: whiteColor,
   iconTheme: IconThemeData(color: lmSecondaryColor),
+  splashColor: lmSecondaryColor.withOpacity(0.5),
   textTheme: TextTheme(
     headline1: TextStyle(
       // appBarTitle
@@ -110,6 +111,7 @@ final darkTheme = ThemeData(
   iconTheme: IconThemeData(
     color: whiteColor,
   ),
+  splashColor: whiteColor.withOpacity(0.5),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: TextButton.styleFrom(
       backgroundColor: dmGreenColor,
