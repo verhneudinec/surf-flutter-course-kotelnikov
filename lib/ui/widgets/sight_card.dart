@@ -213,7 +213,6 @@ class SightCardBody extends StatelessWidget {
   }
 }
 
-/// TODO ddd
 Widget _iconButton({iconPath, consoleText}) {
   return Material(
     type: MaterialType.transparency,

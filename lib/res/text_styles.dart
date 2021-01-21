@@ -82,9 +82,8 @@ class AppTextStyles {
   // Страница с описанием места
   static final sightDetailsTitle = _title,
       sightDetailsType = _smallBold,
-      sightDetailsWorkingTime = _small;
-
-  static final sightDetailsDescription = _small,
+      sightDetailsWorkingTime = _small,
+      sightDetailsDescription = _small,
       sightDetailsPloteRouteButton = _button,
       sightDetailsPlanningButton = _small,
       sightDetailsFavoritesButton = _small;
@@ -96,4 +95,12 @@ class AppTextStyles {
   // Блок "Ничего не найдено"
   static final emptyPageTitle = _subtitle, //
       emptyPageSubtitle = _small;
+
+  //
+  static final filterScreenClearButton = _text,
+      fiterScreenTitle = _superSmall,
+      fiterScreenCategoryTitle = _superSmall,
+      filterScreenSliderTitle = _text,
+      filterScreenSliderHint = _text,
+      fiterScreenShowButton = _text;
 }

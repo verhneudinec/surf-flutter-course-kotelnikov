@@ -5,10 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/res/colors.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
+import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightDetails extends StatelessWidget {
@@ -70,33 +70,8 @@ class SightDetailsHeader extends StatelessWidget {
               left: 16,
               top: 12,
             ),
-            child: InkWell(
-              onTap: () => print("go back button"),
-              child: Container(
-                width: 32,
-                height: 32,
-                decoration: AppDecorations.goBackButton.copyWith(
-                  color: Theme.of(context).backgroundColor,
-                ),
-                child: Material(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(16),
-                  ),
-                  color: Theme.of(context).backgroundColor,
-                  child: IconButton(
-                    onPressed: () => print("go back button"),
-                    icon: SvgPicture.asset(
-                      "assets/icons/Arrow.svg",
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    iconSize: 24,
-                    constraints: BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                    splashRadius: 18,
-                    splashColor: Theme.of(context).splashColor.withOpacity(0.5),
-                  ),
-                ),
-              ),
+            child: AppBackButton(
+              backgroundColor: Theme.of(context).backgroundColor,
             ),
           ),
         ),
