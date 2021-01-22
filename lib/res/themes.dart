@@ -17,7 +17,7 @@ final lightTheme = ThemeData(
   iconTheme: IconThemeData(
     color: lmSecondaryColor,
   ),
-  splashColor: lmSecondaryColor.withOpacity(0.5),
+  splashColor: lmGrayColor.withOpacity(0.5),
   textTheme: TextTheme(
     headline1: TextStyle(
       // appBarTitle

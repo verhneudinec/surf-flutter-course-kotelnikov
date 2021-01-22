@@ -41,10 +41,10 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: isDarkMode ? darkTheme : lightTheme,
-      home: SettingsScreen(),
+      // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      // home: SightListScreen(),
+      home: SightListScreen(),
       // home: SightDetails(sight: mocks[0]),
     );
   }

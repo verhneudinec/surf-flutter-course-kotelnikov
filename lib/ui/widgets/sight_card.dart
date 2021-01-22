@@ -1,3 +1,6 @@
+/// Sight card widget, displays the [sight] data passed to the constructor.
+/// The view changes depending on [cardType].
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
@@ -30,11 +33,26 @@ class SightCard extends StatelessWidget {
           color: Theme.of(context).cardColor,
         ),
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            SightCardHeader(sight: sight, cardType: cardType ?? "default"),
-            SightCardBody(sight: sight, cardType: cardType ?? "default"),
+            // Header and body of card
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SightCardHeader(sight: sight, cardType: cardType ?? "default"),
+                SightCardBody(sight: sight, cardType: cardType ?? "default"),
+              ],
+            ),
+            // On pressed ripple effect
+            Positioned.fill(
+              child: Material(
+                type: MaterialType.transparency,
+                child: InkWell(
+                  splashColor: Theme.of(context).splashColor,
+                  onTap: () => {},
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -49,9 +67,17 @@ class SightCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map _sightTypes = {
+      "hotel": AppTextStrings.hotel,
+      "restourant": AppTextStrings.restourant,
+      "particular_place": AppTextStrings.particularPlace,
+      "park": AppTextStrings.park,
+      "museum": AppTextStrings.museum,
+      "cafe": AppTextStrings.cafe,
+    };
     return Stack(
       children: [
-        // Главное фото места
+        // Main photo of the place
         Container(
           width: double.infinity,
           height: 96,
@@ -63,26 +89,26 @@ class SightCardHeader extends StatelessWidget {
           ),
         ),
 
-        // Контейнер для создания эффекта градиента
+        // Container for creating the gradient effect
         Container(
           decoration: AppDecorations.sightCardImageGradient,
           width: double.infinity,
           height: 96,
         ),
 
-        // Тип места
+        // Type of place
         Positioned(
           top: 16,
           left: 16,
           child: Text(
-            sight.type,
+            _sightTypes[sight.type.toString()].toString(),
             style: AppTextStyles.sightCardType.copyWith(
               color: Theme.of(context).colorScheme.sightCardTypeColor,
             ),
           ),
         ),
 
-        // Добавить в избранное
+        // Add to favorites
         if (cardType == "default")
           Positioned(
             top: 16,
@@ -93,7 +119,7 @@ class SightCardHeader extends StatelessWidget {
             ),
           ),
 
-        // Кнопка "Удалить из списка"
+        // "Remove from list" button
         if (cardType != "default")
           Positioned(
             top: 16,
@@ -104,7 +130,7 @@ class SightCardHeader extends StatelessWidget {
             ),
           ),
 
-        // Кнопка "Изменить запланированное время посещения"
+        // Button "Change scheduled visit time"
         if (cardType == "toVisit")
           Positioned(
             top: 16,
@@ -115,7 +141,7 @@ class SightCardHeader extends StatelessWidget {
             ),
           ),
 
-        // Кнопка "Поделиться"
+        // "Share" button
         if (cardType == "visited")
           Positioned(
             top: 16,
@@ -142,12 +168,12 @@ class SightCardBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Отступ
+          // Indent
           const SizedBox(
             height: 18,
           ),
 
-          // Название места
+          // Place name
           Container(
             constraints: BoxConstraints(
               maxWidth: cardType == "default" ? 296 : double.infinity,
@@ -167,7 +193,7 @@ class SightCardBody extends StatelessWidget {
               height: 2,
             ),
 
-          // Запланированная дата
+          // Scheduled date
           if (cardType == "toVisit")
             Container(
               height: 28,
@@ -180,7 +206,7 @@ class SightCardBody extends StatelessWidget {
               ),
             ),
 
-          // Цель достигнута
+          // Goal achieved
           if (cardType == "visited")
             Container(
               height: 28,
@@ -197,7 +223,7 @@ class SightCardBody extends StatelessWidget {
             height: 2,
           ),
 
-          // Время работы
+          // Working hours
           Container(
             child: Text(
               sight.workingTime,
@@ -213,6 +239,7 @@ class SightCardBody extends StatelessWidget {
   }
 }
 
+/// Widget for displaying the action button on the card
 Widget _iconButton({iconPath, consoleText}) {
   return Material(
     type: MaterialType.transparency,
