@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/app_bar_mini.dart';
+import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 
 final ChangeNotifier themeChangeNotifier = ChangeNotifier();
 bool isDarkMode = false;
@@ -32,6 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        bottomNavigationBar: AppBottomNavigationBar(),
         body: Column(
           children: [
             AppBarMini(
