@@ -96,11 +96,18 @@ class AppTextStyles {
   static final emptyPageTitle = _subtitle, //
       emptyPageSubtitle = _small;
 
-  //
+  // Фильтр интересных мест по категориям и отдаленности
   static final filterScreenClearButton = _text,
       fiterScreenTitle = _superSmall,
       fiterScreenCategoryTitle = _superSmall,
       filterScreenSliderTitle = _text,
       filterScreenSliderHint = _text,
       fiterScreenShowButton = _text;
+
+  static final settingsScreenEnableDarkTheme = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      settingsScreenWatchTutorial = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      );
 }

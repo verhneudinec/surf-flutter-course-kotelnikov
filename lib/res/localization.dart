@@ -1,3 +1,5 @@
+import 'package:places/ui/screen/settings_screen.dart';
+
 class AppTextStrings {
   static String appBarTitle = "Список\nинтересных мест",
       ploteRouteButton = "построить маршрут",
@@ -28,5 +30,8 @@ class AppTextStrings {
       particularPlace = "Особое место",
       park = "Парк",
       museum = "Музей",
-      cafe = "Кафе";
+      cafe = "Кафе",
+      settingsScreenTitle = "Настройки",
+      settingsScreenEnableDarkTheme = "Тёмная тема",
+      settingsScreenWatchTutorial = "Смотреть туториал";
 }

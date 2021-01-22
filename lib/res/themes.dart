@@ -35,8 +35,12 @@ final lightTheme = ThemeData(
       // cardTitle
       color: lmSecondaryColor,
     ),
+    headline5: TextStyle(
+      // SettingsScreen element
+      color: lmMainColor,
+    ),
     headline6: TextStyle(
-      // cardTitle; categoryTitle
+      // categoryTitle
       color: lmSecondaryColor,
     ),
     bodyText1: TextStyle(
