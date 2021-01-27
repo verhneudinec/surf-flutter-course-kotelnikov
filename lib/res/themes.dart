@@ -14,7 +14,10 @@ final lightTheme = ThemeData(
   dividerColor: lmInactiveBlackColor,
   brightness: Brightness.light,
   buttonColor: whiteColor,
-  iconTheme: IconThemeData(color: lmSecondaryColor),
+  iconTheme: IconThemeData(
+    color: lmSecondaryColor,
+  ),
+  splashColor: lmSecondaryColor.withOpacity(0.5),
   textTheme: TextTheme(
     headline1: TextStyle(
       // appBarTitle
@@ -33,7 +36,7 @@ final lightTheme = ThemeData(
       color: lmSecondaryColor,
     ),
     headline6: TextStyle(
-      // cardTitle
+      // cardTitle; categoryTitle
       color: lmSecondaryColor,
     ),
     bodyText1: TextStyle(
@@ -41,16 +44,16 @@ final lightTheme = ThemeData(
       color: lmSecondaryColor,
     ),
     bodyText2: TextStyle(
-      /// тип места в [SightDetails]
+      /// тип места в [SightDetails]; текст иконки в категории
       color: lmSecondaryColor,
     ),
     subtitle1: TextStyle(
       color: lmSecondary2Color,
-      // подзаголовок в карточке места
+      // подзаголовок в карточке места; подсказка в слайдере категорий
     ),
     subtitle2: TextStyle(
       color: lmGreenColor,
-      // подзаголовок, дата достигнута
+      // подзаголовок; дата достигнута
     ),
     caption: TextStyle(
       // время работы
@@ -110,6 +113,7 @@ final darkTheme = ThemeData(
   iconTheme: IconThemeData(
     color: whiteColor,
   ),
+  splashColor: whiteColor.withOpacity(0.5),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: TextButton.styleFrom(
       backgroundColor: dmGreenColor,
@@ -191,5 +195,6 @@ extension ComponentsColor on ColorScheme {
   bool isLightTheme() => brightness == Brightness.light ? true : false;
 
   Color get sightCardTypeColor => whiteColor;
+  Color get categoryTickColor => whiteColor;
   Color get testColor => isLightTheme() ? lmRedColor : dmGreenColor;
 }

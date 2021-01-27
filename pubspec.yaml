@@ -21,12 +21,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  cupertino_range_slider: ^1.0.1
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/icons/
+    - assets/icons/categories/
 
   fonts:
     - family: Roboto

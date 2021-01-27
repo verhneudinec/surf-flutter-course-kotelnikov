@@ -33,11 +33,6 @@ class AppDecorations {
     borderRadius: BorderRadius.circular(10),
   );
 
-  /// Кнопка "Вернуться назад" для [SightDetails]
-  static final goBackButton = BoxDecoration(
-    borderRadius: BorderRadius.circular(10),
-  );
-
   /// Скругление углов для для кнопок [ElevatedButton] и [TextButton]
   static final buttonShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(10.0),
@@ -56,5 +51,13 @@ class AppDecorations {
   /// Кнопка таба
   static final tabIndicatorContainerElement = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(40),
+  );
+
+  static final filterScreenCategoryButton = BoxDecoration(
+    borderRadius: BorderRadius.circular(40),
+  );
+
+  static final filterScreenTickButton = BoxDecoration(
+    borderRadius: BorderRadius.circular(16),
   );
 }

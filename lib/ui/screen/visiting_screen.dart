@@ -49,28 +49,42 @@ class _VisitingScreenState extends State<VisitingScreen>
         //     tabController: tabController,
         //   ),
         // ),
-        body: ListView(
-          children: [
-            AppBarMini(
-              title: AppTextStrings.visitingScreenTitle,
-              tabBarIndicator: TabIndicator(
-                tabController: tabController,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              AppBarMini(
+                title: AppTextStrings.visitingScreenTitle,
+                tabBarIndicator: TabIndicator(
+                  tabController: tabController,
+                ),
               ),
-            ),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
-                // TODO Резиновый размер для TabBarView
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: IndexedStack(
+                  key: ValueKey(tabController.index),
+                  index: tabController.index,
+                  children: [
+                    SightList(cardType: "toVisit"),
+                    SightList(cardType: "visited"),
+                  ],
+                ),
               ),
-              child: TabBarView(
-                controller: tabController,
-                children: [
-                  SightList(cardType: "toVisit"),
-                  SightList(cardType: "visited"),
-                ],
-              ),
-            ),
-          ],
+              // ConstrainedBox(
+              //   constraints: BoxConstraints(
+              //     maxHeight: MediaQuery.of(context).size.height,
+              //     maxWidth: MediaQuery.of(context).size.width,
+              //     // TODO Резиновый размер для TabBarView
+              //   ),
+              //   child: TabBarView(
+              //     controller: tabController,
+              //     children: [
+              //       SightList(cardType: "toVisit"),
+              //       SightList(cardType: "visited"),
+              //     ],
+              //   ),
+              // ),
+            ],
+          ),
         ),
         bottomNavigationBar: AppBottomNavigationBar(),
       ),

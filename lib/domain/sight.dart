@@ -1,7 +1,8 @@
+import 'package:places/domain/geo_position.dart';
+
 class Sight {
   final String name;
-  final double lat;
-  final double lon;
+  final GeoPosition geoPosition;
   final String url;
   final String details;
   final String type;
@@ -9,8 +10,7 @@ class Sight {
 
   Sight(
     this.name,
-    this.lat,
-    this.lon,
+    this.geoPosition,
     this.url,
     this.details,
     this.type,

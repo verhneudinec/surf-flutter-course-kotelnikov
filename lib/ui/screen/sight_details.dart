@@ -5,10 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/res/colors.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
+import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 
 class SightDetails extends StatelessWidget {
@@ -70,20 +70,8 @@ class SightDetailsHeader extends StatelessWidget {
               left: 16,
               top: 12,
             ),
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: AppDecorations.goBackButton.copyWith(
-                color: Theme.of(context).backgroundColor,
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/icons/Arrow.svg",
-                  width: 24,
-                  height: 24,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-              ),
+            child: AppBackButton(
+              backgroundColor: Theme.of(context).backgroundColor,
             ),
           ),
         ),
@@ -171,7 +159,7 @@ class SightDetailsBody extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(vertical: 24),
             child: ElevatedButton.icon(
-              onPressed: null,
+              onPressed: () => print("plote route button"),
               icon: SvgPicture.asset(
                 "assets/icons/Go.svg",
                 width: 24,
@@ -179,10 +167,6 @@ class SightDetailsBody extends StatelessWidget {
               ),
               label: Text(
                 AppTextStrings.ploteRouteButton.toUpperCase(),
-                style: AppTextStyles.sightDetailsPloteRouteButton.copyWith(
-                  color:
-                      whiteColor, // TODO Взять цвет из Theme.of(context).elevatedButtonTheme
-                ),
               ),
             ),
           ),
@@ -205,7 +189,7 @@ class SightDetailsBody extends StatelessWidget {
               // Кнопка "Запланировать поход"
               Expanded(
                 child: TextButton(
-                  onPressed: null,
+                  onPressed: () => print("plan button"),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -230,31 +214,21 @@ class SightDetailsBody extends StatelessWidget {
 
               // Кнопка "Добавить в избранное"
               Expanded(
-                child: TextButton(
-                  onPressed: null,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/icons/Heart.svg",
-                        width: 24,
-                        height: 24,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      SizedBox(width: 9),
-                      Text(
-                        AppTextStrings.favoritesButton,
-                        style:
-                            AppTextStyles.sightDetailsFavoritesButton.copyWith(
-                          color: Theme.of(context).textTheme.bodyText1.color,
-                        ),
-                      ),
-                    ],
+                child: TextButton.icon(
+                  onPressed: () => print("to favorites button"),
+                  icon: SvgPicture.asset(
+                    "assets/icons/Heart.svg",
+                    width: 24,
+                    height: 24,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  label: Text(
+                    AppTextStrings.favoritesButton,
                   ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
