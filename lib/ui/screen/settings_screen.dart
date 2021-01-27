@@ -1,6 +1,3 @@
-/// Screen with application settings. Contains
-/// switch theme using [_switchThemeHandler].
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +9,8 @@ import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 final ChangeNotifier themeChangeNotifier = ChangeNotifier();
 bool isDarkMode = false;
 
+/// Screen with application settings. Contains
+/// switch theme using [_switchThemeHandler].
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
 

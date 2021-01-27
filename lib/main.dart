@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:places/res/themes.dart';
+// и все-таки не вижу смысла пока чистить main,
+// пока не прошли навигацию. пока пусть вызовы
+// останутся, я их постоянно использую.
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/sight_details.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
