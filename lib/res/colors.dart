@@ -12,7 +12,8 @@ const Color lmGreenColor = Color(0xFF4CAF50),
     lmSecondaryColor = Color(0xFF3B3E5B),
     lmSecondary2Color = Color(0xFF7C7E92),
     lmInactiveBlackColor = Color.fromRGBO(124, 126, 146, 0.56),
-    lmPrimaryColor = Color(0xFF252849);
+    lmPrimaryColor = Color(0xFF252849),
+    lmGrayColor = Color(0xFFC4C4C4);
 
 /// Цвета для [darkTheme]
 const Color dmGreenColor = Color(0xFF6ADA6F),

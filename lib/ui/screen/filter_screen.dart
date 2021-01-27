@@ -1,7 +1,3 @@
-/// Screen with filter of places by category and distance.
-/// [FilterScreen] contains a header [_FilterScreenHeader] with an AppBar
-/// and body [_FilterScreenBody]
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/decorations.dart';
@@ -13,6 +9,9 @@ import 'package:places/ui/common/back_button.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
 import 'package:places/utils/filter.dart';
 
+/// Screen with filter of places by category and distance.
+/// [FilterScreen] contains a header [_FilterScreenHeader] with an AppBar
+/// and body [_FilterScreenBody]
 class FilterScreen extends StatefulWidget {
   FilterScreen({Key key}) : super(key: key);
 
@@ -21,70 +20,6 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              _FilterScreenHeader(),
-              _FilterScreenBody(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FilterScreenHeader extends StatelessWidget {
-  const _FilterScreenHeader({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      shadowColor: Colors.transparent,
-      toolbarHeight: 56,
-      leading: Padding(
-        padding: EdgeInsetsDirectional.only(
-          start: 16,
-        ),
-        child: AppBackButton(),
-      ),
-      actions: [
-        Padding(
-          padding: EdgeInsetsDirectional.only(
-            start: 16,
-            end: 16,
-          ),
-          child: SizedBox(
-            width: 90,
-            child: TextButton(
-              onPressed: () => print("Clear button"),
-              child: Text(
-                AppTextStrings.filterScreenClearButton,
-                style: AppTextStyles.filterScreenClearButton.copyWith(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FilterScreenBody extends StatefulWidget {
-  const _FilterScreenBody({Key key}) : super(key: key);
-
-  @override
-  __FilterScreenBodyState createState() => __FilterScreenBodyState();
-}
-
-class __FilterScreenBodyState extends State<_FilterScreenBody> {
   double _searchRangeStart = 100;
   double _searchRangeEnd = 10000;
 
@@ -131,96 +66,155 @@ class __FilterScreenBodyState extends State<_FilterScreenBody> {
     },
   ];
 
-  void onClearHandler() {
-    setState(() {
-      _searchRangeStart = 100;
-      _searchRangeEnd = 10000;
-      _foundSights.clear();
-      _sightTypesData.forEach((sightType) {
-        sightType["selected"] = false;
-      });
-    });
-  }
-
-  void _onTypeClickHandler(i) {
-    setState(() {
-      // inverse a bool value of property [selected]
-      _sightTypesData.elementAt(i)["selected"] =
-          !_sightTypesData.elementAt(i)["selected"];
-    });
-    _searchButtonHandler();
-  }
-
-  void _onMinSliderChangeHandler(searchRangeStart) {
-    setState(() {
-      _searchRangeStart = searchRangeStart;
-    });
-    _searchButtonHandler();
-    // TODO сделать задержку 1-2 секунды до вывода результатов
-  }
-
-  void _onMaxSliderChangeHandler(searchRangeEnd) {
-    setState(() {
-      _searchRangeEnd = searchRangeEnd;
-    });
-    _searchButtonHandler();
-    // TODO сделать задержку 1-2 секунды до вывода результатов
-  }
-
-  void _searchButtonHandler() {
-    List _selectedTypes = [];
-    List _foundSightsBySelectedTypes = [];
-
-    setState(() {
-      _foundSights.clear();
-    });
-
-    /// create a list [_selectedTypes] only with selected categories
-    _sightTypesData.forEach(
-      (sigth) {
-        if (sigth["selected"] == true) _selectedTypes.add(sigth["name"]);
-      },
-    );
-
-    /// create a list [_foundSightsBySelectedTypes] with filtered
-    /// data from [_testMocks] by [_selectedTypes]
-    if (_selectedTypes.isNotEmpty && _testMocks.isNotEmpty) {
-      _testMocks.forEach((sight) {
-        _selectedTypes.forEach(
-          (selectedType) {
-            if (selectedType == sight.type) {
-              _foundSightsBySelectedTypes.add(sight);
-            }
-          },
-        );
-      });
-    } else
-      print("Не выбраны категории"); // TODO Shake alert
-
-    /// finally create the [_foundSights] list, filtered taking into
-    /// account the selected categories [_selectedTypes], search range
-    /// [_searchRangeStart], [_searchRangeEnd] and the user's location
-    /// [_testGeoPosition]
-    if (_foundSightsBySelectedTypes.isNotEmpty) {
-      _foundSightsBySelectedTypes.forEach(
-        (sight) => {
-          if (isPointInsideRange(
-            imHere: _testGeoPosition,
-            checkPoint: sight.geoPosition,
-            minDistance: _searchRangeStart,
-            maxDistance: _searchRangeEnd,
-          ))
-            setState(() {
-              _foundSights.add(sight);
-            })
-        },
-      );
-    } else
-      print("Мест не найдено"); // TODO Shake alert
-  }
-
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              _filterScreenHeader(),
+              _filterScreenBody(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// AppBar for [FilterScreen] with [AppBackButton]
+  Widget _filterScreenHeader() {
+    /// Function for clearing search parameters
+    void _onClearHandler() {
+      setState(() {
+        _searchRangeStart = 100;
+        _searchRangeEnd = 10000;
+        _foundSights.clear();
+        _sightTypesData.forEach((sightType) {
+          sightType["selected"] = false;
+        });
+      });
+    }
+
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      toolbarHeight: 56,
+      leading: Padding(
+        padding: EdgeInsetsDirectional.only(
+          start: 16,
+        ),
+        child: AppBackButton(),
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsetsDirectional.only(
+            start: 16,
+            end: 16,
+          ),
+          child: SizedBox(
+            width: 90,
+            child: TextButton(
+              onPressed: () => _onClearHandler(),
+              child: Text(
+                AppTextStrings.filterScreenClearButton,
+                style: AppTextStyles.filterScreenClearButton.copyWith(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// The body of the screen displaying the categories of places,
+  /// distance slider and search button.
+  Widget _filterScreenBody() {
+    /// A handler that is triggered after clicking the "Show" button
+    void _searchButtonHandler() {
+      List _selectedTypes = [];
+      List _foundSightsBySelectedTypes = [];
+
+      setState(() {
+        _foundSights.clear();
+      });
+
+      /// create a list [_selectedTypes] only with selected categories
+      _sightTypesData.forEach(
+        (sigth) {
+          if (sigth["selected"] == true) _selectedTypes.add(sigth["name"]);
+        },
+      );
+
+      /// create a list [_foundSightsBySelectedTypes] with filtered
+      /// data from [_testMocks] by [_selectedTypes]
+      if (_selectedTypes.isNotEmpty && _testMocks.isNotEmpty) {
+        _testMocks.forEach((sight) {
+          _selectedTypes.forEach(
+            (selectedType) {
+              if (selectedType == sight.type) {
+                _foundSightsBySelectedTypes.add(sight);
+              }
+            },
+          );
+        });
+      } else
+        print("Не выбраны категории"); // TODO Shake alert
+
+      /// finally create the [_foundSights] list, filtered taking into
+      /// account the selected categories [_selectedTypes], search range
+      /// [_searchRangeStart], [_searchRangeEnd] and the user's location
+      /// [_testGeoPosition]
+      if (_foundSightsBySelectedTypes.isNotEmpty) {
+        _foundSightsBySelectedTypes.forEach(
+          (sight) => {
+            if (isPointInsideRange(
+              imHere: _testGeoPosition,
+              checkPoint: sight.geoPosition,
+              minDistance: _searchRangeStart,
+              maxDistance: _searchRangeEnd,
+            ))
+              setState(() {
+                _foundSights.add(sight);
+              })
+          },
+        );
+      } else
+        print("Мест не найдено"); // TODO Shake alert
+    }
+
+    /// The handler is triggered when clicking on a category of a place
+    void _onTypeClickHandler(i) {
+      setState(() {
+        // inverse a bool value of property [selected]
+        _sightTypesData.elementAt(i)["selected"] =
+            !_sightTypesData.elementAt(i)["selected"];
+      });
+      _searchButtonHandler();
+    }
+
+    /// The handler is triggered when the minimum distance change
+    /// in slider.
+    void _onMinSliderChangeHandler(searchRangeStart) {
+      setState(() {
+        _searchRangeStart = searchRangeStart;
+      });
+      _searchButtonHandler();
+      // TODO сделать задержку 1-2 секунды до вывода результатов
+    }
+
+    /// The handler is triggered when the maximum distance change
+    /// in slider.
+    void _onMaxSliderChangeHandler(searchRangeEnd) {
+      setState(() {
+        _searchRangeEnd = searchRangeEnd;
+      });
+      _searchButtonHandler();
+      // TODO сделать задержку 1-2 секунды до вывода результатов
+    }
+
     return Container(
       padding: EdgeInsets.only(
         top: 24,
@@ -407,7 +401,8 @@ class __FilterScreenBodyState extends State<_FilterScreenBody> {
                                   .toUpperCase() +
                               " "),
                       TextSpan(
-                          text: "(" + _foundSights.length.toString() + ")"),
+                        text: "(" + _foundSights.length.toString() + ")",
+                      ),
                     ],
                   ),
                 ),

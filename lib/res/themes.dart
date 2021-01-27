@@ -17,7 +17,7 @@ final lightTheme = ThemeData(
   iconTheme: IconThemeData(
     color: lmSecondaryColor,
   ),
-  splashColor: lmSecondaryColor.withOpacity(0.5),
+  splashColor: lmGrayColor.withOpacity(0.5),
   textTheme: TextTheme(
     headline1: TextStyle(
       // appBarTitle
@@ -35,8 +35,12 @@ final lightTheme = ThemeData(
       // cardTitle
       color: lmSecondaryColor,
     ),
+    headline5: TextStyle(
+      // SettingsScreen element
+      color: lmMainColor,
+    ),
     headline6: TextStyle(
-      // cardTitle; categoryTitle
+      // categoryTitle
       color: lmSecondaryColor,
     ),
     bodyText1: TextStyle(

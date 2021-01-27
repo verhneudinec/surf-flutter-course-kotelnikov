@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:places/res/themes.dart';
-
-// ignore: unused_import
+// и все-таки не вижу смысла пока чистить main,
+// пока не прошли навигацию. пока пусть вызовы
+// останутся, я их постоянно использую.
 import 'package:places/ui/screen/sight_list_screen.dart';
-// ignore: unused_import
 import 'package:places/ui/screen/sight_details.dart';
-// ignore: unused_import
 import 'package:places/ui/screen/visiting_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
-// ignore: unused_import
+import 'package:places/ui/screen/settings_screen.dart';
 import 'package:places/mocks.dart';
 
 void main() {
@@ -16,20 +15,30 @@ void main() {
 }
 
 class App extends StatefulWidget {
-  final bool isDarkMode;
-
-  const App({Key key, this.isDarkMode = false}) : super(key: key);
+  const App({Key key}) : super(key: key);
 
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
+  bool isDarkMode = false;
+
+  @override
+  void initState() {
+    themeChangeNotifier.addListener(() {
+      setState(() {
+        isDarkMode = !isDarkMode;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: widget.isDarkMode ? darkTheme : lightTheme,
+      theme: isDarkMode ? darkTheme : lightTheme,
+      // home: SettingsScreen(),
       home: FilterScreen(),
       // home: VisitingScreen(),
       // home: SightListScreen(),
