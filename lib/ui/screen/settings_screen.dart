@@ -9,7 +9,7 @@ import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:provider/provider.dart';
 
 /// Screen with application settings. Contains
-/// switch theme using [_switchThemeHandler].
+/// switch theme using [themeChanger] from [AppSettings] state using provider.
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
