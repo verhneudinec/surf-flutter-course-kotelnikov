@@ -11,17 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  shared_preferences: ^0.5.12+4
-
+  provider: ^4.3.3
   cupertino_icons: ^1.0.0
-
+  cupertino_range_slider: ^1.0.1
   flutter_svg: 0.18.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  cupertino_range_slider: ^1.0.1
 
 flutter:
   uses-material-design: true
