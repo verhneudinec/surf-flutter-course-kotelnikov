@@ -9,7 +9,7 @@ class AppSettings with ChangeNotifier {
 
   bool get isDarkMode => _isDarkMode;
 
-  void themeChanger() {
+  void changeTheme() {
     _isDarkMode = !_isDarkMode;
     notifyListeners();
   }

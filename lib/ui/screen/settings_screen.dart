@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,6 +15,11 @@ import 'package:provider/provider.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool _isDarkMode = context.watch<AppSettings>().isDarkMode;
+    void _changeTheme() {
+      context.read<AppSettings>().changeTheme();
+    }
+
     return ChangeNotifierProvider(
       create: (_) => AppSettings(),
       child: Container(
@@ -43,9 +50,8 @@ class SettingsScreen extends StatelessWidget {
                         ),
                       ),
                       trailing: CupertinoSwitch(
-                        value: context.watch<AppSettings>().isDarkMode,
-                        onChanged: (value) =>
-                            context.read<AppSettings>().themeChanger(),
+                        value: _isDarkMode,
+                        onChanged: (value) => _changeTheme(),
                         activeColor: Theme.of(context).accentColor,
                         trackColor: Theme.of(context).disabledColor,
                       ),
