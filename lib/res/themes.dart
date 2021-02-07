@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:places/res/colors.dart';
 import 'package:places/res/decorations.dart';
 
+/// ThemeData of application themes
+/// [lightTheme] and [darkTheme]
+
 final lightTheme = ThemeData(
   fontFamily: "Roboto",
   primaryColor: lmMainColor,
@@ -16,6 +19,9 @@ final lightTheme = ThemeData(
   buttonColor: whiteColor,
   iconTheme: IconThemeData(
     color: lmSecondaryColor,
+  ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    foregroundColor: whiteColor,
   ),
   splashColor: lmGrayColor.withOpacity(0.5),
   textTheme: TextTheme(
@@ -37,6 +43,7 @@ final lightTheme = ThemeData(
     ),
     headline5: TextStyle(
       // SettingsScreen element
+      // SelectingTypeScreen element
       color: lmMainColor,
     ),
     headline6: TextStyle(
@@ -117,6 +124,9 @@ final darkTheme = ThemeData(
   iconTheme: IconThemeData(
     color: whiteColor,
   ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    foregroundColor: whiteColor,
+  ),
   splashColor: whiteColor.withOpacity(0.5),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: TextButton.styleFrom(
@@ -167,7 +177,7 @@ final darkTheme = ThemeData(
       color: whiteColor,
     ),
     bodyText2: TextStyle(
-      // тип места
+      // тип места,  кнопка "Отмена" в AppBarCustom
       color: lmSecondary2Color,
     ),
     subtitle1: TextStyle(
@@ -200,5 +210,21 @@ extension ComponentsColor on ColorScheme {
 
   Color get sightCardTypeColor => whiteColor;
   Color get categoryTickColor => whiteColor;
-  Color get testColor => isLightTheme() ? lmRedColor : dmGreenColor;
+  LinearGradient get createSightButtonGradient => isLightTheme()
+      ? LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            lmYellowColor,
+            lmGreenColor,
+          ],
+        )
+      : LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            dmYellowColor,
+            dmGreenColor,
+          ],
+        );
 }

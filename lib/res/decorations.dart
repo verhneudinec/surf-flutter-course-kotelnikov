@@ -60,4 +60,8 @@ class AppDecorations {
   static final filterScreenTickButton = BoxDecoration(
     borderRadius: BorderRadius.circular(16),
   );
+
+  static final createPlaceButton = BoxDecoration(
+    borderRadius: BorderRadius.circular(24),
+  );
 }
