@@ -133,4 +133,18 @@ class AppTextStyles {
       selectingSightTypeScreenSaveButton = _button;
 
   static final createSightButton = _button;
+
+  static final searchBarHintText = _text.copyWith(
+    fontWeight: FontWeight.w400,
+  );
+
+  static final sightSearchScreenSearchHistoryTitle = _superSmall,
+      sightSearchScreenSearchHistoryElement = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      sightSearchScreenCleanHistory = _text,
+      sightSearchScreenSearchListTileTitle = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      sightSearchScreenSearchListTileSubtitle = _small;
 }

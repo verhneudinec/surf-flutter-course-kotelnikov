@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:places/ui/widgets/app_bar_large_title.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/sight_list.dart';
+import 'package:places/ui/widgets/search_bar.dart';
+import 'package:places/ui/widgets/app_bar_mini.dart';
+import 'package:places/ui/screen/add_sight_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
@@ -19,6 +22,15 @@ class SightListScreen extends StatefulWidget {
 }
 
 class _SightListScreenState extends State<SightListScreen> {
+  void _onClickCreateButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddSightScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +39,15 @@ class _SightListScreenState extends State<SightListScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppBarLargeTitle(),
+            AppBarMini(
+              title: AppTextStrings.appBarMiniTitle,
+            ),
+            Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 6,
+                  horizontal: 16,
+                ),
+                child: SearchBar()),
             SightList(),
           ],
         ),
@@ -42,7 +62,7 @@ class _SightListScreenState extends State<SightListScreen> {
             gradient: Theme.of(context).colorScheme.createSightButtonGradient,
           ),
           child: TextButton.icon(
-            onPressed: () => print("create"),
+            onPressed: () => _onClickCreateButton(),
             icon: SvgPicture.asset(
               "assets/icons/Plus.svg",
               width: 24,
