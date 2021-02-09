@@ -7,6 +7,7 @@ import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/app_bar_custom.dart';
+import 'package:places/ui/screen/sight_details.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/search_bar.dart';
 import 'package:places/ui/widgets/error_stub.dart';
@@ -14,6 +15,7 @@ import 'package:places/models/sight_types.dart';
 import 'package:places/models/sights_search.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
+import 'package:places/mocks.dart';
 
 /// Screen for selecting a seat category.
 ///Opened when adding sight in [AddSightScreen].
@@ -69,6 +71,17 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
             searchQuery: searchQuery,
             isTapFromHistory: true,
           );
+    }
+
+    void _onSightClick(sightIndex) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SightDetails(
+            sight: mocks[sightIndex],
+          ),
+        ),
+      );
     }
 
     void _onQueryDelete(index) {
@@ -158,36 +171,40 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
             Column(
               children: [
                 for (int i = 0; i < _searchResults.length; i++)
-                  ListTile(
-                    contentPadding: EdgeInsets.all(0),
-                    leading: ClipRRect(
-                      borderRadius: AppDecorations
-                          .sightSearchScreenSearchListTileImage.borderRadius,
-                      child: Container(
-                        color: Theme.of(context).backgroundColor,
-                        width: 56,
-                        height: 56,
-                        child: Image.network(
-                          _searchResults[i].url,
-                          fit: BoxFit.cover,
-                          loadingBuilder: imageLoaderBuilder,
-                          errorBuilder: imageErrorBuilder,
+                  InkWell(
+                    onTap: () => _onSightClick(i),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(0),
+                      leading: ClipRRect(
+                        borderRadius: AppDecorations
+                            .sightSearchScreenSearchListTileImage.borderRadius,
+                        child: Container(
+                          color: Theme.of(context).backgroundColor,
+                          width: 56,
+                          height: 56,
+                          child: Image.network(
+                            _searchResults[i].url,
+                            fit: BoxFit.cover,
+                            loadingBuilder: imageLoaderBuilder,
+                            errorBuilder: imageErrorBuilder,
+                          ),
                         ),
                       ),
-                    ),
-                    title: Text(
-                      _searchResults[i].name,
-                      style: AppTextStyles.sightSearchScreenSearchListTileTitle
-                          .copyWith(
-                        color: Theme.of(context).textTheme.headline5.color,
+                      title: Text(
+                        _searchResults[i].name,
+                        style: AppTextStyles
+                            .sightSearchScreenSearchListTileTitle
+                            .copyWith(
+                          color: Theme.of(context).textTheme.headline5.color,
+                        ),
                       ),
-                    ),
-                    subtitle: Text(
-                      _sightTypes[_searchResults[i].type],
-                      style: AppTextStyles
-                          .sightSearchScreenSearchListTileSubtitle
-                          .copyWith(
-                        color: Theme.of(context).disabledColor,
+                      subtitle: Text(
+                        _sightTypes[_searchResults[i].type],
+                        style: AppTextStyles
+                            .sightSearchScreenSearchListTileSubtitle
+                            .copyWith(
+                          color: Theme.of(context).disabledColor,
+                        ),
                       ),
                     ),
                   ),

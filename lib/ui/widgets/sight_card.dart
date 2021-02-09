@@ -9,6 +9,7 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
+import 'package:places/ui/screen/sight_details.dart';
 
 class SightCard extends StatelessWidget {
   final Sight sight;
@@ -21,6 +22,17 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _onSightClick() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SightDetails(
+            sight: sight,
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -49,7 +61,7 @@ class SightCard extends StatelessWidget {
                 type: MaterialType.transparency,
                 child: InkWell(
                   splashColor: Theme.of(context).splashColor,
-                  onTap: () => {},
+                  onTap: () => _onSightClick(),
                 ),
               ),
             ),
