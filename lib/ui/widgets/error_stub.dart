@@ -5,11 +5,11 @@ import 'package:places/res/text_styles.dart';
 
 /// The [NotFound] widget displays a stub,
 /// when the list is empty.
-class NotFound extends StatelessWidget {
+class ErrorStub extends StatelessWidget {
   final String icon;
   final String title;
   final String subtitle;
-  const NotFound({
+  const ErrorStub({
     Key key,
     this.icon,
     this.title,

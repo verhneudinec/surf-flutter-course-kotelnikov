@@ -43,4 +43,25 @@ class SightTypes with ChangeNotifier {
   ];
 
   List get sightTypesData => _sightTypesData;
+
+  void onCleanAllSelectedTypes() {
+    _sightTypesData.forEach(
+      (sightType) {
+        sightType["selected"] = false;
+      },
+    );
+    notifyListeners();
+  }
+
+  void onCleanSelectedType(index) {
+    _sightTypesData.elementAt(index).selected = false;
+    notifyListeners();
+  }
+
+  void onTypeClickHandler(index) {
+    _sightTypesData.elementAt(index)["selected"] =
+        !_sightTypesData.elementAt(index)["selected"];
+
+    notifyListeners();
+  }
 }

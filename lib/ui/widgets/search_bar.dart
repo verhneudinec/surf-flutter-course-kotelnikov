@@ -47,7 +47,7 @@ class SearchBar extends StatelessWidget {
     void _onSearchSubmitted(String searchQuery) {
       if (searchQuery.isNotEmpty)
         context.read<SightsSearch>().onSearchSubmitted(
-              searchQuery,
+              searchQuery: searchQuery,
             );
     }
 

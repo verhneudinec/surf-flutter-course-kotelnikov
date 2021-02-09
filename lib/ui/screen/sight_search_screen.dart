@@ -9,7 +9,7 @@ import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/app_bar_custom.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/search_bar.dart';
-import 'package:places/ui/widgets/not_found.dart';
+import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/models/sight_types.dart';
 import 'package:places/models/sights_search.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
@@ -66,7 +66,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
 
     void _onTapQueryFromHistory(searchQuery) {
       context.read<SightsSearch>().onSearchSubmitted(
-            searchQuery,
+            searchQuery: searchQuery,
+            isTapFromHistory: true,
           );
     }
 
@@ -198,8 +199,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                 width: 255,
                 height: MediaQuery.of(context).size.height -
                     300, // TODO исправить размеры, Expanded
-                child: NotFound(
-                  icon: "assets/icons/Delete.svg",
+                child: ErrorStub(
+                  icon: "assets/icons/Search.svg",
                   title: AppTextStrings.sightsNotFoundTitle,
                   subtitle: AppTextStrings.sightsNotFoundSubtitle,
                 ),

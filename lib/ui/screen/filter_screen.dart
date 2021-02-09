@@ -6,8 +6,12 @@ import 'package:places/mocks.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/common/back_button.dart';
+import 'package:places/models/sights_search.dart';
+import 'package:places/models/sight_types.dart';
+import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
 import 'package:places/utils/filter.dart';
+import 'package:provider/provider.dart';
 
 /// Screen with filter of places by category and distance.
 /// [FilterScreen] contains a header [_FilterScreenHeader] with an AppBar
@@ -20,61 +24,75 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  double _searchRangeStart = 100;
-  double _searchRangeEnd = 10000;
-
-  final _testGeoPosition = testGeoPosition;
-
-  final List _foundSights = [];
-  final List _testMocks = mocks;
-  final List _sightTypesData = [
-    {
-      "name": "hotel",
-      "text": AppTextStrings.hotel,
-      "icon": "assets/icons/categories/Hotel.svg",
-      "selected": false,
-    },
-    {
-      "name": "restourant",
-      "text": AppTextStrings.restourant,
-      "icon": "assets/icons/categories/Restourant.svg",
-      "selected": false,
-    },
-    {
-      "name": "particular_place",
-      "text": AppTextStrings.particularPlace,
-      "icon": "assets/icons/categories/Particular_place.svg",
-      "selected": false,
-    },
-    {
-      "name": "park",
-      "text": AppTextStrings.park,
-      "icon": "assets/icons/categories/Park.svg",
-      "selected": false,
-    },
-    {
-      "name": "museum",
-      "text": AppTextStrings.museum,
-      "icon": "assets/icons/categories/Museum.svg",
-      "selected": false,
-    },
-    {
-      "name": "cafe",
-      "text": AppTextStrings.cafe,
-      "icon": "assets/icons/categories/Cafe.svg",
-      "selected": false,
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    int _searchRangeStart = context.watch<SightsSearch>().searchRangeStart;
+    int _searchRangeEnd = context.watch<SightsSearch>().searchRangeEnd;
+    final List _searchResults = context.watch<SightsSearch>().searchResults;
+    final List _sightTypes = context.watch<SightTypes>().sightTypesData;
+
+    void _onCleanAllSearchParameters() {
+      context.read<SightsSearch>().onCleanRange();
+      context.read<SightTypes>().onCleanAllSelectedTypes();
+    }
+
+    void _searchButtonHandler() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SightListScreen(),
+        ),
+      );
+    }
+
+    void _onSearchSubmited() {
+      context.read<SightsSearch>().onSearchSubmitted(
+            isSearchFromFilterScreen: true,
+          );
+    }
+
+    /// The handler is triggered when clicking on a category of a place
+    void _onTypeClickHandler(index) {
+      context.read<SightTypes>().onTypeClickHandler(index);
+      _onSearchSubmited();
+    }
+
+    /// The handler is triggered when the minimum distance change
+    /// in slider.
+    void _onMinSliderChangeHandler(searchRangeStart) {
+      context.read<SightsSearch>().onSearchRangeStartChanged(
+            searchRangeStart.toInt(),
+          );
+      _onSearchSubmited();
+      // TODO сделать задержку 1-2 секунды до вывода результатов
+    }
+
+    /// The handler is triggered when the maximum distance change
+    /// in slider.
+    void _onMaxSliderChangeHandler(searchRangeEnd) {
+      context.read<SightsSearch>().onSearchRangeEndChanged(
+            searchRangeEnd.toInt(),
+          );
+      _onSearchSubmited();
+      // TODO сделать задержку 1-2 секунды до вывода результатов
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
-              _filterScreenHeader(),
-              _filterScreenBody(),
+              _filterScreenHeader(_onCleanAllSearchParameters),
+              _filterScreenBody(
+                _searchRangeStart,
+                _searchRangeEnd,
+                _searchResults,
+                _sightTypes,
+                _searchButtonHandler,
+                _onTypeClickHandler,
+                _onMinSliderChangeHandler,
+                _onMaxSliderChangeHandler,
+              ),
             ],
           ),
         ),
@@ -83,18 +101,8 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   /// AppBar for [FilterScreen] with [AppBackButton]
-  Widget _filterScreenHeader() {
+  Widget _filterScreenHeader(_onCleanAllSearchParameters) {
     /// Function for clearing search parameters
-    void _onClearHandler() {
-      setState(() {
-        _searchRangeStart = 100;
-        _searchRangeEnd = 10000;
-        _foundSights.clear();
-        _sightTypesData.forEach((sightType) {
-          sightType["selected"] = false;
-        });
-      });
-    }
 
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -115,7 +123,7 @@ class _FilterScreenState extends State<FilterScreen> {
           child: SizedBox(
             width: 90,
             child: TextButton(
-              onPressed: () => _onClearHandler(),
+              onPressed: () => _onCleanAllSearchParameters(),
               child: Text(
                 AppTextStrings.filterScreenClearButton,
                 style: AppTextStyles.filterScreenClearButton.copyWith(
@@ -131,90 +139,16 @@ class _FilterScreenState extends State<FilterScreen> {
 
   /// The body of the screen displaying the categories of places,
   /// distance slider and search button.
-  Widget _filterScreenBody() {
-    /// A handler that is triggered after clicking the "Show" button
-    void _searchButtonHandler() {
-      List _selectedTypes = [];
-      List _foundSightsBySelectedTypes = [];
-
-      setState(() {
-        _foundSights.clear();
-      });
-
-      /// create a list [_selectedTypes] only with selected categories
-      _sightTypesData.forEach(
-        (sigth) {
-          if (sigth["selected"] == true) _selectedTypes.add(sigth["name"]);
-        },
-      );
-
-      /// create a list [_foundSightsBySelectedTypes] with filtered
-      /// data from [_testMocks] by [_selectedTypes]
-      if (_selectedTypes.isNotEmpty && _testMocks.isNotEmpty) {
-        _testMocks.forEach((sight) {
-          _selectedTypes.forEach(
-            (selectedType) {
-              if (selectedType == sight.type) {
-                _foundSightsBySelectedTypes.add(sight);
-              }
-            },
-          );
-        });
-      } else
-        print("Не выбраны категории"); // TODO Shake alert
-
-      /// finally create the [_foundSights] list, filtered taking into
-      /// account the selected categories [_selectedTypes], search range
-      /// [_searchRangeStart], [_searchRangeEnd] and the user's location
-      /// [_testGeoPosition]
-      if (_foundSightsBySelectedTypes.isNotEmpty) {
-        _foundSightsBySelectedTypes.forEach(
-          (sight) => {
-            if (isPointInsideRange(
-              imHere: _testGeoPosition,
-              checkPoint: sight.geoPosition,
-              minDistance: _searchRangeStart,
-              maxDistance: _searchRangeEnd,
-            ))
-              setState(() {
-                _foundSights.add(sight);
-              })
-          },
-        );
-      } else
-        print("Мест не найдено"); // TODO Shake alert
-    }
-
-    /// The handler is triggered when clicking on a category of a place
-    void _onTypeClickHandler(i) {
-      setState(() {
-        // inverse a bool value of property [selected]
-        _sightTypesData.elementAt(i)["selected"] =
-            !_sightTypesData.elementAt(i)["selected"];
-      });
-      _searchButtonHandler();
-    }
-
-    /// The handler is triggered when the minimum distance change
-    /// in slider.
-    void _onMinSliderChangeHandler(searchRangeStart) {
-      setState(() {
-        _searchRangeStart = searchRangeStart;
-      });
-      _searchButtonHandler();
-      // TODO сделать задержку 1-2 секунды до вывода результатов
-    }
-
-    /// The handler is triggered when the maximum distance change
-    /// in slider.
-    void _onMaxSliderChangeHandler(searchRangeEnd) {
-      setState(() {
-        _searchRangeEnd = searchRangeEnd;
-      });
-      _searchButtonHandler();
-      // TODO сделать задержку 1-2 секунды до вывода результатов
-    }
-
+  Widget _filterScreenBody(
+    _searchRangeStart,
+    _searchRangeEnd,
+    _searchResults,
+    _sightTypes,
+    _searchButtonHandler,
+    _onTypeClickHandler,
+    _onMinSliderChangeHandler,
+    _onMaxSliderChangeHandler,
+  ) {
     return Container(
       padding: EdgeInsets.only(
         top: 24,
@@ -249,7 +183,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   runSpacing: 40,
                   alignment: WrapAlignment.spaceEvenly,
                   children: [
-                    for (int i = 0; i < _sightTypesData.length; i++)
+                    for (int i = 0; i < _sightTypes.length; i++)
                       Column(
                         children: [
                           /// Category button with text label
@@ -269,12 +203,12 @@ class _FilterScreenState extends State<FilterScreen> {
                                   child: IconButton(
                                     onPressed: () => _onTypeClickHandler(i),
                                     icon: SvgPicture.asset(
-                                      _sightTypesData.elementAt(i)["icon"],
+                                      _sightTypes.elementAt(i)["icon"],
                                       color: Theme.of(context).accentColor,
                                     ),
                                   ),
                                 ),
-                                if (_sightTypesData.elementAt(i)["selected"] ==
+                                if (_sightTypes.elementAt(i)["selected"] ==
                                     true)
                                   Positioned(
                                     bottom: 0,
@@ -309,7 +243,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             height: 12,
                           ),
                           Text(
-                            _sightTypesData.elementAt(i)["text"],
+                            _sightTypes.elementAt(i)["text"],
                             style:
                                 AppTextStyles.fiterScreenCategoryTitle.copyWith(
                               color:
@@ -401,7 +335,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                   .toUpperCase() +
                               " "),
                       TextSpan(
-                        text: "(" + _foundSights.length.toString() + ")",
+                        text: "(" + _searchResults.length.toString() + ")",
                       ),
                     ],
                   ),

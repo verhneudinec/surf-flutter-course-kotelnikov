@@ -29,20 +29,43 @@ class SightsSearch with ChangeNotifier {
     _isSightsNotFound = false;
     _searchResults.clear();
     _searchFieldIsNotEmpty = _searchFieldController.value.text.isNotEmpty;
-    print(_searchFieldIsNotEmpty);
     notifyListeners();
   }
 
-  void onSearchSubmitted(
+  void onSearchRangeStartChanged(newValue) {
+    _searchRangeStart = newValue;
+    notifyListeners();
+  }
+
+  void onSearchRangeEndChanged(newValue) {
+    _searchRangeEnd = newValue;
+    notifyListeners();
+  }
+
+  void onSearchSubmitted({
     String searchQuery,
-  ) {
-    _searchFieldIsNotEmpty = true;
-    _searchHistory.add(searchQuery);
+    isTapFromHistory = false,
+    isSearchFromFilterScreen = false,
+  }) {
+    searchQuery = _searchFieldController.value.text;
+    if (searchQuery.isNotEmpty && !isSearchFromFilterScreen) {
+      _searchFieldIsNotEmpty = true;
+      _searchHistory.add(searchQuery);
+    } else if (isSearchFromFilterScreen == true) {
+      _searchFieldIsNotEmpty = true;
+    }
+
+    if (isTapFromHistory == true) {
+      _searchFieldController.text = searchQuery;
+    }
+
     searchHandler(searchQuery);
+
     notifyListeners();
   }
 
   void onClearTextValue() {
+    _searchFieldIsNotEmpty = false;
     _searchFieldController.clear();
     notifyListeners();
   }
@@ -57,12 +80,22 @@ class SightsSearch with ChangeNotifier {
     notifyListeners();
   }
 
+  void onCleanRange() {
+    _searchRangeStart = 100;
+    _searchRangeEnd = 10000;
+    _searchResults.clear();
+    notifyListeners();
+  }
+
   void searchHandler(String searchQuery) {
+    searchQuery = _searchFieldController.value.text;
+    print(searchQuery);
     if (_searchResults.isNotEmpty) _searchResults.clear();
     _isSightsNotFound = false;
 
     final List _sights = Sights().sights;
     final List _sightTypesData = SightTypes().sightTypesData;
+
     final List _selectedTypes = [];
 
     final List _foundSightsByTypesAndRange = [];
@@ -109,7 +142,9 @@ class SightsSearch with ChangeNotifier {
     /// account the selected categories [_selectedTypes], search range
     /// [_searchRangeStart], [_searchRangeEnd] and the user's location
     /// [_testGeoPosition]
-
+    print("_____searchQuery");
+    print(searchQuery);
+    print("_____searchQuery");
     if (_foundSightsByTypesAndRange.isNotEmpty) {
       _foundSightsByTypesAndRange.forEach(
         (sight) {

@@ -46,7 +46,9 @@ class App extends StatelessWidget {
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      home: SightListScreen(),
+      home: SightListScreen(
+        sightsData: mocks,
+      ),
       // home: SightSearchScreen(),
       // home: SightDetails(sight: mocks[0]),
     );
