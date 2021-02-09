@@ -8,6 +8,7 @@ import 'package:places/models/sights_search.dart';
 import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 
+/// [SearchBar] displays the search bar for sights.
 class SearchBar extends StatelessWidget {
   final bool readonly;
 
@@ -21,6 +22,7 @@ class SearchBar extends StatelessWidget {
     final TextEditingController _searchFieldController =
         context.watch<SightsSearch>().searchFieldController;
 
+    /// When clicking on an inactive [SeachBar]
     void _onClickSearchBar() {
       if (readonly == true)
         Navigator.push(
@@ -31,6 +33,7 @@ class SearchBar extends StatelessWidget {
         );
     }
 
+    /// When clicking on the filter button
     void _onClickFilterButton() {
       Navigator.push(
         context,
@@ -40,10 +43,12 @@ class SearchBar extends StatelessWidget {
       );
     }
 
+    /// If the value in the request has changed
     void _onSearchChanged(String searchQuery) {
       context.read<SightsSearch>().onSearchChanged();
     }
 
+    /// When submitting the search form
     void _onSearchSubmitted(String searchQuery) {
       if (searchQuery.isNotEmpty)
         context.read<SightsSearch>().onSearchSubmitted(
@@ -51,6 +56,7 @@ class SearchBar extends StatelessWidget {
             );
     }
 
+    /// When clicking on the "Clear" button in the form
     void _onClearTextValue() {
       context.read<SightsSearch>().onClearTextValue();
     }

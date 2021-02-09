@@ -52,7 +52,7 @@ class _SightListScreenState extends State<SightListScreen> {
     // работу с сетью и не подключились к api
     Timer(
       Duration(
-        seconds: 10,
+        seconds: 2,
       ),
       () {
         setState(() {
@@ -77,6 +77,8 @@ class _SightListScreenState extends State<SightListScreen> {
               ),
               child: SearchBar(),
             ),
+
+            // While the sights are not loaded - display ProgressIndicator
             if (_isSightListLoading)
               Center(
                 child: Column(
@@ -88,6 +90,9 @@ class _SightListScreenState extends State<SightListScreen> {
                   ],
                 ),
               ),
+
+            /// Display search results if they exist
+            /// or display the data obtained in the constructor [sightsData]
             SightList(
               sights: _searchFieldIsNotEmpty == true
                   ? _searchResults
@@ -97,27 +102,32 @@ class _SightListScreenState extends State<SightListScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ClipRRect(
-        borderRadius: AppDecorations.createPlaceButton.borderRadius,
-        child: Container(
-          width: 177,
-          height: 48,
-          decoration: BoxDecoration(
-            gradient: Theme.of(context).colorScheme.createSightButtonGradient,
+      floatingActionButton: _createSightButton(),
+    );
+  }
+
+  /// [_createSightButton] - action button for adding a new location in SightListScreen
+  Widget _createSightButton() {
+    return ClipRRect(
+      borderRadius: AppDecorations.createPlaceButton.borderRadius,
+      child: Container(
+        width: 177,
+        height: 48,
+        decoration: BoxDecoration(
+          gradient: Theme.of(context).colorScheme.createSightButtonGradient,
+        ),
+        child: TextButton.icon(
+          onPressed: () => _onClickCreateButton(),
+          icon: SvgPicture.asset(
+            "assets/icons/Plus.svg",
+            width: 24,
+            height: 24,
           ),
-          child: TextButton.icon(
-            onPressed: () => _onClickCreateButton(),
-            icon: SvgPicture.asset(
-              "assets/icons/Plus.svg",
-              width: 24,
-              height: 24,
-            ),
-            label: Text(
-              AppTextStrings.createSightButton.toUpperCase(),
-              style: AppTextStyles.createSightButton.copyWith(
-                color:
-                    Theme.of(context).floatingActionButtonTheme.foregroundColor,
-              ),
+          label: Text(
+            AppTextStrings.createSightButton.toUpperCase(),
+            style: AppTextStyles.createSightButton.copyWith(
+              color:
+                  Theme.of(context).floatingActionButtonTheme.foregroundColor,
             ),
           ),
         ),

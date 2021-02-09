@@ -44,6 +44,7 @@ class SightTypes with ChangeNotifier {
 
   List get sightTypesData => _sightTypesData;
 
+  /// Function to clear all active (selected) types
   void onCleanAllSelectedTypes() {
     _sightTypesData.forEach(
       (sightType) {
@@ -53,11 +54,14 @@ class SightTypes with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Function to clear a specific selected type by index
   void onCleanSelectedType(index) {
     _sightTypesData.elementAt(index).selected = false;
     notifyListeners();
   }
 
+  /// The function is called when you click on a sight type.
+  /// Inverts the value of the selected type (by index)
   void onTypeClickHandler(index) {
     _sightTypesData.elementAt(index)["selected"] =
         !_sightTypesData.elementAt(index)["selected"];

@@ -17,8 +17,7 @@ import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/mocks.dart';
 
-/// Screen for selecting a seat category.
-///Opened when adding sight in [AddSightScreen].
+/// Screen for searching places by request
 class SightSearchScreen extends StatefulWidget {
   const SightSearchScreen({Key key}) : super(key: key);
 
@@ -50,7 +49,6 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
   }
 
   Widget _body() {
-    // [_sightTypesData] stores place types from provider [SightTypes].
     bool _searchFieldIsNotEmpty =
         context.watch<SightsSearch>().searchFieldIsNotEmpty;
     bool _isSightsNotFound = context.watch<SightsSearch>().isSightsNotFound;
@@ -66,6 +64,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
       "cafe": AppTextStrings.cafe,
     };
 
+    /// When clicking on a query from the search history
     void _onTapQueryFromHistory(searchQuery) {
       context.read<SightsSearch>().onSearchSubmitted(
             searchQuery: searchQuery,
@@ -73,6 +72,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
           );
     }
 
+    /// When clicking on a search result
     void _onSightClick(sightIndex) {
       Navigator.push(
         context,
@@ -84,10 +84,12 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
       );
     }
 
+    /// When deleting a request from history
     void _onQueryDelete(index) {
       context.read<SightsSearch>().onQueryDelete(index);
     }
 
+    /// Deleting all requests from the search history
     void _onCleanHistory() {
       context.read<SightsSearch>().onCleanHistory();
     }
@@ -110,6 +112,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
           const SizedBox(
             height: 24,
           ),
+
+          /// Display search history
           if (_searchHistory.isNotEmpty && _searchFieldIsNotEmpty == false)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,6 +171,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                   ),
               ],
             ),
+
+          /// Display search results if the conditions are met
           if (_searchFieldIsNotEmpty == true && _searchResults.isNotEmpty)
             Column(
               children: [
@@ -210,6 +216,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                   ),
               ],
             ),
+
+          /// If nothing was found
           if (_searchFieldIsNotEmpty == true && _isSightsNotFound == true)
             Center(
               child: SizedBox(

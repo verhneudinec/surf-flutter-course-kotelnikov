@@ -3,7 +3,7 @@ import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/common/back_button.dart';
 
-/// The [appBarMini] widget implements a custom [AppBar] with
+/// The [AppBarCustom] widget implements a custom [AppBar] with
 /// passed in [title] and outputs [AppBackButton]
 /// or [_cancelButton] depending on the passed values
 /// [backButtonEnabled] and [cancelButtonEnabled].
