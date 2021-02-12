@@ -9,37 +9,29 @@ import 'package:places/ui/screen/visiting_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
 import 'package:places/mocks.dart';
+import 'package:provider/provider.dart';
+import 'package:places/models/app_settings.dart';
 
 void main() {
-  runApp(App());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppSettings()),
+      ],
+      child: App(),
+    ),
+  );
 }
 
-class App extends StatefulWidget {
-  const App({Key key}) : super(key: key);
-
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  bool isDarkMode = false;
-
-  @override
-  void initState() {
-    themeChangeNotifier.addListener(() {
-      setState(() {
-        isDarkMode = !isDarkMode;
-      });
-    });
-  }
-
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool _isDarkMode = context.watch<AppSettings>().isDarkMode;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: isDarkMode ? darkTheme : lightTheme,
-      // home: SettingsScreen(),
-      home: FilterScreen(),
+      theme: _isDarkMode ? darkTheme : lightTheme,
+      home: SettingsScreen(),
+      // home: FilterScreen(),
       // home: VisitingScreen(),
       // home: SightListScreen(),
       // home: SightDetails(sight: mocks[0]),
