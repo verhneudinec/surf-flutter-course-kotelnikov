@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/models/add_sight.dart';
+import 'package:places/models/favorite_sights.dart';
 import 'package:places/res/themes.dart';
 // и все-таки не вижу смысла пока чистить main,
 // пока не прошли навигацию. пока пусть вызовы
@@ -28,6 +29,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => SightTypes()),
         ChangeNotifierProvider(create: (_) => Sights()),
         ChangeNotifierProvider(create: (_) => SightsSearch()),
+        ChangeNotifierProvider(create: (_) => FavoriteSights()),
       ],
       child: App(),
     ),
@@ -45,10 +47,10 @@ class App extends StatelessWidget {
       // home: SelectingSightTypeScreen(),
       // home: SettingsScreen(),
       // home: FilterScreen(),
-      // home: VisitingScreen(),
-      home: SightListScreen(
-        sightsData: mocks,
-      ),
+      home: VisitingScreen(),
+      // home: SightListScreen(
+      //   sightsData: mocks,
+      // ),
       // home: SightSearchScreen(),
       // home: SightDetails(sight: mocks[0]),
     );

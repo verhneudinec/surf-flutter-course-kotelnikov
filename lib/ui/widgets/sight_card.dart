@@ -1,23 +1,25 @@
-/// Sight card widget, displays the [sight] data passed to the constructor.
-/// The view changes depending on [cardType].
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/models/favorite_sights.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 import 'package:places/ui/screen/sight_details.dart';
+import 'package:provider/provider.dart';
 
+/// Sight card widget, displays the [sight] data passed to the constructor.
+/// The view changes depending on [cardType].
 class SightCard extends StatelessWidget {
   final Sight sight;
-  final dynamic cardType;
+  final String cardType;
+
   const SightCard({
     Key key,
     this.sight,
-    this.cardType, // TODO Default value
+    this.cardType,
   }) : super(key: key);
 
   @override
@@ -51,8 +53,14 @@ class SightCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SightCardHeader(sight: sight, cardType: cardType ?? "default"),
-                SightCardBody(sight: sight, cardType: cardType ?? "default"),
+                SightCardHeader(
+                  sight: sight,
+                  cardType: cardType ?? "default",
+                ),
+                SightCardBody(
+                  sight: sight,
+                  cardType: cardType ?? "default",
+                ),
               ],
             ),
             // On pressed ripple effect
@@ -65,6 +73,12 @@ class SightCard extends StatelessWidget {
                 ),
               ),
             ),
+
+            /// Action buttons: delete sight, calendar, share
+            SightCardActionButtons(
+              sight: sight,
+              cardType: cardType ?? "default",
+            ),
           ],
         ),
       ),
@@ -75,7 +89,11 @@ class SightCard extends StatelessWidget {
 class SightCardHeader extends StatelessWidget {
   final Sight sight;
   final String cardType;
-  const SightCardHeader({Key key, this.sight, this.cardType}) : super(key: key);
+  const SightCardHeader({
+    Key key,
+    this.sight,
+    this.cardType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -119,50 +137,6 @@ class SightCardHeader extends StatelessWidget {
             ),
           ),
         ),
-
-        // Add to favorites
-        if (cardType == "default")
-          Positioned(
-            top: 16,
-            right: 16,
-            child: _iconButton(
-              iconPath: "assets/icons/Heart.svg",
-              consoleText: "heart button",
-            ),
-          ),
-
-        // "Remove from list" button
-        if (cardType != "default")
-          Positioned(
-            top: 16,
-            right: 16,
-            child: _iconButton(
-              iconPath: "assets/icons/Delete.svg",
-              consoleText: "delete button",
-            ),
-          ),
-
-        // Button "Change scheduled visit time"
-        if (cardType == "toVisit")
-          Positioned(
-            top: 16,
-            right: 56,
-            child: _iconButton(
-              iconPath: "assets/icons/Calendar.svg",
-              consoleText: "calendar button",
-            ),
-          ),
-
-        // "Share" button
-        if (cardType == "visited")
-          Positioned(
-            top: 16,
-            right: 56,
-            child: _iconButton(
-              iconPath: "assets/icons/Share.svg",
-              consoleText: "share button",
-            ),
-          ),
       ],
     );
   }
@@ -251,18 +225,99 @@ class SightCardBody extends StatelessWidget {
   }
 }
 
-/// Widget for displaying the action button on the card
-Widget _iconButton({iconPath, consoleText}) {
-  return Material(
-    type: MaterialType.transparency,
-    child: IconButton(
-      onPressed: () => print(consoleText),
-      padding: EdgeInsets.zero,
-      splashRadius: 12,
-      constraints: BoxConstraints(),
-      icon: SvgPicture.asset(
-        iconPath,
+/// Action buttons for SightCard: delete, calendar, share
+class SightCardActionButtons extends StatelessWidget {
+  final Sight sight;
+  final String cardType;
+  const SightCardActionButtons({
+    Key key,
+    this.sight,
+    this.cardType,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    /// Removes the list item from provider
+    void onSightCardDelete() {
+      context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
+    }
+
+    return _controllButtons(
+      onSightCardDelete,
+    );
+  }
+
+  /// [_controllButtons] Displays buttons based on [cardType].
+  Widget _controllButtons(
+    onSightCardDelete,
+  ) {
+    // Add to favorites
+    return SizedBox(
+      height: 96,
+      width: double.infinity,
+      child: Stack(
+        children: [
+          if (cardType == "default")
+            Positioned(
+              top: 16,
+              right: 16,
+              child: _iconButton(
+                iconPath: "assets/icons/Heart.svg",
+              ),
+            ),
+
+          // "Remove from list" button
+          if (cardType != "default")
+            Positioned(
+              top: 16,
+              right: 16,
+              child: _iconButton(
+                iconPath: "assets/icons/Delete.svg",
+                onPressed: onSightCardDelete,
+              ),
+            ),
+
+          // Button "Change scheduled visit time"
+          if (cardType == "toVisit")
+            Positioned(
+              top: 16,
+              right: 56,
+              child: _iconButton(
+                iconPath: "assets/icons/Calendar.svg",
+              ),
+            ),
+
+          // "Share" button
+          if (cardType == "visited")
+            Positioned(
+              top: 16,
+              right: 56,
+              child: _iconButton(
+                iconPath: "assets/icons/Share.svg",
+              ),
+            ),
+        ],
       ),
-    ),
-  );
+    );
+  }
+
+  /// Widget for displaying the IconButton
+  /// with icon [iconPath] and action [onPressed]
+  Widget _iconButton({
+    String iconPath,
+    onPressed,
+  }) {
+    return Material(
+      type: MaterialType.transparency,
+      child: IconButton(
+        onPressed: () => onPressed(),
+        padding: EdgeInsets.zero,
+        splashRadius: 12,
+        constraints: BoxConstraints(),
+        icon: SvgPicture.asset(
+          iconPath,
+        ),
+      ),
+    );
+  }
 }
