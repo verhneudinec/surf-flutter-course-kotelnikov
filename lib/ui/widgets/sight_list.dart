@@ -25,7 +25,14 @@ class SightList extends StatelessWidget {
             cardType: cardType,
             onDeleteSight: onDeleteSight,
           )
-        : EmptyList(cardType: cardType);
+        : Center(
+            child: SizedBox(
+              width: 255,
+              height: MediaQuery.of(context).size.height -
+                  250, // TODO исправить размеры, Expanded
+              child: EmptyList(cardType: cardType),
+            ),
+          );
   }
 }
 
