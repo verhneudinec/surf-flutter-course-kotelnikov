@@ -50,8 +50,9 @@ class DisplaySights extends StatelessWidget {
           ),
           Column(
             children: sights
-                .map((item) => SightCard(
-                      sight: item,
+                .map((sight) => SightCard(
+                      key: ValueKey(sight.name),
+                      sight: sight,
                       cardType: cardType,
                     ))
                 .toList(),
