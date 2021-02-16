@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:places/ui/widgets/sight_card.dart';
 import 'package:places/ui/widgets/empty_list.dart';
+import 'package:places/domain/sight.dart';
+import 'package:provider/provider.dart';
+import 'package:places/models/favorite_sights.dart';
 
 /// The [SightList] widget displays a list of places
 /// via [DisplaySights], if list length> 0
@@ -57,14 +60,71 @@ class DisplaySights extends StatelessWidget {
           ),
           Column(
             children: sights
-                .map((sight) => SightCard(
-                      key: ValueKey(sight.name),
-                      sight: sight,
-                      cardType: cardType,
+                .map((sight) => _sightListItem(
+                      context,
+                      sight,
                     ))
                 .toList(),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Sights list item
+  Widget _sightListItem(
+    BuildContext context,
+    Sight sight,
+  ) {
+    return cardType == "default"
+        ? _sightCardBuilder(sight)
+        : _draggableSightCardBuilder(context, sight);
+  }
+
+  /// Builder for a regular card with the "default" type
+  Widget _sightCardBuilder(Sight sight) {
+    return SightCard(
+      key: ValueKey(sight.name),
+      sight: sight,
+      cardType: cardType,
+    );
+  }
+
+  /// Builder for "Favorites" page cards
+  Widget _draggableSightCardBuilder(BuildContext context, Sight sight) {
+    /// [_onDraggingSight] called when dragging an item in the list
+    void _onDraggingSight(int oldIndex, int newIndex) {
+      context.read<FavoriteSights>().onDraggingSight(oldIndex, newIndex);
+    }
+
+    int _sightId = context.watch<FavoriteSights>().getSightId(sight: sight);
+
+    return Material(
+      child: Draggable<String>(
+        key: UniqueKey(),
+        data: _sightId.toString(), // TODO Sight.id
+        axis: Axis.vertical,
+        feedback: Material(
+          color: Colors.transparent,
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+            child: _sightCardBuilder(sight),
+          ),
+        ),
+        childWhenDragging: SizedBox.shrink(),
+        child: DragTarget<String>(
+          builder:
+              (BuildContext context, List<String> incoming, List rejected) {
+            return _sightCardBuilder(sight);
+          },
+          onWillAccept: (oldIndex) {
+            return true;
+          },
+          onAccept: (oldIndex) {
+            _onDraggingSight(int.tryParse(oldIndex), _sightId);
+          },
+        ),
       ),
     );
   }
