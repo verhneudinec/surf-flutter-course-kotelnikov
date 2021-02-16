@@ -6,6 +6,7 @@ class AppTextStrings {
       planningButton = "Запланировать",
       favoritesButton = "В избранное",
       visitingScreenTitle = "Избранное",
+      delete = "Удалить",
       scheduledDate = "Запланировано на 15 окт. 2020",
       goalAchieved = "Цель достигнута 12 окт. 2020",
       toVisitTab = "Посетил",

@@ -78,20 +78,28 @@ class DisplaySights extends StatelessWidget {
   ) {
     return cardType == "default"
         ? _sightCardBuilder(sight)
-        : _draggableSightCardBuilder(context, sight);
+        : _favoriteSightCardBuilder(context, sight);
   }
 
   /// Builder for a regular card with the "default" type
   Widget _sightCardBuilder(Sight sight) {
-    return SightCard(
-      key: ValueKey(sight.name),
-      sight: sight,
-      cardType: cardType,
+    return Container(
+      color: Colors.transparent,
+      margin: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: 16,
+      ),
+      child: SightCard(
+        key: ValueKey(sight.name),
+        sight: sight,
+        cardType: cardType,
+      ),
     );
   }
 
   /// Builder for "Favorites" page cards
-  Widget _draggableSightCardBuilder(BuildContext context, Sight sight) {
+  Widget _favoriteSightCardBuilder(BuildContext context, Sight sight) {
     /// [_onDraggingSight] called when dragging an item in the list
     void _onDraggingSight(int oldIndex, int newIndex) {
       context.read<FavoriteSights>().onDraggingSight(oldIndex, newIndex);
@@ -100,18 +108,12 @@ class DisplaySights extends StatelessWidget {
     int _sightId = context.watch<FavoriteSights>().getSightId(sight: sight);
 
     return Material(
+      type: MaterialType.transparency,
       child: Draggable<String>(
         key: UniqueKey(),
         data: _sightId.toString(), // TODO Sight.id
         axis: Axis.vertical,
-        feedback: Material(
-          color: Colors.transparent,
-          child: ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child: _sightCardBuilder(sight),
-          ),
-        ),
+        feedback: _draggableSightFeedback(context, sight),
         childWhenDragging: SizedBox.shrink(),
         child: DragTarget<String>(
           builder:
@@ -125,6 +127,28 @@ class DisplaySights extends StatelessWidget {
             _onDraggingSight(int.tryParse(oldIndex), _sightId);
           },
         ),
+      ),
+    );
+  }
+
+  Widget _draggableSightFeedback(BuildContext context, Sight sight) {
+    return Material(
+      color: Colors.transparent,
+      child: ConstrainedBox(
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        child: _sightCardBuilder(sight),
+      ),
+    );
+  }
+
+  Widget _dragTargetBackground(BuildContext context, Sight sight) {
+    return Material(
+      color: Colors.transparent,
+      child: ConstrainedBox(
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        child: Container(color: Colors.red),
       ),
     );
   }

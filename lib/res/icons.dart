@@ -1,5 +1,5 @@
 /// Constant app icons
 class AppIcons {
   /// Поправлю работу с иконками на выходных
-  static String icon = "", icon2 = "";
+  static String bucket = "assets/icons/Bucket.svg";
 }

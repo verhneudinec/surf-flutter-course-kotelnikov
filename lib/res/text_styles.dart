@@ -77,7 +77,10 @@ class AppTextStyles {
       sightCardGoalAchieved = _small,
       sightCardType = _smallBold,
       sightCardDescription = _small,
-      sightCardWorkingTime = _small;
+      sightCardWorkingTime = _small,
+      sightCardDismissibleText = _superSmall.copyWith(
+        fontWeight: FontWeight.w500,
+      );
 
   // Страница с описанием места
   static final sightDetailsTitle = _title,

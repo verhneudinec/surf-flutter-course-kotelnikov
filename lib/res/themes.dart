@@ -211,6 +211,9 @@ extension ComponentsColor on ColorScheme {
   bool isLightTheme() => brightness == Brightness.light ? true : false;
 
   Color get sightCardTypeColor => whiteColor;
+  Color get sightCardDismissibleText => whiteColor;
+  Color get sightCardDismissibleBackground =>
+      isLightTheme() ? lmRedColor : dmRedColor;
   Color get addSightScreenPhotoDeleteButton => whiteColor;
   Color get categoryTickColor => whiteColor;
   LinearGradient get createSightButtonGradient => isLightTheme()

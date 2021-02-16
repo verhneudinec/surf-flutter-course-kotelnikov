@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/models/favorite_sights.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
@@ -24,6 +25,11 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Removes the list item from provider
+    void onSightCardDismissed() {
+      context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
+    }
+
     void _onSightClick() {
       Navigator.push(
         context,
@@ -35,18 +41,17 @@ class SightCard extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: 16,
+    return Container(
+      width: double.infinity,
+      decoration: AppDecorations.sightCardContainer.copyWith(
+        color: Theme.of(context).cardColor,
       ),
-      child: Container(
-        width: double.infinity,
-        decoration: AppDecorations.sightCardContainer.copyWith(
-          color: Theme.of(context).cardColor,
-        ),
-        clipBehavior: Clip.antiAlias,
+      clipBehavior: Clip.antiAlias,
+      child: Dismissible(
+        key: UniqueKey(),
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) => onSightCardDismissed(),
+        background: _dismissibleBackground(context),
         child: Stack(
           children: [
             // Header and body of card
@@ -63,6 +68,7 @@ class SightCard extends StatelessWidget {
                 ),
               ],
             ),
+
             // On pressed ripple effect
             Positioned.fill(
               child: Material(
@@ -78,6 +84,31 @@ class SightCard extends StatelessWidget {
             SightCardActionButtons(
               sight: sight,
               cardType: cardType ?? "default",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dismissibleBackground(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.sightCardDismissibleBackground,
+      child: Container(
+        margin: EdgeInsets.only(right: 16),
+        alignment: AlignmentDirectional.centerEnd,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              AppIcons.bucket,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              AppTextStrings.delete,
+              style: AppTextStyles.sightCardDismissibleText.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.sightCardDismissibleText),
             ),
           ],
         ),
@@ -239,6 +270,7 @@ class SightCardActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     /// Removes the list item from provider
     void onSightCardDelete() {
+      // TODO УДАЛИТЬ ДУБЛЬ ФУНКЦИИ DISMISSED
       context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
     }
 
