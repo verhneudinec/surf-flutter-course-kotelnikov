@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/res/card_types.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 
@@ -20,7 +21,7 @@ class EmptyList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset(
-            cardType == "toVisit"
+            cardType == CardTypes.unvisited
                 ? "assets/icons/Card.svg"
                 : "assets/icons/Go.svg",
             width: 64,
@@ -37,7 +38,7 @@ class EmptyList extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            cardType == "toVisit"
+            cardType == CardTypes.unvisited
                 ? AppTextStrings.emptyPageSubtitle
                 : AppTextStrings.emptyPageSubtitleVisited,
             textAlign: TextAlign.center,

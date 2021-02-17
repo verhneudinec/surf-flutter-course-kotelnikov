@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/res/card_types.dart';
 import 'package:places/ui/widgets/sight_card.dart';
 import 'package:places/ui/widgets/empty_list.dart';
 import 'package:places/domain/sight.dart';
@@ -8,7 +9,7 @@ import 'package:places/models/favorite_sights.dart';
 /// The [SightList] widget displays a list of places
 /// via [DisplaySights], if list length> 0
 /// or [EmptyList] -if the array is empty.
-/// [cardType] -card type ["default", "toVisit", "visited"]
+/// [cardType] - card type [CardTypes.general], [CardTypes.unvisited], [CardTypes.visited].
 class SightList extends StatelessWidget {
   final String cardType;
   final List sights;
@@ -76,12 +77,12 @@ class DisplaySights extends StatelessWidget {
     BuildContext context,
     Sight sight,
   ) {
-    return cardType == "default"
+    return cardType == CardTypes.general
         ? _sightCardBuilder(sight)
         : _favoriteSightCardBuilder(context, sight);
   }
 
-  /// Builder for a regular card with the "default" type
+  /// Builder for a regular card with the CardTypes.general type
   Widget _sightCardBuilder(Sight sight) {
     return Container(
       color: Colors.transparent,

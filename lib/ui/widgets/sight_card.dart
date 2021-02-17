@@ -6,6 +6,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 import 'package:places/ui/screen/sight_details.dart';
@@ -60,11 +61,11 @@ class SightCard extends StatelessWidget {
               children: [
                 SightCardHeader(
                   sight: sight,
-                  cardType: cardType ?? "default",
+                  cardType: cardType ?? CardTypes.general,
                 ),
                 SightCardBody(
                   sight: sight,
-                  cardType: cardType ?? "default",
+                  cardType: cardType ?? CardTypes.general,
                 ),
               ],
             ),
@@ -83,7 +84,7 @@ class SightCard extends StatelessWidget {
             /// Action buttons: delete sight, calendar, share
             SightCardActionButtons(
               sight: sight,
-              cardType: cardType ?? "default",
+              cardType: cardType ?? CardTypes.general,
             ),
           ],
         ),
@@ -193,7 +194,7 @@ class SightCardBody extends StatelessWidget {
           // Place name
           Container(
             constraints: BoxConstraints(
-              maxWidth: cardType == "default" ? 296 : double.infinity,
+              maxWidth: cardType == CardTypes.general ? 296 : double.infinity,
             ),
             child: Text(
               sight.name,
@@ -205,13 +206,13 @@ class SightCardBody extends StatelessWidget {
             ),
           ),
 
-          if (cardType != "default")
+          if (cardType != CardTypes.general)
             const SizedBox(
               height: 2,
             ),
 
           // Scheduled date
-          if (cardType == "toVisit")
+          if (cardType == CardTypes.unvisited)
             Container(
               height: 28,
               child: Text(
@@ -224,7 +225,7 @@ class SightCardBody extends StatelessWidget {
             ),
 
           // Goal achieved
-          if (cardType == "visited")
+          if (cardType == CardTypes.visited)
             Container(
               height: 28,
               child: Text(
@@ -289,7 +290,7 @@ class SightCardActionButtons extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          if (cardType == "default")
+          if (cardType == CardTypes.general)
             Positioned(
               top: 16,
               right: 16,
@@ -299,7 +300,7 @@ class SightCardActionButtons extends StatelessWidget {
             ),
 
           // "Remove from list" button
-          if (cardType != "default")
+          if (cardType != CardTypes.general)
             Positioned(
               top: 16,
               right: 16,
@@ -310,7 +311,7 @@ class SightCardActionButtons extends StatelessWidget {
             ),
 
           // Button "Change scheduled visit time"
-          if (cardType == "toVisit")
+          if (cardType == CardTypes.unvisited)
             Positioned(
               top: 16,
               right: 56,
@@ -320,7 +321,7 @@ class SightCardActionButtons extends StatelessWidget {
             ),
 
           // "Share" button
-          if (cardType == "visited")
+          if (cardType == CardTypes.visited)
             Positioned(
               top: 16,
               right: 56,
