@@ -3,7 +3,7 @@ import 'package:places/domain/geo_position.dart';
 
 final testGeoPosition = GeoPosition(52.500095, 106.999299);
 
-final List mocks = [
+final List<Sight> mocks = [
   Sight(
     "Воронежский областной краеведческий",
     GeoPosition(52.500683, 107.004542),

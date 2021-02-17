@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:places/domain/sight.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/ui/widgets/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/sight_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
-import 'package:places/mocks.dart';
 import 'package:places/models/favorite_sights.dart';
 import 'package:provider/provider.dart';
 
@@ -40,19 +40,14 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    List _visitedSights = context.watch<FavoriteSights>().visitedFavoriteSights;
-    List _unvisitedSights =
+    List<Sight> _visitedSights =
+        context.watch<FavoriteSights>().visitedFavoriteSights;
+    List<Sight> _unvisitedSights =
         context.watch<FavoriteSights>().unvisitedFavoriteSights;
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-        // appBar: AppBarMini(
-        //   title: AppTextStrings.visitingScreenTitle,
-        //   tabBarIndicator: TabIndicator(
-        //     tabController: tabController,
-        //   ),
-        // ),
         body: SingleChildScrollView(
           child: Column(
             children: [
