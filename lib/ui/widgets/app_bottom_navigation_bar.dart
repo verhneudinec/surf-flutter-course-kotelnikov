@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 
 class AppBottomNavigationBar extends StatelessWidget {
@@ -28,28 +29,28 @@ class AppBottomNavigationBar extends StatelessWidget {
               items: [
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/icons/List.svg",
+                    AppIcons.list,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   label: AppTextStrings.bottomNavigationBarLabelList,
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/icons/Map.svg",
+                    AppIcons.map,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   label: AppTextStrings.bottomNavigationBarLabelMap,
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/icons/Heart_full.svg",
+                    AppIcons.heartFull,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   label: AppTextStrings.bottomNavigationBarLabelFavorites,
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/icons/Settings.svg",
+                    AppIcons.settings,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   label: AppTextStrings.bottomNavigationBarLabelSettings,

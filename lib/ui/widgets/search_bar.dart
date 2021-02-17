@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
@@ -92,7 +93,7 @@ class SearchBar extends StatelessWidget {
                         horizontal: 8,
                       ),
                       child: SvgPicture.asset(
-                        "assets/icons/Search.svg",
+                        AppIcons.search,
                         color: Theme.of(context).disabledColor,
                       ),
                     ),
@@ -115,7 +116,7 @@ class SearchBar extends StatelessWidget {
                                     horizontal: 8,
                                   ),
                                   child: SvgPicture.asset(
-                                    "assets/icons/Subtract.svg",
+                                    AppIcons.subtract,
                                     color: Theme.of(context).iconTheme.color,
                                   ),
                                 ),
@@ -148,7 +149,7 @@ class SearchBar extends StatelessWidget {
                         horizontal: 8,
                       ),
                       child: SvgPicture.asset(
-                        "assets/icons/Filter.svg",
+                        AppIcons.filter,
                         color: Theme.of(context).accentColor,
                       ),
                     ),

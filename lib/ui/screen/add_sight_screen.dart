@@ -7,6 +7,7 @@ import 'package:places/res/decorations.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/ui/widgets/app_bar_custom.dart';
 import 'package:provider/provider.dart';
 
@@ -250,7 +251,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
               ? InkWell(
                   onTap: () => _clearTextValue(),
                   child: SvgPicture.asset(
-                    "assets/icons/Subtract.svg",
+                    AppIcons.subtract,
                     color: Theme.of(context).iconTheme.color,
                   ),
                 )
@@ -306,7 +307,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
               ),
               hintText: AppTextStrings.addSightScreenTextFormFieldNotSelected,
               suffixIcon: SvgPicture.asset(
-                "assets/icons/View.svg",
+                AppIcons.view,
                 color: Theme.of(context).iconTheme.color,
               ),
               suffixIconConstraints: BoxConstraints(
@@ -462,7 +463,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
               child: GestureDetector(
                 onTap: () => _addSightPhoto(),
                 child: SvgPicture.asset(
-                  "assets/icons/Union.svg",
+                  AppIcons.union,
                   color: Theme.of(context).accentColor,
                   fit: BoxFit.scaleDown,
                 ),
@@ -482,7 +483,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: SvgPicture.asset(
-                        "assets/icons/View.svg",
+                        AppIcons.view,
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -505,7 +506,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                             child: InkWell(
                               onTap: () => _deleteSightPhoto(i),
                               child: SvgPicture.asset(
-                                "assets/icons/Subtract.svg",
+                                AppIcons.subtract,
                                 color: Theme.of(context)
                                     .colorScheme
                                     .addSightScreenPhotoDeleteButton,

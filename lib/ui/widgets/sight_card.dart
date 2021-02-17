@@ -295,7 +295,7 @@ class SightCardActionButtons extends StatelessWidget {
               top: 16,
               right: 16,
               child: _iconButton(
-                iconPath: "assets/icons/Heart.svg",
+                iconPath: AppIcons.heart,
               ),
             ),
 
@@ -305,7 +305,7 @@ class SightCardActionButtons extends StatelessWidget {
               top: 16,
               right: 16,
               child: _iconButton(
-                iconPath: "assets/icons/Delete.svg",
+                iconPath: AppIcons.delete,
                 onPressed: onSightCardDelete,
               ),
             ),
@@ -316,7 +316,7 @@ class SightCardActionButtons extends StatelessWidget {
               top: 16,
               right: 56,
               child: _iconButton(
-                iconPath: "assets/icons/Calendar.svg",
+                iconPath: AppIcons.calendar,
               ),
             ),
 
@@ -326,7 +326,7 @@ class SightCardActionButtons extends StatelessWidget {
               top: 16,
               right: 56,
               child: _iconButton(
-                iconPath: "assets/icons/Share.svg",
+                iconPath: AppIcons.share,
               ),
             ),
         ],

@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
@@ -161,7 +162,7 @@ class SightDetailsBody extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () => print("plote route button"),
               icon: SvgPicture.asset(
-                "assets/icons/Go.svg",
+                AppIcons.go,
                 width: 24,
                 height: 24,
               ),
@@ -194,7 +195,7 @@ class SightDetailsBody extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        "assets/icons/Calendar.svg",
+                        AppIcons.calendar,
                         width: 24,
                         height: 24,
                         color: Theme.of(context).iconTheme.color,
@@ -217,7 +218,7 @@ class SightDetailsBody extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: () => print("to favorites button"),
                   icon: SvgPicture.asset(
-                    "assets/icons/Heart.svg",
+                    AppIcons.heart,
                     width: 24,
                     height: 24,
                     color: Theme.of(context).iconTheme.color,
