@@ -49,7 +49,7 @@ class SightCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: Dismissible(
-        key: UniqueKey(),
+        key: ValueKey(sight.name.toString()),
         direction: DismissDirection.endToStart,
         onDismissed: (direction) => onSightCardDismissed(),
         background: _dismissibleBackground(context),
