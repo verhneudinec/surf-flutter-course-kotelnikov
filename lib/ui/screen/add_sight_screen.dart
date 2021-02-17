@@ -475,9 +475,10 @@ class _AddSightScreenState extends State<AddSightScreen> {
               children: [
                 const SizedBox(width: 16),
                 Dismissible(
+                  key:
+                      UniqueKey(), // Проблема здесь и я понял, почему нужен уникальный ключ
                   direction: DismissDirection.vertical,
                   onDismissed: (direction) => _deleteSightPhoto(i),
-                  key: UniqueKey(),
                   background: Align(
                     alignment: Alignment.bottomCenter,
                     child: RotatedBox(

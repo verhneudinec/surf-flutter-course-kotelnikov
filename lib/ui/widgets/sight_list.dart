@@ -111,7 +111,7 @@ class DisplaySights extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: Draggable<String>(
-        key: ValueKey(_sightId.toString()),
+        key: ValueKey(sight.name),
         data: _sightId.toString(), // TODO Sight.id
         axis: Axis.vertical,
         feedback: _draggableSightFeedback(context, sight),
