@@ -9,6 +9,7 @@ import 'package:places/models/sights_search.dart';
 import 'package:places/models/sight_types.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
+import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:places/utils/filter.dart';
 import 'package:places/res/icons.dart';
 import 'package:provider/provider.dart';
@@ -78,24 +79,20 @@ class _FilterScreenState extends State<FilterScreen> {
     }
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              _filterScreenHeader(_onCleanAllSearchParameters),
-              _filterScreenBody(
-                _searchRangeStart,
-                _searchRangeEnd,
-                _searchResults,
-                _sightTypes,
-                _searchButtonHandler,
-                _onTypeClickHandler,
-                _onMinSliderChangeHandler,
-                _onMaxSliderChangeHandler,
-              ),
-            ],
+      body: Column(
+        children: [
+          _filterScreenHeader(_onCleanAllSearchParameters),
+          _filterScreenBody(
+            _searchRangeStart,
+            _searchRangeEnd,
+            _searchResults,
+            _sightTypes,
+            _searchButtonHandler,
+            _onTypeClickHandler,
+            _onMinSliderChangeHandler,
+            _onMaxSliderChangeHandler,
           ),
-        ),
+        ],
       ),
     );
   }
@@ -162,8 +159,7 @@ class _FilterScreenState extends State<FilterScreen> {
       ),
       child: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          CustomListViewBuilder(
             children: [
               Text(
                 AppTextStrings.fiterScreenTitleText.toUpperCase(),
