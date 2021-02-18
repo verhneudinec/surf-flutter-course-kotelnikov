@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+/// Custom [ListView.builder] with predefined settings.
+/// The builder returns the widgets that were passed to [children].
 class CustomListViewBuilder extends StatelessWidget {
   final List<Widget> children;
   const CustomListViewBuilder({Key key, @required this.children})
@@ -9,6 +11,7 @@ class CustomListViewBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LimitedBox(
+      // TODO Переделать в Flexible
       maxWidth: MediaQuery.of(context).size.width,
       maxHeight: MediaQuery.of(context).size.height - 250,
       child: ListView.builder(
