@@ -2,9 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
+import 'package:places/res/navigator_pages.dart';
 
+/// Bottom navigation for the app
 class AppBottomNavigationBar extends StatelessWidget {
   const AppBottomNavigationBar({Key key}) : super(key: key);
+
+  /// Navigator for BottomNavigationBar
+  void _onClickBottomNavigationBarItem(BuildContext context, int index) {
+    // Примитивно, но работает. Пока не изучили тему - сойдет
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          switch (index) {
+            case 0:
+              return NavigatorPages.homePage;
+              break;
+            case 1:
+              // Еще нет экрана MapScreen
+              break;
+            case 2:
+              return NavigatorPages.favorites;
+              break;
+            case 3:
+              return NavigatorPages.settings;
+              break;
+          }
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +52,8 @@ class AppBottomNavigationBar extends StatelessWidget {
               showSelectedLabels: false,
               showUnselectedLabels: false,
               iconSize: 24,
-              onTap:
-                  null, // TODO Сделать навигацию в приложении после изучения темы
+              onTap: (int index) =>
+                  _onClickBottomNavigationBarItem(context, index),
               items: [
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(

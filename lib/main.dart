@@ -43,14 +43,14 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      home: AddSightScreen(),
+      // home: AddSightScreen(),
       // home: SelectingSightTypeScreen(),
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      // home: SightListScreen(
-      //   sightsData: mocks,
-      // ),
+      home: SightListScreen(
+        sightsData: mocks,
+      ),
       // home: SightSearchScreen(),
       // home: SightDetails(sight: mocks[0]),
     );
