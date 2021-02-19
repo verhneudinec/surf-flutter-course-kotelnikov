@@ -61,7 +61,6 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Photo of the sight
         _photogallery(),
 
         // Container for creating the gradient effect
@@ -84,12 +83,13 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
           ),
         ),
 
-        // Gallery indicator
         _photogalleryIndicator(),
       ],
     );
   }
 
+  /// Photogallery of the sight.
+  /// Displays photos from [widget.sight.urls].
   Widget _photogallery() {
     return LimitedBox(
       maxWidth: MediaQuery.of(context).size.width,
@@ -118,6 +118,9 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
     );
   }
 
+  /// Gallery indicator.
+  /// Displays the indicator if the indicator index matches [_currentPhotogalleryIndex].
+  /// Otherwise outputs an empty block.
   Widget _photogalleryIndicator() {
     return Positioned(
       left: 0,
