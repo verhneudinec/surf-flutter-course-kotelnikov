@@ -1,5 +1,4 @@
-import 'package:places/ui/screen/settings_screen.dart';
-
+/// Constant application text strings
 class AppTextStrings {
   static String appBarTitle = "Список\nинтересных мест",
       ploteRouteButton = "построить маршрут",
@@ -33,5 +32,21 @@ class AppTextStrings {
       cafe = "Кафе",
       settingsScreenTitle = "Настройки",
       settingsScreenEnableDarkTheme = "Тёмная тема",
-      settingsScreenWatchTutorial = "Смотреть туториал";
+      settingsScreenWatchTutorial = "Смотреть туториал",
+      addSightScreenTitle = "Новое место",
+      addSightScreenCategoryLabel = "Категория",
+      addSightScreenCancelButton = "Отмена",
+      addSightScreenTextFormFieldNotSelected = "Не выбрано",
+      addSightScreenTextFormFieldNotSpecified = "Не указано",
+      addSightScreenTextFormFieldEmpty = "Введите текст",
+      addSightScreenSightNameLabel = "Название",
+      addSightScreenSightLatitudeLabel = "Широта",
+      addSightScreenSightLongitudeLabel = "Долгота",
+      addSightScreenSightSpecifyCoordinates = "Указать на карте",
+      addSightScreenSightDescriptionLabel = "Описание",
+      addSightScreenSightCreateButton = "Создать",
+      appBarCustomCancelButton = "Отмена",
+      selectingSightTypeScreenTitle = "Категория",
+      selectingSightTypeScreenSaveButton = "Сохранить",
+      createSightButton = "Новое место";
 }

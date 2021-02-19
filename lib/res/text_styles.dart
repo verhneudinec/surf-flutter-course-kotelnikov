@@ -4,7 +4,7 @@ class AppTextStyles {
   AppTextStyles({Key key, BuildContext context});
 
   ///
-  /// Основные стили
+  /// Basic styles
   ///
 
   /// [_largeTitle] - fontSize: 32
@@ -110,4 +110,27 @@ class AppTextStyles {
       settingsScreenWatchTutorial = _text.copyWith(
         fontWeight: FontWeight.w400,
       );
+
+  static final addSightScreenLabel = _superSmall.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      addSightScreenHint = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      addSightScreenSightFieldText = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      addSightScreenSightSpecifyCoordinatesButton = _text.copyWith(
+        fontWeight: FontWeight.w500,
+      ),
+      addSightScreenSightCreateButton = _button;
+
+  static final appBarCustomCancelButton = _text;
+
+  static final selectingSightTypeScreenElement = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      selectingSightTypeScreenSaveButton = _button;
+
+  static final createSightButton = _button;
 }
