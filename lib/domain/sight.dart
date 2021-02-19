@@ -14,6 +14,7 @@ class Sight {
   final String details;
   final String type;
   final String workingTime;
+  final bool isVisited;
 
   Sight(
     this.name,
@@ -22,5 +23,6 @@ class Sight {
     this.details,
     this.type,
     this.workingTime,
+    this.isVisited,
   );
 }
