@@ -12,12 +12,16 @@ import 'package:places/ui/widgets/empty_list.dart';
 
 class SightList extends StatelessWidget {
   final String cardType;
-  static List sights = mocks;
-  const SightList({Key key, this.cardType}) : super(key: key);
+  final List sights;
+  const SightList({
+    Key key,
+    this.cardType,
+    this.sights,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return sights.length != 0
+    return sights.isNotEmpty == true
         ? DisplaySights(sights: sights, cardType: cardType)
         : EmptyList(cardType: cardType);
   }
@@ -26,7 +30,11 @@ class SightList extends StatelessWidget {
 class DisplaySights extends StatelessWidget {
   final List sights;
   final String cardType;
-  const DisplaySights({Key key, this.sights, this.cardType}) : super(key: key);
+  const DisplaySights({
+    Key key,
+    this.sights,
+    this.cardType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,7 @@ class DisplaySights extends StatelessWidget {
             height: 32,
           ),
           Column(
-            children: mocks
+            children: sights
                 .map((item) => SightCard(sight: item, cardType: cardType))
                 .toList(),
           ),

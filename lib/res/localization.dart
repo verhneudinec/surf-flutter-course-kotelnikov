@@ -1,6 +1,7 @@
 /// Constant application text strings
 class AppTextStrings {
   static String appBarTitle = "Список\nинтересных мест",
+      appBarMiniTitle = "Список интересных мест",
       ploteRouteButton = "построить маршрут",
       planningButton = "Запланировать",
       favoritesButton = "В избранное",
@@ -48,5 +49,10 @@ class AppTextStrings {
       appBarCustomCancelButton = "Отмена",
       selectingSightTypeScreenTitle = "Категория",
       selectingSightTypeScreenSaveButton = "Сохранить",
-      createSightButton = "Новое место";
+      createSightButton = "Новое место",
+      searchBarHintText = "Поиск",
+      sightSearchScreenSearchHistory = "Вы искали",
+      sightSearchScreenCleanHistory = "Очистить историю",
+      sightsNotFoundTitle = "Ничего не найдено",
+      sightsNotFoundSubtitle = "Попробуйте изменить параметры поиска";
 }

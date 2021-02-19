@@ -17,3 +17,19 @@ bool isPointInsideRange({
   final double distance = sqrt(dx * dx + dy * dy);
   return distance >= minDistance && distance <= maxDistance;
 }
+
+class IsSightInsideSearchRange {
+  bool check({
+    GeoPosition checkPoint,
+    GeoPosition imHere,
+    double minDistance,
+    double maxDistance,
+  }) {
+    const double ky = 40000000 / 360;
+    final double kx = cos(pi * checkPoint.lat / 180.0) * ky;
+    final double dx = (checkPoint.lon - imHere.lon).abs() * kx;
+    final double dy = (checkPoint.lat - imHere.lat).abs() * ky;
+    final double distance = sqrt(dx * dx + dy * dy);
+    return distance >= minDistance && distance <= maxDistance;
+  }
+}

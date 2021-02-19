@@ -44,6 +44,7 @@ final lightTheme = ThemeData(
     headline5: TextStyle(
       // SettingsScreen element
       // SelectingTypeScreen element
+      // ListTile in SearchScreen
       color: lmMainColor,
     ),
     headline6: TextStyle(
@@ -68,6 +69,7 @@ final lightTheme = ThemeData(
     ),
     caption: TextStyle(
       // время работы
+      // элемент истории поиска
       color: lmSecondary2Color,
     ),
   ),
