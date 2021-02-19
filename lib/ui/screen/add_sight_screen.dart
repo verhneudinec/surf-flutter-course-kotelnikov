@@ -447,6 +447,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
 
     return CustomListViewBuilder(
       scrollDirection: Axis.horizontal,
+      additionalPadding: false,
       children: [
         Container(
           width: 72,
