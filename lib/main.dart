@@ -48,11 +48,11 @@ class App extends StatelessWidget {
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      home: SightListScreen(
-        sightsData: mocks,
-      ),
+      // home: SightListScreen(
+      //   sightsData: mocks,
+      // ),
       // home: SightSearchScreen(),
-      // home: SightDetails(sight: mocks[0]),
+      home: SightDetails(sight: mocks[2]),
     );
   }
 }

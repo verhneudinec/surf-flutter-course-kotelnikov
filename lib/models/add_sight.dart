@@ -83,7 +83,9 @@ class AddSight with ChangeNotifier {
         double.tryParse(_sightLatitudeController.text),
         double.tryParse(_sightLongitudeController.text),
       ),
-      "https://melbourneartcritic.files.wordpress.com/2018/06/fullsizeoutput_62.jpeg",
+      [
+        "https://melbourneartcritic.files.wordpress.com/2018/06/fullsizeoutput_62.jpeg"
+      ],
       _sightDescriptionController.text,
       _sightTypeController.text,
       "открыто до 20:00",

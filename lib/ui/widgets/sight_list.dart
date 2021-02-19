@@ -55,20 +55,22 @@ class DisplaySights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 32,
-          ),
-          CustomListViewBuilder(
-            children: sights
-                .map((sight) => _sightListItem(
-                      context,
-                      sight,
-                    ))
-                .toList(),
-          ),
-        ],
+      child: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 32,
+            ),
+            CustomListViewBuilder(
+              children: sights
+                  .map((sight) => _sightListItem(
+                        context,
+                        sight,
+                      ))
+                  .toList(),
+            ),
+          ],
+        ),
       ),
     );
   }

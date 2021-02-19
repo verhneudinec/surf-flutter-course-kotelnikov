@@ -144,7 +144,7 @@ class SightCardHeader extends StatelessWidget {
           width: double.infinity,
           height: 96,
           child: Image.network(
-            sight.url,
+            sight.urls.elementAt(0),
             fit: BoxFit.cover,
             loadingBuilder: imageLoaderBuilder,
             errorBuilder: imageErrorBuilder,
