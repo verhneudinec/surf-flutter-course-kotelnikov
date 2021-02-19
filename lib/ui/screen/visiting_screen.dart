@@ -1,16 +1,17 @@
-///
-/// Экран [VisitingScreen] отображает раздел "Избранное".
-/// Выводит список "Посетил" или "Хочу посетить" через DefaultTabController.
-/// Для индикации текущего таба используется [TabIndicator].
-///
-
 import 'package:flutter/material.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/ui/widgets/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/sight_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
+import 'package:places/mocks.dart';
+import 'package:places/models/favorite_sights.dart';
+import 'package:provider/provider.dart';
 
+///The [VisitingScreen] displays the Favorites section.
+///Lists "Visited" or "Want to visit" via DefaultTabController.
+///[TabIndicator] is used to indicate the current tab.
+///The state is controlled by the [FavoriteSights] provider
 class VisitingScreen extends StatefulWidget {
   const VisitingScreen({Key key}) : super(key: key);
 
@@ -39,6 +40,9 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
+    List _visitedSights = context.watch<FavoriteSights>().visitedFavoriteSights;
+    List _unvisitedSights =
+        context.watch<FavoriteSights>().unvisitedFavoriteSights;
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
@@ -64,8 +68,14 @@ class _VisitingScreenState extends State<VisitingScreen>
                   key: ValueKey(tabController.index),
                   index: tabController.index,
                   children: [
-                    SightList(cardType: "toVisit"),
-                    SightList(cardType: "visited"),
+                    SightList(
+                      sights: _unvisitedSights,
+                      cardType: "toVisit",
+                    ),
+                    SightList(
+                      sights: _visitedSights,
+                      cardType: "visited",
+                    ),
                   ],
                 ),
               ),

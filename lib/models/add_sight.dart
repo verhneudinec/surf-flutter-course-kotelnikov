@@ -69,6 +69,7 @@ class AddSight with ChangeNotifier {
       _sightDescriptionController.text,
       _sightTypeController.text,
       "открыто до 20:00",
+      false,
     );
     return _newSight;
   }

@@ -1,39 +1,50 @@
-///
-/// Виджет [SightList] выводит список мест
-/// через [DisplaySights], если длина списка > 0
-/// или [EmptyList] - если массив пуст.
-/// [cardType] - тип карточки ["default", "toVisit", "visited"]
-///
-
 import 'package:flutter/material.dart';
 import 'package:places/ui/widgets/sight_card.dart';
-import 'package:places/mocks.dart';
 import 'package:places/ui/widgets/empty_list.dart';
 
+/// The [SightList] widget displays a list of places
+/// via [DisplaySights], if list length> 0
+/// or [EmptyList] -if the array is empty.
+/// [cardType] -card type ["default", "toVisit", "visited"]
 class SightList extends StatelessWidget {
   final String cardType;
   final List sights;
+  final onDeleteSight;
   const SightList({
     Key key,
     this.cardType,
     this.sights,
+    this.onDeleteSight,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return sights.isNotEmpty == true
-        ? DisplaySights(sights: sights, cardType: cardType)
-        : EmptyList(cardType: cardType);
+        ? DisplaySights(
+            sights: sights,
+            cardType: cardType,
+            onDeleteSight: onDeleteSight,
+          )
+        : Center(
+            child: SizedBox(
+              width: 255,
+              height: MediaQuery.of(context).size.height -
+                  250, // TODO исправить размеры, Expanded
+              child: EmptyList(cardType: cardType),
+            ),
+          );
   }
 }
 
 class DisplaySights extends StatelessWidget {
   final List sights;
   final String cardType;
+  final onDeleteSight;
   const DisplaySights({
     Key key,
     this.sights,
     this.cardType,
+    this.onDeleteSight,
   }) : super(key: key);
 
   @override
@@ -46,7 +57,11 @@ class DisplaySights extends StatelessWidget {
           ),
           Column(
             children: sights
-                .map((item) => SightCard(sight: item, cardType: cardType))
+                .map((sight) => SightCard(
+                      key: ValueKey(sight.name),
+                      sight: sight,
+                      cardType: cardType,
+                    ))
                 .toList(),
           ),
         ],
