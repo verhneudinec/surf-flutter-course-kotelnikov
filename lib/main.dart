@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/models/add_sight.dart';
 import 'package:places/models/favorite_sights.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/ui/screen/onboarding_screen.dart';
 // и все-таки не вижу смысла пока чистить main,
 // пока не прошли навигацию. пока пусть вызовы
 // останутся, я их постоянно использую.
@@ -43,6 +44,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
+      home: OnboardingScreen(),
+      // home: SightDetails(sight: mocks[2]),
       // home: AddSightScreen(),
       // home: SelectingSightTypeScreen(),
       // home: SettingsScreen(),
@@ -52,7 +55,6 @@ class App extends StatelessWidget {
       //   sightsData: mocks,
       // ),
       // home: SightSearchScreen(),
-      home: SightDetails(sight: mocks[2]),
     );
   }
 }

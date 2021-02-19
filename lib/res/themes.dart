@@ -31,6 +31,7 @@ final lightTheme = ThemeData(
     ),
     headline2: TextStyle(
       // sightDetails
+      // заголовок OnboardingScreen
       color: lmSecondaryColor,
     ),
     headline3: TextStyle(
@@ -62,6 +63,7 @@ final lightTheme = ThemeData(
     subtitle1: TextStyle(
       color: lmSecondary2Color,
       // подзаголовок в карточке места; подсказка в слайдере категорий
+      // подзаголовок OnboardingScreen
     ),
     subtitle2: TextStyle(
       color: lmGreenColor,
@@ -185,6 +187,7 @@ final darkTheme = ThemeData(
     subtitle1: TextStyle(
       color: dmSecondary2Color,
       // подзаголовок в карточке места
+      // подзаголовок в OnboardingScreen
     ),
     subtitle2: TextStyle(
       color: dmGreenColor,

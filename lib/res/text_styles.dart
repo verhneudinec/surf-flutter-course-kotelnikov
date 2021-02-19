@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/ui/screen/onboarding_screen.dart';
 
 class AppTextStyles {
   AppTextStyles({Key key, BuildContext context});
@@ -150,4 +151,11 @@ class AppTextStyles {
         fontWeight: FontWeight.w400,
       ),
       sightSearchScreenSearchListTileSubtitle = _small;
+
+  static final onboardingSkipButton = _text,
+      onboardingScreenTitle = _title,
+      onboardingScreenSubtitle = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      onBoardingStartButton = _button;
 }

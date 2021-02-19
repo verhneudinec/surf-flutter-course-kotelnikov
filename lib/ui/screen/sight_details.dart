@@ -89,7 +89,7 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
   }
 
   /// Photogallery of the sight.
-  /// Displays photos from [widget.sight.urls].
+  /// Displays photos from [widget.sight.urls]
   Widget _photogallery() {
     return LimitedBox(
       maxWidth: MediaQuery.of(context).size.width,

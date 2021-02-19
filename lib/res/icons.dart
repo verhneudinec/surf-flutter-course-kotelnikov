@@ -25,5 +25,8 @@ class AppIcons {
       particularPlace = "assets/icons/categories/Particular_place.svg",
       park = "assets/icons/categories/Park.svg",
       museum = "assets/icons/categories/Museum.svg",
-      cafe = "assets/icons/categories/Cafe.svg";
+      cafe = "assets/icons/categories/Cafe.svg",
+      pointer = "assets/icons/tutorial/Pointer.svg",
+      backpack = "assets/icons/tutorial/Backpack.svg",
+      clickerFinger = "assets/icons/tutorial/ClickerFinger.svg";
 }
