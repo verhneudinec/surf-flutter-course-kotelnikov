@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
 import 'package:places/domain/sight.dart';
 
-/// Провайдер для массива мест приложений.
-/// Инициализируется данными из [mocks].
+/// Provider for an array of application locations.
+/// Initialized with data from [mocks].
 class Sights with ChangeNotifier {
   final List _sights = mocks;
 

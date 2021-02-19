@@ -64,4 +64,15 @@ class AppDecorations {
   static final createPlaceButton = BoxDecoration(
     borderRadius: BorderRadius.circular(24),
   );
+
+  static final searchBar = BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      searchBarSuffix = BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+      );
+
+  static final sightSearchScreenSearchListTileImage = BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+  );
 }

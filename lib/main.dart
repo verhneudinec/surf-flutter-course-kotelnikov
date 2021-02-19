@@ -11,11 +11,13 @@ import 'package:places/ui/screen/filter_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
 import 'package:places/ui/screen/add_sight_screen.dart';
 import 'package:places/ui/screen/selecting_sight_type.dart';
+import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/mocks.dart';
 import 'package:provider/provider.dart';
 import 'package:places/models/app_settings.dart';
 import 'package:places/models/sight_types.dart';
 import 'package:places/models/sights.dart';
+import 'package:places/models/sights_search.dart';
 
 void main() {
   runApp(
@@ -25,6 +27,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AddSight()),
         ChangeNotifierProvider(create: (_) => SightTypes()),
         ChangeNotifierProvider(create: (_) => Sights()),
+        ChangeNotifierProvider(create: (_) => SightsSearch()),
       ],
       child: App(),
     ),
@@ -43,7 +46,10 @@ class App extends StatelessWidget {
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      home: SightListScreen(),
+      home: SightListScreen(
+        sightsData: mocks,
+      ),
+      // home: SightSearchScreen(),
       // home: SightDetails(sight: mocks[0]),
     );
   }
