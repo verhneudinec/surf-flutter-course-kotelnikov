@@ -56,18 +56,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ],
         ),
         body: Center(
-          child: PageView(
-            controller: _onboardingPageController,
-            physics: Platform.isAndroid
-                ? ClampingScrollPhysics()
-                : BouncingScrollPhysics(),
+          child: Stack(
             children: [
-              _firstPage(),
-              _secondPage(),
-              _thirdPage(),
+              PageView(
+                controller: _onboardingPageController,
+                physics: Platform.isAndroid
+                    ? ClampingScrollPhysics()
+                    : BouncingScrollPhysics(),
+                children: [
+                  _firstPage(),
+                  _secondPage(),
+                  _thirdPage(),
+                ],
+                onPageChanged: (int page) =>
+                    _updateCurrentOnboardingPageIndex(page),
+              ),
+
+              /// Display  [_pageIndicator].
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 88),
+                  child: _pageIndicator(),
+                ),
+              ),
             ],
-            onPageChanged: (int page) =>
-                _updateCurrentOnboardingPageIndex(page),
           ),
         ),
       ),
@@ -151,14 +164,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
 
-        /// Display  [_pageIndicator] and [_startButton].
+        /// Display  [_startButton].
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _pageIndicator(),
-            const SizedBox(
-              height: 32,
-            ),
             _currentOnboardingPageIndex == 2
                 ? _startButton()
                 : const SizedBox(
