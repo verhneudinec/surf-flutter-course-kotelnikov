@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/models/app_settings.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/app_bar_mini.dart';
@@ -69,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
                       trailing: Padding(
                         padding: EdgeInsets.only(right: 8),
                         child: SvgPicture.asset(
-                          "assets/icons/Info.svg",
+                          AppIcons.info,
                           color: Theme.of(context).accentColor,
                         ),
                       ),

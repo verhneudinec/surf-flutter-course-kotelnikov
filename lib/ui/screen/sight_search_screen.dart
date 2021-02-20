@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/models/add_sight.dart';
 import 'package:places/models/sights.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
@@ -225,7 +226,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                 height: MediaQuery.of(context).size.height -
                     300, // TODO исправить размеры, Expanded
                 child: ErrorStub(
-                  icon: "assets/icons/Search.svg",
+                  icon: AppIcons.search,
                   title: AppTextStrings.sightsNotFoundTitle,
                   subtitle: AppTextStrings.sightsNotFoundSubtitle,
                 ),
@@ -271,7 +272,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                 width: 24,
                 height: 24,
                 child: SvgPicture.asset(
-                  "assets/icons/Delete.svg",
+                  AppIcons.delete,
                   color: Theme.of(context).disabledColor,
                 ),
               ),

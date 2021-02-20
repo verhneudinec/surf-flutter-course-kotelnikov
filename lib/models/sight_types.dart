@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 
 /// Provider for place types.
@@ -7,37 +8,37 @@ class SightTypes with ChangeNotifier {
     {
       "name": "hotel",
       "text": AppTextStrings.hotel,
-      "icon": "assets/icons/categories/Hotel.svg",
+      "icon": AppIcons.hotel,
       "selected": true,
     },
     {
       "name": "restourant",
       "text": AppTextStrings.restourant,
-      "icon": "assets/icons/categories/Restourant.svg",
+      "icon": AppIcons.restourant,
       "selected": true,
     },
     {
       "name": "particular_place",
       "text": AppTextStrings.particularPlace,
-      "icon": "assets/icons/categories/Particular_place.svg",
+      "icon": AppIcons.particularPlace,
       "selected": true,
     },
     {
       "name": "park",
       "text": AppTextStrings.park,
-      "icon": "assets/icons/categories/Park.svg",
+      "icon": AppIcons.park,
       "selected": true,
     },
     {
       "name": "museum",
       "text": AppTextStrings.museum,
-      "icon": "assets/icons/categories/Museum.svg",
+      "icon": AppIcons.museum,
       "selected": true,
     },
     {
       "name": "cafe",
       "text": AppTextStrings.cafe,
-      "icon": "assets/icons/categories/Cafe.svg",
+      "icon": AppIcons.cafe,
       "selected": true,
     },
   ];
