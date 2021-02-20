@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/res/card_types.dart';
+import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:places/ui/widgets/sight_card.dart';
 import 'package:places/ui/widgets/empty_list.dart';
 import 'package:places/domain/sight.dart';
@@ -59,7 +60,7 @@ class DisplaySights extends StatelessWidget {
           const SizedBox(
             height: 32,
           ),
-          Column(
+          CustomListViewBuilder(
             children: sights
                 .map((sight) => _sightListItem(
                       context,
@@ -110,7 +111,7 @@ class DisplaySights extends StatelessWidget {
 
     return Material(
       type: MaterialType.transparency,
-      child: Draggable<String>(
+      child: LongPressDraggable<String>(
         key: ValueKey(sight.name),
         data: _sightId.toString(), // TODO Sight.id
         axis: Axis.vertical,
