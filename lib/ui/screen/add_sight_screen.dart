@@ -3,8 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/models/add_sight.dart';
 import 'package:places/models/sights.dart';
+import 'package:places/res/decorations.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/res/themes.dart';
 import 'package:places/ui/widgets/app_bar_custom.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   Widget build(BuildContext context) {
     /// [_isFieldsFilled] check for filling in all fields.
     /// The "Save" button becomes active when this field is true.
-    bool _isFieldsFilled = context.read<AddSight>().isFieldsFilled;
+    bool _isFieldsFilled = context.watch<AddSight>().isFieldsFilled;
 
     /// [_onSightCreate] takes the prepared data of the new
     /// sight from [AddSight] and writes them to
@@ -41,33 +43,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.symmetric(
-          vertical: 8.0,
-          horizontal: 16.0,
-        ),
-        child: TextButton(
-          onPressed: () {
-            if (_isFieldsFilled == true)
-              _onSightCreate();
-            else
-              print("Не все поля заполнены"); // TODO Shake bar
-          },
-          child: Text(
-            AppTextStrings.addSightScreenSightCreateButton.toUpperCase(),
-            style: AppTextStyles.addSightScreenSightCreateButton,
-          ),
-          style: _isFieldsFilled == true
-              ? Theme.of(context).elevatedButtonTheme.style
-              : Theme.of(context).elevatedButtonTheme.style.copyWith(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Theme.of(context).backgroundColor,
-                    ),
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                      Theme.of(context).disabledColor,
-                    ),
-                  ),
-        ),
+      bottomNavigationBar: _createSightButton(
+        _isFieldsFilled,
+        _onSightCreate,
       ),
     );
   }
@@ -81,7 +59,8 @@ class _AddSightScreenState extends State<AddSightScreen> {
 
   Widget _body() {
     /// Controllers for text fields
-    final _sightTypeController = context.watch<AddSight>().sightTypeController,
+    final TextEditingController _sightTypeController =
+            context.watch<AddSight>().sightTypeController,
         _sightNameController = context.watch<AddSight>().sightNameController,
         _sightLatitudeController =
             context.watch<AddSight>().sightLatitudeController,
@@ -90,228 +69,144 @@ class _AddSightScreenState extends State<AddSightScreen> {
         _sightDescriptionController =
             context.watch<AddSight>().sightDescriptionController;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 24,
+    /// Photogallery of the place
+    List _sightPhotogallery = context.watch<AddSight>().sightPhotogallery;
+
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 24,
+          ),
+          _photogallery(_sightPhotogallery),
+          const SizedBox(
+            height: 24,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 24,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _sightType(_sightTypeController),
+
+                const SizedBox(
+                  height: 24,
+                ),
+
+                /// Sight name
+                Text(
+                  AppTextStrings.addSightScreenSightNameLabel.toUpperCase(),
+                  style: AppTextStyles.addSightScreenLabel.copyWith(
+                    color: Theme.of(context).disabledColor,
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 12,
+                ),
+
+                _outlinedTextField(
+                  hintText: AppTextStrings.addSightScreenTextFormFieldEmpty,
+                  controller: _sightNameController,
+                  focusNode: context.watch<AddSight>().nameFieldFocusNode,
+                  nextFocusNode:
+                      context.watch<AddSight>().latitudeFieldFocusNode,
+                ),
+
+                const SizedBox(
+                  height: 24,
+                ),
+
+                _sightGeolocation(
+                  _sightLatitudeController,
+                  _sightLongitudeController,
+                ),
+
+                const SizedBox(
+                  height: 12,
+                ),
+
+                _specifyCoordinatesOnMap(),
+
+                const SizedBox(
+                  height: 35,
+                ),
+
+                Text(
+                  AppTextStrings.addSightScreenSightDescriptionLabel
+                      .toUpperCase(),
+                  style: AppTextStyles.addSightScreenLabel.copyWith(
+                    color: Theme.of(context).disabledColor,
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 12,
+                ),
+
+                _outlinedTextField(
+                  hintText: AppTextStrings.addSightScreenTextFormFieldEmpty,
+                  maxLines: 4,
+                  focusNode: context.watch<AddSight>().detailsFieldFocusNode,
+                  controller: _sightDescriptionController,
+                  nextFocusNode:
+                      context.watch<AddSight>().detailsFieldFocusNode,
+                  isLastField: true,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 24,
-            ),
+    );
+  }
 
-            /// Sight type
-            Text(
-              AppTextStrings.addSightScreenCategoryLabel.toUpperCase(),
-              style: AppTextStyles.addSightScreenLabel.copyWith(
-                color: Theme.of(context).disabledColor,
-              ),
-            ),
-
-            InkWell(
-              onTap: () => {},
-              child: TextFormField(
-                controller: _sightTypeController,
-                readOnly: true,
-                onTap: () => print("Выбор категории"),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 14,
-                    horizontal: 0,
-                  ),
-                  hintStyle: AppTextStyles.addSightScreenHint.copyWith(
-                    color: Theme.of(context).textTheme.caption.color,
-                  ),
-                  hintText:
-                      AppTextStrings.addSightScreenTextFormFieldNotSelected,
-                  suffixIcon: SvgPicture.asset(
-                    "assets/icons/View.svg",
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  suffixIconConstraints: BoxConstraints(
-                    maxHeight: 24,
-                    maxWidth: 24,
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).disabledColor.withOpacity(0.3),
-                      width: 0.8,
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).disabledColor.withOpacity(0.3),
-                      width: 0.8,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 24,
-            ),
-
-            /// Sight name
-            Text(
-              AppTextStrings.addSightScreenSightNameLabel.toUpperCase(),
-              style: AppTextStyles.addSightScreenLabel.copyWith(
-                color: Theme.of(context).disabledColor,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            _outlinedTextField(
-              hintText: AppTextStrings.addSightScreenTextFormFieldEmpty,
-              controller: _sightNameController,
-              focusNode: context.watch<AddSight>().nameFieldFocusNode,
-              nextFocusNode: context.watch<AddSight>().latitudeFieldFocusNode,
-            ),
-
-            const SizedBox(
-              height: 24,
-            ),
-
-            Container(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                textDirection: TextDirection.ltr,
-                children: [
-                  /// Latitude
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            AppTextStrings.addSightScreenSightLatitudeLabel
-                                .toUpperCase(),
-                            style: AppTextStyles.addSightScreenLabel.copyWith(
-                              color: Theme.of(context).disabledColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        _outlinedTextField(
-                          hintText: AppTextStrings
-                              .addSightScreenTextFormFieldNotSpecified,
-                          controller: _sightLatitudeController,
-                          numberKeyboardType: true,
-                          focusNode:
-                              context.watch<AddSight>().latitudeFieldFocusNode,
-                          nextFocusNode:
-                              context.watch<AddSight>().longitideFieldFocusNode,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(
-                    width: 16,
-                  ),
-
-                  /// Longitude
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            AppTextStrings.addSightScreenSightLongitudeLabel
-                                .toUpperCase(),
-                            style: AppTextStyles.addSightScreenLabel.copyWith(
-                              color: Theme.of(context).disabledColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        _outlinedTextField(
-                          hintText: AppTextStrings
-                              .addSightScreenTextFormFieldNotSpecified,
-                          controller: _sightLongitudeController,
-                          numberKeyboardType: true,
-                          focusNode:
-                              context.watch<AddSight>().longitideFieldFocusNode,
-                          nextFocusNode:
-                              context.watch<AddSight>().detailsFieldFocusNode,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(
-              height: 12,
-            ),
-
-            // Specify coordinates on the map
-            InkWell(
-              onTap: () => print("Указать на карте"),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 3,
-                  bottom: 2,
-                ),
-                child: Text(
-                  AppTextStrings.addSightScreenSightSpecifyCoordinates,
-                  style: AppTextStyles
-                      .addSightScreenSightSpecifyCoordinatesButton
-                      .copyWith(
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 35,
-            ),
-
-            Text(
-              AppTextStrings.addSightScreenSightDescriptionLabel.toUpperCase(),
-              style: AppTextStyles.addSightScreenLabel.copyWith(
-                color: Theme.of(context).disabledColor,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            _outlinedTextField(
-              hintText: AppTextStrings.addSightScreenTextFormFieldEmpty,
-              maxLines: 4,
-              focusNode: context.watch<AddSight>().detailsFieldFocusNode,
-              controller: _sightDescriptionController,
-              nextFocusNode: context.watch<AddSight>().detailsFieldFocusNode,
-              isLastField: true,
-            ),
-          ],
+  /// "Add a new sight" button
+  Widget _createSightButton(bool _isFieldsFilled, _onSightCreate) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 16.0,
+      ),
+      child: TextButton(
+        onPressed: () {
+          if (_isFieldsFilled == true)
+            _onSightCreate();
+          else
+            print("Не все поля заполнены"); // TODO Shake bar
+        },
+        child: Text(
+          AppTextStrings.addSightScreenSightCreateButton.toUpperCase(),
+          style: AppTextStyles.addSightScreenSightCreateButton,
         ),
+        style: _isFieldsFilled == true
+            ? Theme.of(context).elevatedButtonTheme.style
+            : Theme.of(context).elevatedButtonTheme.style.copyWith(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).backgroundColor,
+                  ),
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).disabledColor,
+                  ),
+                ),
       ),
     );
   }
 
   /// [_outlinedTextField] displays a text field with borders
   Widget _outlinedTextField({
-    hintText,
-    maxLines,
-    controller,
-    numberKeyboardType,
-    focusNode,
-    nextFocusNode,
-    isLastField = false,
+    String hintText,
+    int maxLines,
+    TextEditingController controller,
+    bool numberKeyboardType,
+    FocusNode focusNode,
+    FocusNode nextFocusNode,
+    bool isLastField = false,
   }) {
     /// [_clearTextValue] clears the text field
     /// by clicking on the cross.
@@ -378,6 +273,253 @@ class _AddSightScreenState extends State<AddSightScreen> {
             width: 2,
           ),
         ),
+      ),
+    );
+  }
+
+  /// Type of sight
+  Widget _sightType(
+    TextEditingController _sightTypeController,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppTextStrings.addSightScreenCategoryLabel.toUpperCase(),
+          style: AppTextStyles.addSightScreenLabel.copyWith(
+            color: Theme.of(context).disabledColor,
+          ),
+        ),
+        InkWell(
+          onTap: () => {},
+          child: TextFormField(
+            controller: _sightTypeController,
+            readOnly: true,
+            onTap: () => print("Выбор категории"),
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 14,
+                horizontal: 0,
+              ),
+              hintStyle: AppTextStyles.addSightScreenHint.copyWith(
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              hintText: AppTextStrings.addSightScreenTextFormFieldNotSelected,
+              suffixIcon: SvgPicture.asset(
+                "assets/icons/View.svg",
+                color: Theme.of(context).iconTheme.color,
+              ),
+              suffixIconConstraints: BoxConstraints(
+                maxHeight: 24,
+                maxWidth: 24,
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).disabledColor.withOpacity(0.3),
+                  width: 0.8,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).disabledColor.withOpacity(0.3),
+                  width: 0.8,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Geolocation of the sight
+  Widget _sightGeolocation(
+    TextEditingController _sightLatitudeController,
+    TextEditingController _sightLongitudeController,
+  ) {
+    return Container(
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        textDirection: TextDirection.ltr,
+        children: [
+          /// Latitude
+          Expanded(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    AppTextStrings.addSightScreenSightLatitudeLabel
+                        .toUpperCase(),
+                    style: AppTextStyles.addSightScreenLabel.copyWith(
+                      color: Theme.of(context).disabledColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                _outlinedTextField(
+                  hintText:
+                      AppTextStrings.addSightScreenTextFormFieldNotSpecified,
+                  controller: _sightLatitudeController,
+                  numberKeyboardType: true,
+                  focusNode: context.watch<AddSight>().latitudeFieldFocusNode,
+                  nextFocusNode:
+                      context.watch<AddSight>().longitideFieldFocusNode,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(
+            width: 16,
+          ),
+
+          /// Longitude
+          Expanded(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    AppTextStrings.addSightScreenSightLongitudeLabel
+                        .toUpperCase(),
+                    style: AppTextStyles.addSightScreenLabel.copyWith(
+                      color: Theme.of(context).disabledColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                _outlinedTextField(
+                  hintText:
+                      AppTextStrings.addSightScreenTextFormFieldNotSpecified,
+                  controller: _sightLongitudeController,
+                  numberKeyboardType: true,
+                  focusNode: context.watch<AddSight>().longitideFieldFocusNode,
+                  nextFocusNode:
+                      context.watch<AddSight>().detailsFieldFocusNode,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Specify coordinates of sight on the map
+  Widget _specifyCoordinatesOnMap() {
+    return InkWell(
+      onTap: () => print("Указать на карте"),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 3,
+          bottom: 2,
+        ),
+        child: Text(
+          AppTextStrings.addSightScreenSightSpecifyCoordinates,
+          style: AppTextStyles.addSightScreenSightSpecifyCoordinatesButton
+              .copyWith(
+            color: Theme.of(context).accentColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _photogallery(List _sightPhotogallery) {
+    /// Add a photo to the gallery
+    void _addSightPhoto() {
+      context.read<AddSight>().addSightPhoto();
+    }
+
+    ///  Delete a photo from the gallery
+    void _deleteSightPhoto(index) {
+      context.read<AddSight>().deleteSightPhoto(index);
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 72,
+            height: 72,
+            margin: EdgeInsets.only(left: 16),
+            child: Ink(
+              decoration:
+                  AppDecorations.addSightScreenGalleryPrimaryElement.copyWith(
+                border: Border.all(
+                  color: Theme.of(context).accentColor.withOpacity(0.48),
+                ),
+              ),
+              child: GestureDetector(
+                onTap: () => _addSightPhoto(),
+                child: SvgPicture.asset(
+                  "assets/icons/Union.svg",
+                  color: Theme.of(context).accentColor,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ),
+          ),
+          for (int i = 0; i < _sightPhotogallery.length; i++)
+            Row(
+              children: [
+                const SizedBox(width: 16),
+                Dismissible(
+                  direction: DismissDirection.vertical,
+                  onDismissed: (direction) => _deleteSightPhoto(i),
+                  key: UniqueKey(),
+                  background: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: SvgPicture.asset(
+                        "assets/icons/View.svg",
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                  ),
+                  child: GestureDetector(
+                    onTap: () => print("Нажатие на карточку с индексом $i"),
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      decoration: AppDecorations
+                          .addSightScreenGallerySecondaryElement
+                          .copyWith(
+                        color: Theme.of(context).accentColor.withOpacity(.70),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 6,
+                            right: 6,
+                            child: InkWell(
+                              onTap: () => _deleteSightPhoto(i),
+                              child: SvgPicture.asset(
+                                "assets/icons/Subtract.svg",
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .addSightScreenPhotoDeleteButton,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+        ],
       ),
     );
   }

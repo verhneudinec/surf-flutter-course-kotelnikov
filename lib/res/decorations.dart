@@ -72,6 +72,13 @@ class AppDecorations {
         borderRadius: BorderRadius.circular(40),
       );
 
+  static final addSightScreenGalleryPrimaryElement = BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      addSightScreenGallerySecondaryElement = BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      );
+
   static final sightSearchScreenSearchListTileImage = BoxDecoration(
     borderRadius: BorderRadius.circular(12),
   );

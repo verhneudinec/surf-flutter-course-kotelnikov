@@ -11,6 +11,9 @@ class AddSight with ChangeNotifier {
       _sightLongitudeController = TextEditingController(),
       _sightDescriptionController = TextEditingController();
 
+  /// Photogallery of the place
+  List _sightPhotogallery = [];
+
   /// Fullness of text fields.
   bool _isFieldsFilled = false;
 
@@ -28,6 +31,9 @@ class AddSight with ChangeNotifier {
       _sightLongitudeController;
   TextEditingController get sightDescriptionController =>
       _sightDescriptionController;
+
+  /// Photogallery of the place
+  List get sightPhotogallery => _sightPhotogallery;
 
   /// Fullness of text fields.
   bool get isFieldsFilled => _isFieldsFilled;
@@ -54,6 +60,18 @@ class AddSight with ChangeNotifier {
   /// Function to clear the text field.
   void clearTextValue(TextEditingController controller) {
     controller.clear();
+    notifyListeners();
+  }
+
+  /// Add a photo to the gallery
+  void addSightPhoto() {
+    _sightPhotogallery.add(_sightPhotogallery.length);
+    notifyListeners();
+  }
+
+  /// Delete a photo from the gallery
+  void deleteSightPhoto(int sightPhotoIndex) {
+    _sightPhotogallery.removeAt(sightPhotoIndex);
     notifyListeners();
   }
 
