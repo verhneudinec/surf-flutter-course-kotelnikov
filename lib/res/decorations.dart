@@ -82,4 +82,8 @@ class AppDecorations {
   static final sightSearchScreenSearchListTileImage = BoxDecoration(
     borderRadius: BorderRadius.circular(12),
   );
+
+  static final onboardingPageIndicator = BoxDecoration(
+    borderRadius: BorderRadius.circular(8),
+  );
 }

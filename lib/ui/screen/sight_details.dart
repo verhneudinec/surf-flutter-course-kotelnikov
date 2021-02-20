@@ -1,3 +1,5 @@
+import 'dart:io';
+
 /// Экран с подробной информацией о месте
 /// [SightDetails] содержит в себе шапку [SightDetailsHeader]
 /// и тело [SightDetailsBody] с основной информацией о месте
@@ -36,35 +38,39 @@ class SightDetails extends StatelessWidget {
   }
 }
 
-class SightDetailsHeader extends StatelessWidget {
+class SightDetailsHeader extends StatefulWidget {
   final Sight sight;
   const SightDetailsHeader({Key key, this.sight}) : super(key: key);
 
   @override
+  _SightDetailsHeaderState createState() => _SightDetailsHeaderState();
+}
+
+class _SightDetailsHeaderState extends State<SightDetailsHeader> {
+  final PageController _photogalleryController = new PageController();
+  int _currentPhotogalleryIndex = 0;
+
+  void _updateCurrentPhotogalleryIndex(int currentIndex) {
+    setState(() {
+      _currentPhotogalleryIndex = currentIndex;
+    });
+  }
+
+  // TODO Перевести все комментарии и описание к старым страницам на английский
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Фото достопримечательности
-        Container(
-          width: double.infinity,
-          height: 360,
-          decoration: AppDecorations.sightCardImageGradient,
-          child: Image.network(
-            sight.url,
-            fit: BoxFit.cover,
-            loadingBuilder: imageLoaderBuilder,
-            errorBuilder: imageErrorBuilder,
-          ),
-        ),
+        _photogallery(),
 
-        // Контейнер для создания эффекта градиента
+        // Container for creating the gradient effect
         Container(
           decoration: AppDecorations.sightCardImageGradient,
           width: double.infinity,
           height: 96,
         ),
 
-        // Кнопка "Вернуться назад"
+        // "Go back" button
         SafeArea(
           child: Padding(
             padding: EdgeInsets.only(
@@ -77,19 +83,66 @@ class SightDetailsHeader extends StatelessWidget {
           ),
         ),
 
-        // Ползунок галереи
-        Positioned(
-          left: -8,
-          bottom: 0,
-          child: Container(
-            width: 152,
-            height: 7.57,
-            decoration: AppDecorations.galleryIndicator.copyWith(
-              color: Theme.of(context).iconTheme.color,
-            ),
-          ),
-        )
+        _photogalleryIndicator(),
       ],
+    );
+  }
+
+  /// Photogallery of the sight.
+  /// Displays photos from [widget.sight.urls]
+  Widget _photogallery() {
+    return LimitedBox(
+      maxWidth: MediaQuery.of(context).size.width,
+      maxHeight: 360,
+      child: PageView.builder(
+        controller: _photogalleryController,
+        itemCount: widget.sight.urls.length,
+        physics: Platform.isAndroid
+            ? ClampingScrollPhysics()
+            : BouncingScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            width: double.infinity,
+            height: 360,
+            decoration: AppDecorations.sightCardImageGradient,
+            child: Image.network(
+              widget.sight.urls.elementAt(index),
+              fit: BoxFit.cover,
+              loadingBuilder: imageLoaderBuilder,
+              errorBuilder: imageErrorBuilder,
+            ),
+          );
+        },
+        onPageChanged: (int page) => _updateCurrentPhotogalleryIndex(page),
+      ),
+    );
+  }
+
+  /// Gallery indicator.
+  /// Displays the indicator if the indicator index matches [_currentPhotogalleryIndex].
+  /// Otherwise outputs an empty block.
+  Widget _photogalleryIndicator() {
+    return Positioned(
+      left: 0,
+      bottom: 0,
+      child: Row(
+        children: [
+          for (int i = 0; i < widget.sight.urls.length; i++)
+            i == _currentPhotogalleryIndex
+                ? Container(
+                    width: MediaQuery.of(context).size.width /
+                        widget.sight.urls.length,
+                    height: 7.5,
+                    decoration: AppDecorations.galleryIndicator.copyWith(
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  )
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width /
+                        widget.sight.urls.length,
+                  ),
+        ],
+      ),
     );
   }
 }
@@ -100,6 +153,15 @@ class SightDetailsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map _sightTypes = {
+      "hotel": AppTextStrings.hotel,
+      "restourant": AppTextStrings.restourant,
+      "particular_place": AppTextStrings.particularPlace,
+      "park": AppTextStrings.park,
+      "museum": AppTextStrings.museum,
+      "cafe": AppTextStrings.cafe,
+    };
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 24,
@@ -125,7 +187,7 @@ class SightDetailsBody extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
-                  sight.type,
+                  _sightTypes[sight.type],
                   style: AppTextStyles.sightDetailsType.copyWith(
                     color: Theme.of(context).textTheme.bodyText2.color,
                   ),

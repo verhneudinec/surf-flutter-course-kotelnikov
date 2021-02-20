@@ -10,7 +10,7 @@ import 'package:places/domain/geo_position.dart';
 class Sight {
   final String name;
   final GeoPosition geoPosition;
-  final String url;
+  final List<String> urls;
   final String details;
   final String type;
   final String workingTime;
@@ -19,7 +19,7 @@ class Sight {
   Sight(
     this.name,
     this.geoPosition,
-    this.url,
+    this.urls,
     this.details,
     this.type,
     this.workingTime,

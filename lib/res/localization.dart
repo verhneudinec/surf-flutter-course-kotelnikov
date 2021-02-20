@@ -55,5 +55,16 @@ class AppTextStrings {
       sightSearchScreenSearchHistory = "Вы искали",
       sightSearchScreenCleanHistory = "Очистить историю",
       sightsNotFoundTitle = "Ничего не найдено",
-      sightsNotFoundSubtitle = "Попробуйте изменить параметры поиска";
+      sightsNotFoundSubtitle = "Попробуйте изменить параметры поиска",
+      onBoardingSkipButton = "Пропустить",
+      onBoardingFirstPageTitle = "Добро пожаловать в Путеводитель",
+      onBoardingFirstPageSubtitle =
+          "Ищи новые локации и сохраняй самые любимые.",
+      onBoardingSecondPageTitle = "Построй маршрут и отправляйся в путь",
+      onBoardingSecondPageSubtitle =
+          "Достигай цели максимально быстро и комфортно.",
+      onBoardingThirdPageTitle = "Добавляй места, которые нашёл сам",
+      onBoardingThirdPageSubtitle =
+          "Делись самыми интересными и помоги нам стать лучше!",
+      onBoardingStartButton = "На старт";
 }
