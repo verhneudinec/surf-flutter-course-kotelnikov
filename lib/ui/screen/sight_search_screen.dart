@@ -14,7 +14,7 @@ import 'package:places/ui/widgets/search_bar.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/models/sight_types.dart';
 import 'package:places/models/sights_search.dart';
-import 'package:places/ui/widgets/imageLoaderBuilder.dart';
+import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/mocks.dart';
 

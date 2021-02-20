@@ -8,7 +8,7 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/ui/widgets/imageLoaderBuilder.dart';
+import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/screen/sight_details.dart';
 import 'package:provider/provider.dart';
 

@@ -12,7 +12,7 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
-import 'package:places/ui/widgets/imageLoaderBuilder.dart';
+import 'package:places/ui/widgets/image_loader_builder.dart';
 
 class SightDetails extends StatelessWidget {
   final Sight sight;

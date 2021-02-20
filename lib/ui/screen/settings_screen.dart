@@ -5,6 +5,7 @@ import 'package:places/models/app_settings.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/ui/screen/onboarding_screen.dart';
 import 'package:places/ui/widgets/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,15 @@ class SettingsScreen extends StatelessWidget {
     bool _isDarkMode = context.watch<AppSettings>().isDarkMode;
     void _changeTheme() {
       context.read<AppSettings>().changeTheme();
+    }
+
+    void _onClickOnboardingButton() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OnboardingScreen(),
+        ),
+      );
     }
 
     return ChangeNotifierProvider(
@@ -59,6 +69,7 @@ class SettingsScreen extends StatelessWidget {
                     _divider(context),
                     // "Watch tutorial" button
                     ListTile(
+                      onTap: () => _onClickOnboardingButton(),
                       contentPadding: EdgeInsets.all(0),
                       title: Text(
                         AppTextStrings.settingsScreenWatchTutorial,
