@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/res/icons.dart';
 
 class AppBackButton extends StatelessWidget {
   final Color backgroundColor;
@@ -24,7 +25,7 @@ class AppBackButton extends StatelessWidget {
           child: IconButton(
             onPressed: () => print("go back button"),
             icon: SvgPicture.asset(
-              "assets/icons/Arrow.svg",
+              AppIcons.arrow,
               color: Theme.of(context).iconTheme.color,
             ),
             iconSize: 24,

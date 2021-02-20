@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/ui/screen/onboarding_screen.dart';
 
 class AppTextStyles {
   AppTextStyles({Key key, BuildContext context});
@@ -77,7 +78,10 @@ class AppTextStyles {
       sightCardGoalAchieved = _small,
       sightCardType = _smallBold,
       sightCardDescription = _small,
-      sightCardWorkingTime = _small;
+      sightCardWorkingTime = _small,
+      sightCardDismissibleText = _superSmall.copyWith(
+        fontWeight: FontWeight.w500,
+      );
 
   // Страница с описанием места
   static final sightDetailsTitle = _title,
@@ -147,4 +151,11 @@ class AppTextStyles {
         fontWeight: FontWeight.w400,
       ),
       sightSearchScreenSearchListTileSubtitle = _small;
+
+  static final onboardingSkipButton = _text,
+      onboardingScreenTitle = _title,
+      onboardingScreenSubtitle = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      ),
+      onBoardingStartButton = _button;
 }

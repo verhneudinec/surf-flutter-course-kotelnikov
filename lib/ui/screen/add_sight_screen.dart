@@ -7,7 +7,9 @@ import 'package:places/res/decorations.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/ui/widgets/app_bar_custom.dart';
+import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:provider/provider.dart';
 
 /// Screen for adding and editing a place
@@ -250,7 +252,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
               ? InkWell(
                   onTap: () => _clearTextValue(),
                   child: SvgPicture.asset(
-                    "assets/icons/Subtract.svg",
+                    AppIcons.subtract,
                     color: Theme.of(context).iconTheme.color,
                   ),
                 )
@@ -306,7 +308,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
               ),
               hintText: AppTextStrings.addSightScreenTextFormFieldNotSelected,
               suffixIcon: SvgPicture.asset(
-                "assets/icons/View.svg",
+                AppIcons.view,
                 color: Theme.of(context).iconTheme.color,
               ),
               suffixIconConstraints: BoxConstraints(
@@ -443,84 +445,82 @@ class _AddSightScreenState extends State<AddSightScreen> {
       context.read<AddSight>().deleteSightPhoto(index);
     }
 
-    return SingleChildScrollView(
+    return CustomListViewBuilder(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            margin: EdgeInsets.only(left: 16),
-            child: Ink(
-              decoration:
-                  AppDecorations.addSightScreenGalleryPrimaryElement.copyWith(
-                border: Border.all(
-                  color: Theme.of(context).accentColor.withOpacity(0.48),
-                ),
+      additionalPadding: false,
+      children: [
+        Container(
+          width: 72,
+          height: 72,
+          margin: EdgeInsets.only(left: 16),
+          child: Ink(
+            decoration:
+                AppDecorations.addSightScreenGalleryPrimaryElement.copyWith(
+              border: Border.all(
+                color: Theme.of(context).accentColor.withOpacity(0.48),
               ),
-              child: GestureDetector(
-                onTap: () => _addSightPhoto(),
-                child: SvgPicture.asset(
-                  "assets/icons/Union.svg",
-                  color: Theme.of(context).accentColor,
-                  fit: BoxFit.scaleDown,
-                ),
+            ),
+            child: GestureDetector(
+              onTap: () => _addSightPhoto(),
+              child: SvgPicture.asset(
+                AppIcons.union,
+                color: Theme.of(context).accentColor,
+                fit: BoxFit.scaleDown,
               ),
             ),
           ),
-          for (int i = 0; i < _sightPhotogallery.length; i++)
-            Row(
-              children: [
-                const SizedBox(width: 16),
-                Dismissible(
-                  direction: DismissDirection.vertical,
-                  onDismissed: (direction) => _deleteSightPhoto(i),
-                  key: UniqueKey(),
-                  background: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: RotatedBox(
-                      quarterTurns: 3,
-                      child: SvgPicture.asset(
-                        "assets/icons/View.svg",
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                  ),
-                  child: GestureDetector(
-                    onTap: () => print("Нажатие на карточку с индексом $i"),
-                    child: Container(
-                      width: 72,
-                      height: 72,
-                      decoration: AppDecorations
-                          .addSightScreenGallerySecondaryElement
-                          .copyWith(
-                        color: Theme.of(context).accentColor.withOpacity(.70),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 6,
-                            right: 6,
-                            child: InkWell(
-                              onTap: () => _deleteSightPhoto(i),
-                              child: SvgPicture.asset(
-                                "assets/icons/Subtract.svg",
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .addSightScreenPhotoDeleteButton,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+        ),
+        for (int i = 0; i < _sightPhotogallery.length; i++)
+          Row(
+            children: [
+              const SizedBox(width: 16),
+              Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.vertical,
+                onDismissed: (direction) => _deleteSightPhoto(i),
+                background: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: SvgPicture.asset(
+                      AppIcons.view,
+                      fit: BoxFit.scaleDown,
                     ),
                   ),
                 ),
-              ],
-            )
-        ],
-      ),
+                child: GestureDetector(
+                  onTap: () => print("Нажатие на карточку с индексом $i"),
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: AppDecorations
+                        .addSightScreenGallerySecondaryElement
+                        .copyWith(
+                      color: Theme.of(context).accentColor.withOpacity(.70),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 6,
+                          right: 6,
+                          child: InkWell(
+                            onTap: () => _deleteSightPhoto(i),
+                            child: SvgPicture.asset(
+                              AppIcons.subtract,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .addSightScreenPhotoDeleteButton,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+      ],
     );
   }
 }

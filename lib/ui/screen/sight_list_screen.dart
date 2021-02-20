@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/ui/widgets/app_bar_large_title.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/sight_list.dart';
@@ -119,7 +120,7 @@ class _SightListScreenState extends State<SightListScreen> {
         child: TextButton.icon(
           onPressed: () => _onClickCreateButton(),
           icon: SvgPicture.asset(
-            "assets/icons/Plus.svg",
+            AppIcons.plus,
             width: 24,
             height: 24,
           ),

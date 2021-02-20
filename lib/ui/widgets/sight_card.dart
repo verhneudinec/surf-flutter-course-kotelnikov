@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/models/favorite_sights.dart';
+import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/imageLoaderBuilder.dart';
 import 'package:places/ui/screen/sight_details.dart';
@@ -24,6 +26,11 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Removes the list item from provider
+    void onSightCardDismissed() {
+      context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
+    }
+
     void _onSightClick() {
       Navigator.push(
         context,
@@ -35,18 +42,17 @@ class SightCard extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: 16,
+    return Container(
+      width: double.infinity,
+      decoration: AppDecorations.sightCardContainer.copyWith(
+        color: Theme.of(context).cardColor,
       ),
-      child: Container(
-        width: double.infinity,
-        decoration: AppDecorations.sightCardContainer.copyWith(
-          color: Theme.of(context).cardColor,
-        ),
-        clipBehavior: Clip.antiAlias,
+      clipBehavior: Clip.antiAlias,
+      child: Dismissible(
+        key: ValueKey(sight.name),
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) => onSightCardDismissed(),
+        background: _dismissibleBackground(context),
         child: Stack(
           children: [
             // Header and body of card
@@ -55,14 +61,15 @@ class SightCard extends StatelessWidget {
               children: [
                 SightCardHeader(
                   sight: sight,
-                  cardType: cardType ?? "default",
+                  cardType: cardType ?? CardTypes.general,
                 ),
                 SightCardBody(
                   sight: sight,
-                  cardType: cardType ?? "default",
+                  cardType: cardType ?? CardTypes.general,
                 ),
               ],
             ),
+
             // On pressed ripple effect
             Positioned.fill(
               child: Material(
@@ -77,7 +84,32 @@ class SightCard extends StatelessWidget {
             /// Action buttons: delete sight, calendar, share
             SightCardActionButtons(
               sight: sight,
-              cardType: cardType ?? "default",
+              cardType: cardType ?? CardTypes.general,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dismissibleBackground(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.sightCardDismissibleBackground,
+      child: Container(
+        margin: EdgeInsets.only(right: 16),
+        alignment: AlignmentDirectional.centerEnd,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              AppIcons.bucket,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              AppTextStrings.delete,
+              style: AppTextStyles.sightCardDismissibleText.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.sightCardDismissibleText),
             ),
           ],
         ),
@@ -112,7 +144,7 @@ class SightCardHeader extends StatelessWidget {
           width: double.infinity,
           height: 96,
           child: Image.network(
-            sight.url,
+            sight.urls.elementAt(0),
             fit: BoxFit.cover,
             loadingBuilder: imageLoaderBuilder,
             errorBuilder: imageErrorBuilder,
@@ -162,7 +194,7 @@ class SightCardBody extends StatelessWidget {
           // Place name
           Container(
             constraints: BoxConstraints(
-              maxWidth: cardType == "default" ? 296 : double.infinity,
+              maxWidth: cardType == CardTypes.general ? 296 : double.infinity,
             ),
             child: Text(
               sight.name,
@@ -174,13 +206,13 @@ class SightCardBody extends StatelessWidget {
             ),
           ),
 
-          if (cardType != "default")
+          if (cardType != CardTypes.general)
             const SizedBox(
               height: 2,
             ),
 
           // Scheduled date
-          if (cardType == "toVisit")
+          if (cardType == CardTypes.unvisited)
             Container(
               height: 28,
               child: Text(
@@ -193,7 +225,7 @@ class SightCardBody extends StatelessWidget {
             ),
 
           // Goal achieved
-          if (cardType == "visited")
+          if (cardType == CardTypes.visited)
             Container(
               height: 28,
               child: Text(
@@ -239,6 +271,7 @@ class SightCardActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     /// Removes the list item from provider
     void onSightCardDelete() {
+      // TODO УДАЛИТЬ ДУБЛЬ ФУНКЦИИ DISMISSED
       context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
     }
 
@@ -257,43 +290,43 @@ class SightCardActionButtons extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          if (cardType == "default")
+          if (cardType == CardTypes.general)
             Positioned(
               top: 16,
               right: 16,
               child: _iconButton(
-                iconPath: "assets/icons/Heart.svg",
+                iconPath: AppIcons.heart,
               ),
             ),
 
           // "Remove from list" button
-          if (cardType != "default")
+          if (cardType != CardTypes.general)
             Positioned(
               top: 16,
               right: 16,
               child: _iconButton(
-                iconPath: "assets/icons/Delete.svg",
+                iconPath: AppIcons.delete,
                 onPressed: onSightCardDelete,
               ),
             ),
 
           // Button "Change scheduled visit time"
-          if (cardType == "toVisit")
+          if (cardType == CardTypes.unvisited)
             Positioned(
               top: 16,
               right: 56,
               child: _iconButton(
-                iconPath: "assets/icons/Calendar.svg",
+                iconPath: AppIcons.calendar,
               ),
             ),
 
           // "Share" button
-          if (cardType == "visited")
+          if (cardType == CardTypes.visited)
             Positioned(
               top: 16,
               right: 56,
               child: _iconButton(
-                iconPath: "assets/icons/Share.svg",
+                iconPath: AppIcons.share,
               ),
             ),
         ],

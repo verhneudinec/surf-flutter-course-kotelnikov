@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/localization.dart';
-import 'package:places/mocks.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/common/back_button.dart';
@@ -10,7 +9,9 @@ import 'package:places/models/sights_search.dart';
 import 'package:places/models/sight_types.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
+import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:places/utils/filter.dart';
+import 'package:places/res/icons.dart';
 import 'package:provider/provider.dart';
 
 /// Screen with filter of places by category and distance.
@@ -78,24 +79,20 @@ class _FilterScreenState extends State<FilterScreen> {
     }
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              _filterScreenHeader(_onCleanAllSearchParameters),
-              _filterScreenBody(
-                _searchRangeStart,
-                _searchRangeEnd,
-                _searchResults,
-                _sightTypes,
-                _searchButtonHandler,
-                _onTypeClickHandler,
-                _onMinSliderChangeHandler,
-                _onMaxSliderChangeHandler,
-              ),
-            ],
+      body: Column(
+        children: [
+          _filterScreenHeader(_onCleanAllSearchParameters),
+          _filterScreenBody(
+            _searchRangeStart,
+            _searchRangeEnd,
+            _searchResults,
+            _sightTypes,
+            _searchButtonHandler,
+            _onTypeClickHandler,
+            _onMinSliderChangeHandler,
+            _onMaxSliderChangeHandler,
           ),
-        ),
+        ],
       ),
     );
   }
@@ -162,8 +159,7 @@ class _FilterScreenState extends State<FilterScreen> {
       ),
       child: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          CustomListViewBuilder(
             children: [
               Text(
                 AppTextStrings.fiterScreenTitleText.toUpperCase(),
@@ -228,7 +224,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                             .borderRadius,
                                         onTap: () => _onTypeClickHandler(i),
                                         child: SvgPicture.asset(
-                                          "assets/icons/Tick.svg",
+                                          AppIcons.tick,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .categoryTickColor,
@@ -253,6 +249,16 @@ class _FilterScreenState extends State<FilterScreen> {
                         ],
                       ),
                   ],
+                ),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              Container(
+                height: 400,
+                color: Colors.green[100],
+                child: Center(
+                  child: Text("Тест ListView"),
                 ),
               ),
               const SizedBox(
@@ -295,9 +301,6 @@ class _FilterScreenState extends State<FilterScreen> {
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: 24,
               ),
 
               /// Сustom distance selection slider in Cupertino style
