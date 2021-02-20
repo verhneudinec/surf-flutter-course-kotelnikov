@@ -20,7 +20,8 @@ final List<Sight> mocks = [
     "Клубника",
     GeoPosition(52.512044, 107.027643),
     [
-      "https://www.tourprom.ru/site_media/images/poiphoto/0_ab06c_12040d68_orig_1.jpg"
+      "https://www.tourprom.ru/site_media/images/poiphoto/0_ab06c_12040d68_orig_1.jpg",
+      "https://argumenti.ru/images/arhnews/607000.jpg",
     ],
     '''Пару лет назад в городе Байкальске на ежегодном фестивале, посвященном клубнике, был открыт памятник Клубнике. 
 Ягода располагается на пьедестале в центре городка. Ее блестящие красные бока манят туристов, как бы предлагая ее вкусить. 
@@ -37,13 +38,13 @@ final List<Sight> mocks = [
     GeoPosition(52.512044, 107.027643),
     [
       "https://avatars.mds.yandex.net/get-zen_doc/1538903/pub_5c7e364c87fe6f00b77d4ed5_5c7e37e6d8231600b474e88a/scale_1200",
-      "https://img01.rl0.ru/afisha/o/s3.afisha.ru/mediastorage/86/78/18b756347cf54f79b050eb5e7886.jpg",
-      "https://cdn.fishki.net/upload/post/201410/03/1311005/a03dcec0ff864b1bcbbb23a6935f92ae.jpg",
+      "http://i.mycdn.me/i?r=AzEPZsRbOZEKgBhR0XGMT1RkxuLGUV6iC2ChCrLP__mUhqaKTM5SRkZCeTgDn6uOyic",
+      "https://pbs.twimg.com/media/EM82Z96U0AAvmIC.jpg",
     ],
     '''Тасиро — японский остров, относящийся к префектуре Мияги, расположенный примерно в 15 км к юго-востоку от порта города Исиномаки.
 Административно относится к городу Исиномаки. Известен как остров кошек.
     ''',
-    "cafe",
+    "particular_place",
     "открыто круглосуточно",
     true,
   ),

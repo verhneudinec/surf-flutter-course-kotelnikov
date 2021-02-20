@@ -4,8 +4,10 @@ Widget imageLoaderBuilder(
     BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
   if (loadingProgress == null) return child;
   return Align(
-    alignment: AlignmentDirectional.bottomEnd,
-    child: LinearProgressIndicator(),
+    alignment: AlignmentDirectional.bottomCenter,
+    child: LinearProgressIndicator(
+      minHeight: 8.0,
+    ),
   );
 }
 
