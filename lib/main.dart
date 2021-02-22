@@ -45,15 +45,15 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
       // home: OnboardingScreen(),
-      // home: SightDetails(sight: mocks[2]),
+      home: SightDetails(sight: mocks[2]),
       // home: AddSightScreen(),
       // home: SelectingSightTypeScreen(),
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      home: SightListScreen(
-        sightsData: mocks,
-      ),
+      // home: SightListScreen(
+      //   sightsData: mocks,
+      // ),
       // home: SightSearchScreen(),
     );
   }

@@ -1,9 +1,4 @@
 import 'dart:io';
-
-/// Экран с подробной информацией о месте
-/// [SightDetails] содержит в себе шапку [SightDetailsHeader]
-/// и тело [SightDetailsBody] с основной информацией о месте
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
@@ -14,6 +9,9 @@ import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 
+/// Screen with detailed information about the place
+/// [SightDetails] contains a header [SightDetailsHeader]
+/// and body [SightDetailsBody] with basic information about the place
 class SightDetails extends StatelessWidget {
   final Sight sight;
   const SightDetails({Key key, this.sight}) : super(key: key);
@@ -56,7 +54,6 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
     });
   }
 
-  // TODO Перевести все комментарии и описание к старым страницам на английский
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -168,7 +165,7 @@ class SightDetailsBody extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Название места
+          // Sight name
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
@@ -183,7 +180,7 @@ class SightDetailsBody extends StatelessWidget {
 
           Row(
             children: [
-              // Тип места
+              // Type of sight
               Container(
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
@@ -194,7 +191,7 @@ class SightDetailsBody extends StatelessWidget {
                 ),
               ),
 
-              // Время работы места
+              // Opening hours of the sight
               Container(
                 child: Text(
                   "закрыто до 09:00",
@@ -206,7 +203,7 @@ class SightDetailsBody extends StatelessWidget {
             ],
           ),
 
-          // Описание места
+          // Sight description
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
@@ -218,7 +215,7 @@ class SightDetailsBody extends StatelessWidget {
             ),
           ),
 
-          // Кнопка построения маршрута
+          // Button for building a route
           Container(
             margin: EdgeInsets.symmetric(vertical: 24),
             child: ElevatedButton.icon(
@@ -234,7 +231,7 @@ class SightDetailsBody extends StatelessWidget {
             ),
           ),
 
-          // Разделитель
+          // Separator
           Container(
             margin: EdgeInsets.only(
               bottom: 8,
@@ -245,11 +242,11 @@ class SightDetailsBody extends StatelessWidget {
             ),
           ),
 
-          // Кнопки действий
+          // Action buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // Кнопка "Запланировать поход"
+              // "Plan a hike" button
               Expanded(
                 child: TextButton(
                   onPressed: () => print("plan button"),
@@ -275,7 +272,7 @@ class SightDetailsBody extends StatelessWidget {
                 ),
               ),
 
-              // Кнопка "Добавить в избранное"
+              // "Add to favorites" button
               Expanded(
                 child: TextButton.icon(
                   onPressed: () => print("to favorites button"),
