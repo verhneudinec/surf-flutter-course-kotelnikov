@@ -6,7 +6,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/screen/onboarding_screen.dart';
-import 'package:places/ui/widgets/app_bar_mini.dart';
+import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:provider/provider.dart';
 

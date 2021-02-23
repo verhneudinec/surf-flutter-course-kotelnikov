@@ -8,7 +8,7 @@ import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/ui/widgets/app_bar_custom.dart';
+import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:provider/provider.dart';
 

@@ -1,18 +1,20 @@
 import 'package:places/domain/sight.dart';
 import 'package:places/domain/geo_position.dart';
 
+/// User geolocation for testing filters
 final testGeoPosition = GeoPosition(52.500095, 106.999299);
 
+/// List of predefined sights
 final List<Sight> mocks = [
   Sight(
     "Воронежский областной краеведческий",
     GeoPosition(52.500683, 107.004542),
     [
-      "https://melbourneartcritic.files.wordpress.com/2018/06/fullsizeoutput_62.jpeg"
+      "https://tripplanet.ru/wp-content/uploads/europe/russia/voronezh/voronezh-regional-museum.jpg"
     ],
     '''Памятник Чарльзу Ла Тробе расположен в Мельбурне, Австралия. 
 Скульптором является Чарльз Робб, который и создал перевернутый монумент, посвященный первому вице-губернатору штата Виктория.''',
-    "particular_place",
+    "museum",
     "открыто до 20:00",
     false,
   ),
