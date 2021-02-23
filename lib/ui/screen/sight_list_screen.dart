@@ -90,12 +90,6 @@ class _SightListScreenState extends State<SightListScreen> {
                   ? _searchResults
                   : widget.sightsData,
             ),
-
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Container(height: 900, color: Colors.black),
-              ]),
-            ),
           ],
         ),
       ),
