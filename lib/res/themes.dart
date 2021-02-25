@@ -236,4 +236,23 @@ extension ComponentsColor on ColorScheme {
             dmGreenColor,
           ],
         );
+  Color get splashScreenIconColor => whiteColor;
+  LinearGradient get splashScreenBackgroundGradient =>
+      isLightTheme() // TODO исправить градиент
+          ? LinearGradient(
+              begin: Alignment(-2, 0),
+              end: Alignment(1, 0),
+              colors: [
+                lmYellowColor,
+                lmGreenColor,
+              ],
+            )
+          : LinearGradient(
+              begin: Alignment(-2, 0),
+              end: Alignment(1, 0),
+              colors: [
+                dmYellowColor,
+                dmGreenColor,
+              ],
+            );
 }

@@ -8,6 +8,7 @@ import 'package:places/ui/screen/onboarding_screen.dart';
 // останутся, я их постоянно использую.
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/sight_details.dart';
+import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
@@ -44,6 +45,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
+      home: SplashScreen(),
       // home: OnboardingScreen(),
       // home: SightDetails(sight: mocks[2]),
       // home: AddSightScreen(),
@@ -51,9 +53,9 @@ class App extends StatelessWidget {
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      home: SightListScreen(
-        sightsData: mocks,
-      ),
+      // home: SightListScreen(
+      //   sightsData: mocks,
+      // ),
       // home: SightSearchScreen(),
     );
   }
