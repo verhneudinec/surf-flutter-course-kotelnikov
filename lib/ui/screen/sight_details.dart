@@ -19,18 +19,24 @@ class SightDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(
-            bottom: 30, // TODO Нижние отступы в приложении
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: Colors.transparent,
+            expandedHeight: 360,
+            flexibleSpace: FlexibleSpaceBar(
+              background: SightDetailsHeader(sight: sight),
+            ),
           ),
-          child: Column(
-            children: [
-              SightDetailsHeader(sight: sight),
-              SightDetailsBody(sight: sight),
-            ],
-          ),
-        ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: SightDetailsBody(sight: sight),
+              ),
+            ]),
+          )
+        ],
       ),
     );
   }

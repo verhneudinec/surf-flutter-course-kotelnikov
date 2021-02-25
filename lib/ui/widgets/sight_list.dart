@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:places/models/favorite_sights.dart';
 
 /// The [SightList] widget displays a list of places
-/// via [DisplaySights], if list length> 0
-/// or [EmptyList] -if the array is empty.
-/// [cardType] - card type [CardTypes.general], [CardTypes.unvisited], [CardTypes.visited].
+/// if list length > 0 or [EmptyList] - if the array is empty.
+/// [cardType] - card type [CardTypes.general],
+/// [CardTypes.unvisited], [CardTypes.visited].
 class SightList extends StatelessWidget {
   final String cardType;
   final List sights;
@@ -24,58 +24,29 @@ class SightList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return sights.isNotEmpty == true
-        ? DisplaySights(
-            sights: sights,
-            cardType: cardType,
-            onDeleteSight: onDeleteSight,
-          )
-        : Center(
-            child: SizedBox(
-              width: 255,
-              height: MediaQuery.of(context).size.height -
-                  250, // TODO исправить размеры, Expanded
-              child: EmptyList(cardType: cardType),
-            ),
-          );
-  }
-}
-
-class DisplaySights extends StatelessWidget {
-  final List sights;
-  final String cardType;
-  final onDeleteSight;
-  const DisplaySights({
-    Key key,
-    this.sights,
-    this.cardType,
-    this.onDeleteSight,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 32,
-            ),
-            CustomListViewBuilder(
-              children: sights
-                  .map((sight) => _sightListItem(
-                        context,
-                        sight,
-                      ))
-                  .toList(),
-            ),
-          ],
-        ),
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        sights.isNotEmpty == true
+            ? sights
+                .map((sight) => _sightListItem(
+                      context,
+                      sight,
+                    ))
+                .toList()
+            : [
+                Center(
+                  child: SizedBox(
+                    width: 255,
+                    height: MediaQuery.of(context).size.height -
+                        250, // TODO исправить размеры, Expanded
+                    child: EmptyList(cardType: cardType),
+                  ),
+                )
+              ],
       ),
     );
   }
 
-  /// Sights list item
   Widget _sightListItem(
     BuildContext context,
     Sight sight,
@@ -142,17 +113,6 @@ class DisplaySights extends StatelessWidget {
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: _sightCardBuilder(sight),
-      ),
-    );
-  }
-
-  Widget _dragTargetBackground(BuildContext context, Sight sight) {
-    return Material(
-      color: Colors.transparent,
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-        child: Container(color: Colors.red),
       ),
     );
   }
