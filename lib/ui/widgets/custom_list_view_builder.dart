@@ -37,25 +37,5 @@ class CustomListViewBuilder extends StatelessWidget {
         },
       ),
     );
-
-    // return LimitedBox(
-    //   // TODO Переделать в Flexible
-    //   maxWidth: MediaQuery.of(context).size.width,
-    //   maxHeight: scrollDirection == Axis.vertical
-    //       ? MediaQuery.of(context).size.height - 250
-    //       : 72,
-    //   child: ListView.builder(
-    //     scrollDirection: scrollDirection ?? Axis.vertical,
-    //     padding:
-    //         additionalPadding ? EdgeInsets.only(bottom: 48) : EdgeInsets.all(0),
-    //     physics: Platform.isAndroid
-    //         ? ClampingScrollPhysics()
-    //         : BouncingScrollPhysics(),
-    //     itemCount: children.length,
-    //     itemBuilder: (context, index) {
-    //       return children[index];
-    //     },
-    //   ),
-    // );
   }
 }
