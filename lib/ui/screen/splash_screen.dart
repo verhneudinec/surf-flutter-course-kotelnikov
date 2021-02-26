@@ -23,17 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    _isInitialized = _appInitialize();
-
-    _navigateToNext();
-  }
-
-  /// Simulate loading application data
-  Future<bool> _appInitialize() {
-    return Future<bool>.delayed(
+    // Simulate initialization. Let's assume that the data was loaded in 1 second.
+    _isInitialized = Future<bool>.delayed(
       Duration(seconds: 1),
       () => true,
     );
+
+    _navigateToNext();
   }
 
   /// Function to navigate to next screen,
@@ -49,22 +45,18 @@ class _SplashScreenState extends State<SplashScreen> {
         ],
         eagerError: true,
       );
+
+      // If there was no error, then go to the next screen.
+      // Error handling is not yet provided.
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => OnboardingScreen(),
+        ),
+      );
     } catch (error) {
       print('Error $error');
     }
-
-    /// If there was no error, then go to the next screen.
-    /// Error handling is not yet provided.
-    _isInitialized.then(
-      (value) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => OnboardingScreen(),
-          ),
-        );
-      },
-    );
   }
 
   @override
