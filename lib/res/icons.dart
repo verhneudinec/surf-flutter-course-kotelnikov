@@ -28,5 +28,6 @@ class AppIcons {
       cafe = "assets/icons/categories/Cafe.svg",
       pointer = "assets/icons/tutorial/Pointer.svg",
       backpack = "assets/icons/tutorial/Backpack.svg",
-      clickerFinger = "assets/icons/tutorial/ClickerFinger.svg";
+      clickerFinger = "assets/icons/tutorial/ClickerFinger.svg",
+      splashIcon = "assets/icons/SplashIcon.svg";
 }
