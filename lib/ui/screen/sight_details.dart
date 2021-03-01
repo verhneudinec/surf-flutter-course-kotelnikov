@@ -23,6 +23,7 @@ class SightDetails extends StatelessWidget {
         slivers: [
           SliverAppBar(
             backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
             expandedHeight: 360,
             flexibleSpace: FlexibleSpaceBar(
               background: SightDetailsHeader(sight: sight),

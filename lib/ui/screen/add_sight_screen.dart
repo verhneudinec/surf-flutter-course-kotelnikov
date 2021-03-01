@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/domain/sight.dart';
@@ -8,6 +9,7 @@ import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/icons.dart';
+import 'package:places/ui/screen/selecting_sight_type.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:provider/provider.dart';
@@ -22,19 +24,33 @@ class AddSightScreen extends StatefulWidget {
 }
 
 class _AddSightScreenState extends State<AddSightScreen> {
+  /// [_onSightCreate] takes the prepared data of the new
+  /// sight from [AddSight] and writes them to
+  /// array of mock data from [Sights].
+  void _onSightCreate() {
+    Sight _newSight = context.read<AddSight>().prepareNewSight();
+
+    context.read<Sights>().addSight(_newSight);
+
+    Navigator.of(context).pop();
+    // TODO Сделать экран с уведомлением о том, что место добавлено
+  }
+
+  /// When clicking on the category selection button
+  void _onSelectSightType() {
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (BuildContext context) => SelectingSightTypeScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     /// [_isFieldsFilled] check for filling in all fields.
     /// The "Save" button becomes active when this field is true.
     bool _isFieldsFilled = context.watch<AddSight>().isFieldsFilled;
-
-    /// [_onSightCreate] takes the prepared data of the new
-    /// sight from [AddSight] and writes them to
-    /// array of mock data from [Sights].
-    void _onSightCreate() {
-      Sight _newSight = context.read<AddSight>().prepareNewSight();
-      context.read<Sights>().addSight(_newSight);
-    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -94,7 +110,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _sightType(_sightTypeController),
+                _sightType(_sightTypeController, _onSelectSightType),
 
                 const SizedBox(
                   height: 24,
@@ -282,6 +298,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   /// Type of sight
   Widget _sightType(
     TextEditingController _sightTypeController,
+    _onSelectSightType,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +314,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
           child: TextFormField(
             controller: _sightTypeController,
             readOnly: true,
-            onTap: () => print("Выбор категории"),
+            onTap: () => _onSelectSightType(),
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 14,

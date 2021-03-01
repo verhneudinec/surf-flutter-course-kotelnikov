@@ -12,8 +12,12 @@ class AppBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Remove the current screen from the navigator stack on click
+    void _onClickBackButton() {
+      Navigator.of(context).pop();
+    }
+
     return InkWell(
-      onTap: () => print("go back button"),
       child: Container(
         width: 32,
         height: 32,
@@ -23,7 +27,7 @@ class AppBackButton extends StatelessWidget {
           ),
           color: backgroundColor ?? Colors.transparent,
           child: IconButton(
-            onPressed: () => print("go back button"),
+            onPressed: () => _onClickBackButton(),
             icon: SvgPicture.asset(
               AppIcons.arrow,
               color: Theme.of(context).iconTheme.color,

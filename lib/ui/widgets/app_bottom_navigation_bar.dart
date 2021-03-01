@@ -2,36 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
-import 'package:places/res/navigator_pages.dart';
 
 /// Bottom navigation for the app
+/// [currentPageIndex] - the current page index for the navigator.
 class AppBottomNavigationBar extends StatelessWidget {
-  const AppBottomNavigationBar({Key key}) : super(key: key);
+  final int currentPageIndex;
+  const AppBottomNavigationBar({
+    Key key,
+    this.currentPageIndex,
+  }) : super(key: key);
 
-  /// Navigator for BottomNavigationBar
+  /// Navigator for BottomNavigationBar.
+  /// If need to navigate through the current index - do nothing.
   void _onClickBottomNavigationBarItem(BuildContext context, int index) {
-    // Примитивно, но работает. Пока не изучили тему - сойдет
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          switch (index) {
-            case 0:
-              return NavigatorPages.homePage;
-              break;
-            case 1:
-              // Еще нет экрана MapScreen
-              break;
-            case 2:
-              return NavigatorPages.favorites;
-              break;
-            case 3:
-              return NavigatorPages.settings;
-              break;
-          }
-        },
-      ),
-    );
+    if (currentPageIndex != index)
+      switch (index) {
+        case 0:
+          Navigator.pushNamed(context, "/home");
+          break;
+        case 1:
+          Navigator.pushNamed(context, "/map");
+          break;
+        case 2:
+          Navigator.pushNamed(context, "/favorites");
+          break;
+        case 3:
+          Navigator.pushNamed(context, "/settings");
+          break;
+      }
   }
 
   @override

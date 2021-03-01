@@ -31,6 +31,8 @@ class SightCard extends StatelessWidget {
       context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
     }
 
+    /// Go to the screen with sight details
+    /// when clicking on the card
     void _onSightClick() {
       Navigator.push(
         context,

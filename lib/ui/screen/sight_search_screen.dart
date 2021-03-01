@@ -74,7 +74,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
     }
 
     /// When clicking on a search result
-    void _onSightClick(sightIndex) {
+    void _onSightClick(int sightIndex) {
       Navigator.push(
         context,
         MaterialPageRoute(

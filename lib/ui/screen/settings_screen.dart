@@ -20,6 +20,7 @@ class SettingsScreen extends StatelessWidget {
       context.read<AppSettings>().changeTheme();
     }
 
+    /// View the app tutorial
     void _onClickOnboardingButton() {
       Navigator.push(
         context,
@@ -33,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
       create: (_) => AppSettings(),
       child: Container(
         child: Scaffold(
-          bottomNavigationBar: AppBottomNavigationBar(),
+          bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 3),
           body: Column(
             children: [
               AppBarMini(
