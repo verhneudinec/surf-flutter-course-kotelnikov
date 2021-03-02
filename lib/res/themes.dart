@@ -115,6 +115,7 @@ final lightTheme = ThemeData(
   bottomSheetTheme: BottomSheetThemeData(
     backgroundColor: Colors.transparent,
   ),
+  dialogBackgroundColor: lmMainColor.withOpacity(0.24),
 );
 
 final darkTheme = ThemeData(
@@ -214,6 +215,7 @@ final darkTheme = ThemeData(
   bottomSheetTheme: BottomSheetThemeData(
     backgroundColor: Colors.transparent,
   ),
+  dialogBackgroundColor: dmMainColor,
 );
 
 extension ComponentsColor on ColorScheme {

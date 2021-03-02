@@ -30,5 +30,8 @@ class AppIcons {
       pointer = "assets/icons/tutorial/Pointer.svg",
       backpack = "assets/icons/tutorial/Backpack.svg",
       clickerFinger = "assets/icons/tutorial/ClickerFinger.svg",
-      splashIcon = "assets/icons/SplashIcon.svg";
+      splashIcon = "assets/icons/SplashIcon.svg",
+      file = "assets/icons/File.svg",
+      camera = "assets/icons/Camera.svg",
+      photo = "assets/icons/Photo.svg";
 }

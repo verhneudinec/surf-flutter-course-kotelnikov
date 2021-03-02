@@ -36,6 +36,10 @@ class AppDecorations {
         Radius.circular(8),
       );
 
+  static final addPhotoDialog = BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+  );
+
   /// Ползунок галереи в [SightDetails]
   static final galleryIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
@@ -43,7 +47,7 @@ class AppDecorations {
 
   /// Скругление углов для для кнопок [ElevatedButton] и [TextButton]
   static final buttonShape = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10.0),
+    borderRadius: BorderRadius.circular(12.0),
   );
 
   /// Кнопка "Запланировать" для [SightDetails]
