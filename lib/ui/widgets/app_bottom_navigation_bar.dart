@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/res/app_routes.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/localization.dart';
 
@@ -18,16 +19,16 @@ class AppBottomNavigationBar extends StatelessWidget {
     if (currentPageIndex != index)
       switch (index) {
         case 0:
-          Navigator.pushNamed(context, "/home");
+          Navigator.pushNamed(context, AppRoutes.home);
           break;
         case 1:
-          Navigator.pushNamed(context, "/map");
+          Navigator.pushNamed(context, AppRoutes.map);
           break;
         case 2:
-          Navigator.pushNamed(context, "/favorites");
+          Navigator.pushNamed(context, AppRoutes.favorites);
           break;
         case 3:
-          Navigator.pushNamed(context, "/settings");
+          Navigator.pushNamed(context, AppRoutes.settings);
           break;
       }
   }

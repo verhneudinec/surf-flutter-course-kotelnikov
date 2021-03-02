@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/models/add_sight.dart';
 import 'package:places/models/favorite_sights.dart';
+import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/map_screen.dart';
 import 'package:places/ui/screen/onboarding_screen.dart';
@@ -47,14 +48,13 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
       home: SplashScreen(),
-      initialRoute: "/home",
       routes: {
-        "/home": (context) => SightListScreen(
+        AppRoutes.home: (context) => SightListScreen(
               sightsData: mocks,
             ),
-        "/map": (BuildContext context) => MapScreen(),
-        "/favorites": (BuildContext context) => VisitingScreen(),
-        "/settings": (BuildContext context) => SettingsScreen(),
+        AppRoutes.map: (BuildContext context) => MapScreen(),
+        AppRoutes.favorites: (BuildContext context) => VisitingScreen(),
+        AppRoutes.settings: (BuildContext context) => SettingsScreen(),
       },
       // home: OnboardingScreen(),
       // home: SightDetails(sight: mocks[2]),
