@@ -14,7 +14,12 @@ import 'package:places/ui/widgets/image_loader_builder.dart';
 /// and body [SightDetailsBody] with basic information about the place
 class SightDetails extends StatelessWidget {
   final Sight sight;
-  const SightDetails({Key key, this.sight}) : super(key: key);
+  final bool isBottomSheet;
+  const SightDetails({
+    Key key,
+    @required this.sight,
+    this.isBottomSheet = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,10 @@ class SightDetails extends StatelessWidget {
             automaticallyImplyLeading: false,
             expandedHeight: 360,
             flexibleSpace: FlexibleSpaceBar(
-              background: SightDetailsHeader(sight: sight),
+              background: SightDetailsHeader(
+                sight: sight,
+                isBottomSheet: isBottomSheet,
+              ),
             ),
           ),
           SliverList(
@@ -45,7 +53,9 @@ class SightDetails extends StatelessWidget {
 
 class SightDetailsHeader extends StatefulWidget {
   final Sight sight;
-  const SightDetailsHeader({Key key, this.sight}) : super(key: key);
+  final bool isBottomSheet;
+  const SightDetailsHeader({Key key, this.sight, this.isBottomSheet})
+      : super(key: key);
 
   @override
   _SightDetailsHeaderState createState() => _SightDetailsHeaderState();
@@ -74,15 +84,38 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
           height: 96,
         ),
 
+        // BottomSheet close slider
+        if (widget.isBottomSheet)
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: ClipRRect(
+                borderRadius: AppDecorations.bottomSheetTopRectangleRadius,
+                child: Container(
+                  height: 4,
+                  width: 40,
+                  color: Theme.of(context).backgroundColor,
+                ),
+              ),
+            ),
+          ),
+
         // "Go back" button
         SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 16,
-              top: 12,
-            ),
-            child: AppBackButton(
-              backgroundColor: Theme.of(context).backgroundColor,
+          child: Align(
+            alignment:
+                widget.isBottomSheet ? Alignment.topRight : Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: widget.isBottomSheet ? 16 : 12,
+              ),
+              child: AppBackButton(
+                backgroundColor: Theme.of(context).backgroundColor,
+                isCancelRoundedButton: widget.isBottomSheet,
+              ),
             ),
           ),
         ),

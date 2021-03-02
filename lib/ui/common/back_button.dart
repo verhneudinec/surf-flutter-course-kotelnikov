@@ -1,14 +1,21 @@
-///
-/// Custom BackButton
-///
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/res/decorations.dart';
 import 'package:places/res/icons.dart';
 
+/// Custom BackButton.
+/// [backgroundColor] - color of the container in which the icon is located.
+/// [isCancelRoundedButton] - if true, will be displayed the icon [AppIcons.close]
+/// with a rounded container. By default a rectangular container with the [AppIcons.arrow]
+/// icon is displayed.
 class AppBackButton extends StatelessWidget {
   final Color backgroundColor;
-  const AppBackButton({Key key, this.backgroundColor}) : super(key: key);
+  final bool isCancelRoundedButton;
+  const AppBackButton({
+    Key key,
+    this.backgroundColor,
+    this.isCancelRoundedButton = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +26,19 @@ class AppBackButton extends StatelessWidget {
 
     return InkWell(
       child: Container(
-        width: 32,
-        height: 32,
+        width: isCancelRoundedButton ? 40 : 32,
+        height: isCancelRoundedButton ? 40 : 32,
         child: Material(
           borderRadius: BorderRadius.all(
-            Radius.circular(10),
+            isCancelRoundedButton
+                ? AppDecorations.appCancelButtonRadius
+                : AppDecorations.appBackButtonRadius,
           ),
           color: backgroundColor ?? Colors.transparent,
           child: IconButton(
             onPressed: () => _onClickBackButton(),
             icon: SvgPicture.asset(
-              AppIcons.arrow,
+              isCancelRoundedButton ? AppIcons.close : AppIcons.arrow,
               color: Theme.of(context).iconTheme.color,
             ),
             iconSize: 24,

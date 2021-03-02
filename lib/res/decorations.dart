@@ -28,6 +28,14 @@ class AppDecorations {
     ),
   );
 
+  static final bottomSheetBorderRadius = BorderRadius.only(
+        topLeft: Radius.circular(16),
+        topRight: Radius.circular(16),
+      ),
+      bottomSheetTopRectangleRadius = BorderRadius.all(
+        Radius.circular(8),
+      );
+
   /// Ползунок галереи в [SightDetails]
   static final galleryIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
@@ -86,4 +94,7 @@ class AppDecorations {
   static final onboardingPageIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(8),
   );
+
+  static final appBackButtonRadius = Radius.circular(10),
+      appCancelButtonRadius = Radius.circular(40);
 }

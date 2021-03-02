@@ -20,6 +20,7 @@ class AppIcons {
       filter = "assets/icons/Filter.svg",
       share = "assets/icons/Share.svg",
       arrow = "assets/icons/Arrow.svg",
+      close = "assets/icons/Close.svg",
       hotel = "assets/icons/categories/Hotel.svg",
       restourant = "assets/icons/categories/Restourant.svg",
       particularPlace = "assets/icons/categories/Particular_place.svg",

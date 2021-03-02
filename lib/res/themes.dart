@@ -112,6 +112,9 @@ final lightTheme = ThemeData(
       shape: AppDecorations.buttonShape,
     ),
   ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: Colors.transparent,
+  ),
 );
 
 final darkTheme = ThemeData(
@@ -207,6 +210,9 @@ final darkTheme = ThemeData(
       backgroundColor: dmDarkColor,
       color: dmSecondary2Color,
     ),
+  ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: Colors.transparent,
   ),
 );
 
