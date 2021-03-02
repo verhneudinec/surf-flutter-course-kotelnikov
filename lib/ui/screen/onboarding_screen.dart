@@ -6,6 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/localization.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/ui/screen/sight_list_screen.dart';
+
+import '../../mocks.dart';
 
 /// The [OnboardingScreen] displays hints on how to use the app.
 /// The screen is displayed when you first launch the app or through the settings screen.
@@ -40,6 +43,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           _currentOnboardingPageIndex = currentIndex;
         });
       },
+    );
+  }
+
+  /// Function to go to the next screen
+  void _goToTheNextScreen() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => SightListScreen(
+          sightsData: mocks,
+        ),
+      ),
     );
   }
 
@@ -216,7 +231,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => _goToTheNextScreen(),
         child: Text(
           AppTextStrings.onBoardingStartButton.toUpperCase(),
           style: AppTextStyles.addSightScreenSightCreateButton,
@@ -233,7 +248,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   /// "Skip" button for [AppBar]
   Widget _skipButton() {
     return InkWell(
-      onTap: () => print(AppTextStrings.onBoardingSkipButton),
+      onTap: () => _goToTheNextScreen(),
       child: Container(
         alignment: AlignmentDirectional.center,
         padding: EdgeInsets.symmetric(horizontal: 16),

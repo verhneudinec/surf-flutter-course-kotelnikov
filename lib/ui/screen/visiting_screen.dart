@@ -49,50 +49,62 @@ class _VisitingScreenState extends State<VisitingScreen>
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              AppBarMini(
-                title: AppTextStrings.visitingScreenTitle,
-                tabBarIndicator: TabIndicator(
-                  tabController: tabController,
-                ),
+        body: Column(
+          children: [
+            AppBarMini(
+              title: AppTextStrings.visitingScreenTitle,
+              tabBarIndicator: TabIndicator(
+                tabController: tabController,
               ),
-              AnimatedSwitcher(
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height - 238,
+              child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: IndexedStack(
                   key: ValueKey(tabController.index),
                   index: tabController.index,
                   children: [
-                    SightList(
-                      sights: _unvisitedSights,
-                      cardType: CardTypes.unvisited,
+                    CustomScrollView(
+                      slivers: [
+                        SightList(
+                          sights: _unvisitedSights,
+                          cardType: CardTypes.unvisited,
+                        ),
+                      ],
                     ),
-                    SightList(
-                      sights: _visitedSights,
-                      cardType: "visited",
+                    CustomScrollView(
+                      slivers: [
+                        SightList(
+                          sights: _visitedSights,
+                          cardType: CardTypes.visited,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              // ConstrainedBox(
-              //   constraints: BoxConstraints(
-              //     maxHeight: MediaQuery.of(context).size.height,
-              //     maxWidth: MediaQuery.of(context).size.width,
-              //     // TODO Резиновый размер для TabBarView
-              //   ),
-              //   child: TabBarView(
-              //     controller: tabController,
-              //     children: [
-              //       SightList(cardType: CardTypes.unvisited),
-              //       SightList(cardType: "visited"),
-              //     ],
-              //   ),
-              // ),
-            ],
-          ),
+            ),
+            // ConstrainedBox(
+            //   constraints: BoxConstraints(
+            //     maxHeight: MediaQuery.of(context).size.height,
+            //     maxWidth: MediaQuery.of(context).size.width,
+            //     // TODO Резиновый размер для TabBarView
+            //   ),
+            //   child: TabBarView(
+            //     controller: tabController,
+            //     children: [
+            //       SightList(cardType: CardTypes.unvisited),
+            //       SightList(cardType: "visited"),
+            //     ],
+            //   ),
+            // ),
+          ],
         ),
-        bottomNavigationBar: AppBottomNavigationBar(),
+        bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 2),
       ),
     );
   }

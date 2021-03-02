@@ -254,13 +254,7 @@ class _FilterScreenState extends State<FilterScreen> {
               const SizedBox(
                 height: 24,
               ),
-              Container(
-                height: 400,
-                color: Colors.green[100],
-                child: Center(
-                  child: Text("Тест ListView"),
-                ),
-              ),
+
               const SizedBox(
                 height: 56,
               ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/icons.dart';
@@ -48,9 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // If there was no error, then go to the next screen.
       // Error handling is not yet provided.
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
+        CupertinoPageRoute(
           builder: (BuildContext context) => OnboardingScreen(),
         ),
       );

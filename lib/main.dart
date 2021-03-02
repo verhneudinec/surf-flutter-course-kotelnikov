@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:places/models/add_sight.dart';
 import 'package:places/models/favorite_sights.dart';
+import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/ui/screen/map_screen.dart';
 import 'package:places/ui/screen/onboarding_screen.dart';
 // и все-таки не вижу смысла пока чистить main,
 // пока не прошли навигацию. пока пусть вызовы
@@ -46,6 +48,14 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
       home: SplashScreen(),
+      routes: {
+        AppRoutes.home: (context) => SightListScreen(
+              sightsData: mocks,
+            ),
+        AppRoutes.map: (BuildContext context) => MapScreen(),
+        AppRoutes.favorites: (BuildContext context) => VisitingScreen(),
+        AppRoutes.settings: (BuildContext context) => SettingsScreen(),
+      },
       // home: OnboardingScreen(),
       // home: SightDetails(sight: mocks[2]),
       // home: AddSightScreen(),

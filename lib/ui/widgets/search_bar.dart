@@ -23,7 +23,7 @@ class SearchBar extends StatelessWidget {
     final TextEditingController _searchFieldController =
         context.watch<SightsSearch>().searchFieldController;
 
-    /// When clicking on an inactive [SeachBar]
+    /// When clicking on an inactive [SeachBar].
     void _onClickSearchBar() {
       if (readonly == true)
         Navigator.push(
@@ -34,7 +34,7 @@ class SearchBar extends StatelessWidget {
         );
     }
 
-    /// When clicking on the filter button
+    /// When clicking on the filter button.
     void _onClickFilterButton() {
       Navigator.push(
         context,

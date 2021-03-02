@@ -30,6 +30,7 @@ class SightListScreen extends StatefulWidget {
 class _SightListScreenState extends State<SightListScreen> {
   bool _isSightListLoading = true;
 
+  /// To go to the [AddSightScreen] screen
   void _onClickCreateButton() {
     Navigator.push(
       context,
@@ -78,6 +79,9 @@ class _SightListScreenState extends State<SightListScreen> {
                         height: 10,
                       ),
                       CircularProgressIndicator(),
+                      const SizedBox(
+                        height: 24,
+                      ),
                     ],
                   ),
                 ),
@@ -95,7 +99,7 @@ class _SightListScreenState extends State<SightListScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _createSightButton(),
-      bottomNavigationBar: AppBottomNavigationBar(),
+      bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 0),
     );
   }
 
