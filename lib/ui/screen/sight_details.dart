@@ -23,30 +23,40 @@ class SightDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-            expandedHeight: 360,
-            flexibleSpace: FlexibleSpaceBar(
-              background: SightDetailsHeader(
-                sight: sight,
-                isBottomSheet: isBottomSheet,
-              ),
+    return DraggableScrollableSheet(
+      initialChildSize: 1.0,
+      minChildSize: 0.5,
+      builder: (BuildContext context, ScrollController scrollController) {
+        return ClipRRect(
+          borderRadius: AppDecorations.bottomSheetBorderRadius,
+          child: Scaffold(
+            body: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  automaticallyImplyLeading: false,
+                  expandedHeight: 360,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: SightDetailsHeader(
+                      sight: sight,
+                      isBottomSheet: isBottomSheet,
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: SightDetailsBody(sight: sight),
+                    ),
+                  ]),
+                )
+              ],
             ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: SightDetailsBody(sight: sight),
-              ),
-            ]),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }
