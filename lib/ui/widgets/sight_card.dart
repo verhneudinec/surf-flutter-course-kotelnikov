@@ -42,12 +42,18 @@ class SightCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: AppDecorations.bottomSheetBorderRadius,
               child: GestureDetector(
-                onVerticalDragDown: (offset) {
-                  if (offset.localPosition.dy < 70) Navigator.of(context).pop();
-                },
-                child: SightDetails(
-                  sight: sight,
-                  isBottomSheet: true,
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification notification) {
+                    if (notification is OverscrollNotification &&
+                        notification.overscroll < -10) {
+                      Navigator.of(context).pop();
+                    }
+                    return false;
+                  },
+                  child: SightDetails(
+                    sight: sight,
+                    isBottomSheet: true,
+                  ),
                 ),
               ),
             ),
