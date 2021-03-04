@@ -211,6 +211,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
                   foregroundColor: MaterialStateProperty.all<Color>(
                     Theme.of(context).disabledColor,
                   ),
+                  minimumSize: MaterialStateProperty.all<Size>(
+                    Size(double.infinity, 48),
+                  ),
                 ),
       ),
     );
@@ -452,9 +455,24 @@ class _AddSightScreenState extends State<AddSightScreen> {
   }
 
   Widget _photogallery(List _sightPhotogallery) {
-    /// Add a photo to the gallery
+    /// Dialog box with options for adding a photo
     void _addSightPhoto() {
-      context.read<AddSight>().addSightPhoto();
+      showDialog(
+        context: context,
+        builder: (_) {
+          return Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              child: _addSightPhotoDialog(),
+            ),
+          );
+        },
+        barrierColor: Theme.of(context).dialogBackgroundColor,
+      );
     }
 
     ///  Delete a photo from the gallery
@@ -537,6 +555,123 @@ class _AddSightScreenState extends State<AddSightScreen> {
               ),
             ],
           )
+      ],
+    );
+  }
+
+  /// Custom implementation of the [AlertDialog] widget
+  Widget _addSightPhotoDialog() {
+    // Function for closing the window
+    void _closeDialog() {
+      Navigator.of(context).pop();
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          decoration: AppDecorations.addPhotoDialog.copyWith(
+            color: Theme.of(context).backgroundColor,
+          ),
+          child: Column(
+            children: [
+              _dialogActionButton(
+                  icon: AppIcons.camera,
+                  title:
+                      AppTextStrings.addSightScreenAddPhotoDialogButtonCamera),
+              _dialogActionButton(
+                  icon: AppIcons.photo,
+                  title:
+                      AppTextStrings.addSightScreenAddPhotoDialogButtonPhoto),
+              _dialogActionButton(
+                icon: AppIcons.file,
+                title: AppTextStrings.addSightScreenAddPhotoDialogButtonFile,
+                isShowDivider: false,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextButton(
+          onPressed: () => _closeDialog(),
+          child: Text(
+            AppTextStrings.addSightScreenAddPhotoDialogCancelButton
+                .toUpperCase(),
+            style: AppTextStyles.addSightScreenPhotoDialogCancelButton.copyWith(
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          style: Theme.of(context).textButtonTheme.style.copyWith(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).backgroundColor,
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).accentColor,
+                ),
+                elevation: MaterialStateProperty.all<double>(0),
+                minimumSize: MaterialStateProperty.all<Size>(
+                  Size(double.infinity, 48),
+                ),
+              ),
+        ),
+      ],
+    );
+  }
+
+  /// Action button for [_addSightPhotoDialog].
+  /// [Icon] - path to the svg icon.
+  /// [Title] - text for the button.
+  /// [isShowDivider] - whether to show the separator.
+  Widget _dialogActionButton({
+    @required String icon,
+    @required String title,
+    bool isShowDivider = true,
+  }) {
+    return Column(
+      children: [
+        TextButton(
+          onPressed: () => print(title),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                icon,
+                width: 24,
+                height: 24,
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              SizedBox(width: 12),
+              Text(
+                title,
+                style:
+                    AppTextStyles.addSightScreenPhotoDialogTextButtons.copyWith(
+                  color: Theme.of(context).textTheme.caption.color,
+                ),
+              ),
+            ],
+          ),
+          style: Theme.of(context).textButtonTheme.style.copyWith(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).backgroundColor,
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).accentColor,
+                ),
+                elevation: MaterialStateProperty.all<double>(0),
+              ),
+        ),
+        if (isShowDivider)
+          Divider(
+            color: Theme.of(context).disabledColor,
+            indent: 0,
+            endIndent: 0,
+            height: 1,
+          ),
       ],
     );
   }

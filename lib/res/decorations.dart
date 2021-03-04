@@ -28,6 +28,18 @@ class AppDecorations {
     ),
   );
 
+  static final bottomSheetBorderRadius = BorderRadius.only(
+        topLeft: Radius.circular(16),
+        topRight: Radius.circular(16),
+      ),
+      bottomSheetTopRectangleRadius = BorderRadius.all(
+        Radius.circular(8),
+      );
+
+  static final addPhotoDialog = BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+  );
+
   /// Ползунок галереи в [SightDetails]
   static final galleryIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
@@ -35,7 +47,7 @@ class AppDecorations {
 
   /// Скругление углов для для кнопок [ElevatedButton] и [TextButton]
   static final buttonShape = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10.0),
+    borderRadius: BorderRadius.circular(12.0),
   );
 
   /// Кнопка "Запланировать" для [SightDetails]
@@ -86,4 +98,7 @@ class AppDecorations {
   static final onboardingPageIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(8),
   );
+
+  static final appBackButtonRadius = Radius.circular(10),
+      appCancelButtonRadius = Radius.circular(40);
 }

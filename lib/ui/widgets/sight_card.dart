@@ -31,17 +31,33 @@ class SightCard extends StatelessWidget {
       context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
     }
 
-    /// Go to the screen with sight details
-    /// when clicking on the card
+    /// Open a window with details of the place,
+    /// if there was a click on the card
     void _onSightClick() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SightDetails(
-            sight: sight,
-          ),
-        ),
+      showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return Container(
+            margin: EdgeInsets.only(top: 84),
+            child: SightDetails(
+              sight: sight,
+              isBottomSheet: true,
+            ),
+          );
+        },
+        isScrollControlled: true,
       );
+
+      /// Go to the screen with sight details
+      /// when clicking on the card
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => SightDetails(
+      //       sight: sight,
+      //     ),
+      //   ),
+      // );
     }
 
     return Container(

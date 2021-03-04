@@ -112,6 +112,10 @@ final lightTheme = ThemeData(
       shape: AppDecorations.buttonShape,
     ),
   ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: Colors.transparent,
+  ),
+  dialogBackgroundColor: lmMainColor.withOpacity(0.24),
 );
 
 final darkTheme = ThemeData(
@@ -208,6 +212,10 @@ final darkTheme = ThemeData(
       color: dmSecondary2Color,
     ),
   ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: Colors.transparent,
+  ),
+  dialogBackgroundColor: dmMainColor,
 );
 
 extension ComponentsColor on ColorScheme {

@@ -127,7 +127,11 @@ class AppTextStyles {
       addSightScreenSightSpecifyCoordinatesButton = _text.copyWith(
         fontWeight: FontWeight.w500,
       ),
-      addSightScreenSightCreateButton = _button;
+      addSightScreenSightCreateButton = _button,
+      addSightScreenPhotoDialogCancelButton = _smallBold,
+      addSightScreenPhotoDialogTextButtons = _text.copyWith(
+        fontWeight: FontWeight.w400,
+      );
 
   static final appBarCustomCancelButton = _text;
 

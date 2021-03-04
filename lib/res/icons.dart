@@ -20,6 +20,7 @@ class AppIcons {
       filter = "assets/icons/Filter.svg",
       share = "assets/icons/Share.svg",
       arrow = "assets/icons/Arrow.svg",
+      close = "assets/icons/Close.svg",
       hotel = "assets/icons/categories/Hotel.svg",
       restourant = "assets/icons/categories/Restourant.svg",
       particularPlace = "assets/icons/categories/Particular_place.svg",
@@ -29,5 +30,8 @@ class AppIcons {
       pointer = "assets/icons/tutorial/Pointer.svg",
       backpack = "assets/icons/tutorial/Backpack.svg",
       clickerFinger = "assets/icons/tutorial/ClickerFinger.svg",
-      splashIcon = "assets/icons/SplashIcon.svg";
+      splashIcon = "assets/icons/SplashIcon.svg",
+      file = "assets/icons/File.svg",
+      camera = "assets/icons/Camera.svg",
+      photo = "assets/icons/Photo.svg";
 }
