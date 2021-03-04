@@ -27,7 +27,7 @@ class SightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Removes the list item from provider
-    void onSightCardDismissed() {
+    void _onSightCardDelete() {
       context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
     }
 
@@ -69,7 +69,7 @@ class SightCard extends StatelessWidget {
       child: Dismissible(
         key: ValueKey(sight.name),
         direction: DismissDirection.endToStart,
-        onDismissed: (direction) => onSightCardDismissed(),
+        onDismissed: (direction) => _onSightCardDelete(),
         background: _dismissibleBackground(context),
         child: Stack(
           children: [
@@ -103,6 +103,7 @@ class SightCard extends StatelessWidget {
             SightCardActionButtons(
               sight: sight,
               cardType: cardType ?? CardTypes.general,
+              onSightCardDelete: _onSightCardDelete,
             ),
           ],
         ),
@@ -181,7 +182,7 @@ class SightCardHeader extends StatelessWidget {
           top: 16,
           left: 16,
           child: Text(
-            _sightTypes[sight.type.toString()].toString(),
+            _sightTypes[sight.type],
             style: AppTextStyles.sightCardType.copyWith(
               color: Theme.of(context).colorScheme.sightCardTypeColor,
             ),
@@ -276,39 +277,62 @@ class SightCardBody extends StatelessWidget {
 }
 
 /// Action buttons for SightCard: delete, calendar, share
-class SightCardActionButtons extends StatelessWidget {
+class SightCardActionButtons extends StatefulWidget {
   final Sight sight;
   final String cardType;
+  final onSightCardDelete;
   const SightCardActionButtons({
     Key key,
     this.sight,
     this.cardType,
+    this.onSightCardDelete,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    /// Removes the list item from provider
-    void onSightCardDelete() {
-      // TODO УДАЛИТЬ ДУБЛЬ ФУНКЦИИ DISMISSED
-      context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
-    }
+  _SightCardActionButtonsState createState() => _SightCardActionButtonsState();
+}
 
-    return _controllButtons(
-      onSightCardDelete,
+class _SightCardActionButtonsState extends State<SightCardActionButtons> {
+  DateTime _scheduledDate;
+  DateTime _currentDate = DateTime.now();
+
+  /// Modal window for changing the date of visit
+  void _onChangeVisitTime() async {
+    DateTime _res = await showDatePicker(
+      context: context,
+      initialDate: _currentDate,
+      firstDate: _currentDate,
+      lastDate: _currentDate.add(
+        Duration(days: 365),
+      ),
+      helpText: AppTextStrings.datePickerHelpText,
+      confirmText: AppTextStrings.datePickerConfrimText,
+      cancelText: AppTextStrings.datePickerCancelText,
+      builder: (_, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: Theme.of(context).backgroundColor,
+          ),
+          child: child,
+        );
+      },
     );
+
+    if (_res != null) {
+      setState(() {
+        _scheduledDate = _res;
+      });
+    }
   }
 
-  /// [_controllButtons] Displays buttons based on [cardType].
-  Widget _controllButtons(
-    onSightCardDelete,
-  ) {
-    // Add to favorites
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       height: 96,
       width: double.infinity,
       child: Stack(
         children: [
-          if (cardType == CardTypes.general)
+          if (widget.cardType == CardTypes.general)
             Positioned(
               top: 16,
               right: 16,
@@ -318,28 +342,29 @@ class SightCardActionButtons extends StatelessWidget {
             ),
 
           // "Remove from list" button
-          if (cardType != CardTypes.general)
+          if (widget.cardType != CardTypes.general)
             Positioned(
               top: 16,
               right: 16,
               child: _iconButton(
                 iconPath: AppIcons.delete,
-                onPressed: onSightCardDelete,
+                onPressed: () => widget.onSightCardDelete(),
               ),
             ),
 
           // Button "Change scheduled visit time"
-          if (cardType == CardTypes.unvisited)
+          if (widget.cardType == CardTypes.unvisited)
             Positioned(
               top: 16,
               right: 56,
               child: _iconButton(
                 iconPath: AppIcons.calendar,
+                onPressed: () => _onChangeVisitTime(),
               ),
             ),
 
           // "Share" button
-          if (cardType == CardTypes.visited)
+          if (widget.cardType == CardTypes.visited)
             Positioned(
               top: 16,
               right: 56,

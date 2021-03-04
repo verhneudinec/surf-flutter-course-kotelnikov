@@ -70,5 +70,8 @@ class AppTextStrings {
       onBoardingThirdPageTitle = "Добавляй места, которые нашёл сам",
       onBoardingThirdPageSubtitle =
           "Делись самыми интересными и помоги нам стать лучше!",
-      onBoardingStartButton = "На старт";
+      onBoardingStartButton = "На старт",
+      datePickerHelpText = "Выбрать дату",
+      datePickerConfrimText = "Подтвердить",
+      datePickerCancelText = "Отмена";
 }
