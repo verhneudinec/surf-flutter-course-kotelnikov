@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
 
+/// App decorations.
+/// This file describes the radius of the blocks
+/// and sometimes the gradients and backgrounds.
 class AppDecorations {
+  /// Sight card container in the [SightCard] widget
   static final sightCardContainer = BoxDecoration(
-    borderRadius: BorderRadius.circular(16),
-  );
-
-  static final sightCardContainerWithShadow = BoxDecoration(
-    borderRadius: BorderRadius.circular(16),
-    boxShadow: [
-      BoxShadow(
-        color: Color.fromRGBO(26, 26, 32, 0.16),
-        blurRadius: 16,
-        spreadRadius: 0,
-        offset: Offset(0, 4),
+        borderRadius: BorderRadius.circular(16),
       ),
-    ],
-  );
+      sightCardContainerWithShadow = BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(26, 26, 32, 0.16),
+            blurRadius: 16,
+            spreadRadius: 0,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      sightCardImageGradient = BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF252849).withOpacity(0.4),
+            Color.fromRGBO(59, 62, 91, 0.032),
+          ],
+        ),
+      );
 
-  static final sightCardImageGradient = BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [
-        Color(0xFF252849).withOpacity(0.4),
-        Color.fromRGBO(59, 62, 91, 0.032),
-      ],
-    ),
-  );
-
+  /// Styles for bottom sheet
   static final bottomSheetBorderRadius = BorderRadius.only(
         topLeft: Radius.circular(16),
         topRight: Radius.circular(16),
@@ -36,47 +39,50 @@ class AppDecorations {
         Radius.circular(8),
       );
 
+  /// Styles for the modal window for adding a photo
   static final addPhotoDialog = BoxDecoration(
     borderRadius: BorderRadius.circular(12),
   );
 
-  /// Ползунок галереи в [SightDetails]
+  /// Gallery slider in [SightDetails]
   static final galleryIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
   );
 
-  /// Скругление углов для для кнопок [ElevatedButton] и [TextButton]
+  /// Rounding corners for [ElevatedButton] and [TextButton] buttons
   static final buttonShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(12.0),
   );
 
-  /// Кнопка "Запланировать" для [SightDetails]
+  /// Schedule button for [SightDetails]
   static final planningButton = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
   );
 
-  /// Контейнер индикатора табов
+  /// Tabs indicator container
   static final tabIndicatorContainer = BoxDecoration(
     borderRadius: BorderRadius.circular(40),
   );
 
-  /// Кнопка таба
+  /// Tab button
   static final tabIndicatorContainerElement = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(40),
   );
 
+  /// Buttons on pages [FilterScreen]
   static final filterScreenCategoryButton = BoxDecoration(
-    borderRadius: BorderRadius.circular(40),
-  );
+        borderRadius: BorderRadius.circular(40),
+      ),
+      filterScreenTickButton = BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+      );
 
-  static final filterScreenTickButton = BoxDecoration(
-    borderRadius: BorderRadius.circular(16),
-  );
-
+  /// Button to create a place on the main
   static final createPlaceButton = BoxDecoration(
     borderRadius: BorderRadius.circular(24),
   );
 
+  /// Styles for [SearchBar]
   static final searchBar = BoxDecoration(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -84,6 +90,7 @@ class AppDecorations {
         borderRadius: BorderRadius.circular(40),
       );
 
+  /// Styles for [AddSightScreen]
   static final addSightScreenGalleryPrimaryElement = BoxDecoration(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -91,14 +98,17 @@ class AppDecorations {
         borderRadius: BorderRadius.circular(12),
       );
 
+  /// Styles for [SightSearchScreen]
   static final sightSearchScreenSearchListTileImage = BoxDecoration(
     borderRadius: BorderRadius.circular(12),
   );
 
+  /// Styles for [OnboardingScreen]
   static final onboardingPageIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(8),
   );
 
+  /// Styles for the [AppBackButton] widget
   static final appBackButtonRadius = Radius.circular(10),
       appCancelButtonRadius = Radius.circular(40);
 }

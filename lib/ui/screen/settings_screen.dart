@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/models/app_settings.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/screen/onboarding_screen.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';

@@ -1,12 +1,10 @@
-///
-/// [TabIndicator] выводит индикацию табов для страницы "Избранное".
-///
-
 import 'package:flutter/material.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 
+/// [TabIndicator] displays the indication of tabs for the "Favorites" page.
+/// Accepts a [tabController] tab controller as parameters.
 class TabIndicator extends StatelessWidget {
   final TabController tabController;
   const TabIndicator({Key key, this.tabController}) : super(key: key);

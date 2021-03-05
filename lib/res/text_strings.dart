@@ -1,6 +1,7 @@
 /// Constant application text strings
 class AppTextStrings {
-  static String appBarTitle = "Список\nинтересных мест",
+  static String appTitle = "Places",
+      appBarTitle = "Список\nинтересных мест",
       appBarMiniTitle = "Список интересных мест",
       ploteRouteButton = "построить маршрут",
       planningButton = "Запланировать",
@@ -12,9 +13,11 @@ class AppTextStrings {
       toVisitTab = "Посетил",
       visitedTab = "Хочу посетить",
       emptyPageTitle = "Пусто",
-      emptyPageSubtitle =
-          "Отмечайте понравившиеся места\nи они появиятся здесь.",
+      emptyPageSubtitleDefault =
+          "Попробуйте обновить страницу\nили зайдите позже.",
       emptyPageSubtitleVisited = "Завершите маршрут,\nчтобы место попало сюда.",
+      emptyPageSubtitleUnvisited =
+          "Отмечайте понравившиеся места\nи они появиятся здесь.",
       bottomNavigationBarLabelList = "Интересные места",
       bottomNavigationBarLabelMap = "Карта",
       bottomNavigationBarLabelFavorites = "Избранное",

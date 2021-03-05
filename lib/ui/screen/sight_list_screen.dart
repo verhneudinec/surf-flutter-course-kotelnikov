@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/sight_list.dart';
 import 'package:places/ui/screen/add_sight_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
@@ -93,6 +94,7 @@ class _SightListScreenState extends State<SightListScreen> {
               sights: _searchFieldIsNotEmpty == true
                   ? _searchResults
                   : widget.sightsData,
+              cardsType: CardTypes.general,
             ),
           ],
         ),

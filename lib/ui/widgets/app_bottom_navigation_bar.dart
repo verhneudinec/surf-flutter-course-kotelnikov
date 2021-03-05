@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 
 /// Bottom navigation for the app
 /// [currentPageIndex] - the current page index for the navigator.
