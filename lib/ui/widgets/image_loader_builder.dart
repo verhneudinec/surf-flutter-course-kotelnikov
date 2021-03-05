@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Image loading widget. Displayed when downloading an image from the network.
 Widget imageLoaderBuilder(
     BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
   if (loadingProgress == null) return child;

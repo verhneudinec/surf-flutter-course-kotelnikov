@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/common/back_button.dart';
 

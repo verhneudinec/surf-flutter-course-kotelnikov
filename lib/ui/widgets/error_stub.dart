@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/res/localization.dart';
 import 'package:places/res/text_styles.dart';
 
-/// The [NotFound] widget displays a stub,
-/// when the list is empty.
+/// [The [ErrorStub] widget displays a stub,
+/// when the list or screen is empty.
+/// [icon] - icon in svg format.
+/// [title] - stub title.
+/// [subtitle] - additional text under the title.
 class ErrorStub extends StatelessWidget {
   final String icon;
   final String title;

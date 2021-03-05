@@ -4,19 +4,10 @@ import 'package:places/models/favorite_sights.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/map_screen.dart';
-import 'package:places/ui/screen/onboarding_screen.dart';
-// и все-таки не вижу смысла пока чистить main,
-// пока не прошли навигацию. пока пусть вызовы
-// останутся, я их постоянно использую.
 import 'package:places/ui/screen/sight_list_screen.dart';
-import 'package:places/ui/screen/sight_details.dart';
 import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
-import 'package:places/ui/screen/filter_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
-import 'package:places/ui/screen/add_sight_screen.dart';
-import 'package:places/ui/screen/selecting_sight_type.dart';
-import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/mocks.dart';
 import 'package:provider/provider.dart';
 import 'package:places/models/app_settings.dart';

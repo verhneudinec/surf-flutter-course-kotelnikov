@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/models/favorite_sights.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
@@ -48,7 +48,7 @@ class SightCard extends StatelessWidget {
         isScrollControlled: true,
       );
 
-      /// Go to the screen with sight details
+      /// TODO Go to the screen with sight details
       /// when clicking on the card
       // Navigator.push(
       //   context,

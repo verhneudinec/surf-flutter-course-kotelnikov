@@ -5,7 +5,7 @@ import 'package:places/domain/sight.dart';
 import 'package:places/models/add_sight.dart';
 import 'package:places/models/sights.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/icons.dart';

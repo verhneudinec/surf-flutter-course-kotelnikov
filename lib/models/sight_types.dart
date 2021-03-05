@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 
 /// Provider for place types.
 class SightTypes with ChangeNotifier {

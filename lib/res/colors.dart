@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Общие цвета
+//////////////////////////
+/// Application colors ///
+/////////////////////////
+
+/// Common colors
 const Color whiteColor = Colors.white;
 
-/// Цвета для [lightTheme]
+/// Colors for [lightTheme]
 const Color lmGreenColor = Color(0xFF4CAF50),
     lmYellowColor = Color(0xFFFCDD3D),
     lmRedColor = Color(0xFFEF4343),
@@ -15,7 +19,7 @@ const Color lmGreenColor = Color(0xFF4CAF50),
     lmPrimaryColor = Color(0xFF252849),
     lmGrayColor = Color(0xFFC4C4C4);
 
-/// Цвета для [darkTheme]
+/// Colors for [darkTheme]
 const Color dmGreenColor = Color(0xFF6ADA6F),
     dmYellowColor = Color(0xFFFFE769),
     dmRedColor = Color(0xFFCF2A2A),

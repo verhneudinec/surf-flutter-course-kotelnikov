@@ -218,7 +218,11 @@ final darkTheme = ThemeData(
   dialogBackgroundColor: dmMainColor,
 );
 
+/// Additional colors for themes
 extension ComponentsColor on ColorScheme {
+  /// [isLightTheme] - theme identifier.
+  /// If true, light theme is used now.
+  /// Otherwise - dark theme.
   bool isLightTheme() => brightness == Brightness.light ? true : false;
 
   Color get sightCardTypeColor => whiteColor;

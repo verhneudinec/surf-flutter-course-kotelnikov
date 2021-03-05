@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/card_types.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/sight_list.dart';
@@ -72,7 +72,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                       slivers: [
                         SightList(
                           sights: _unvisitedSights,
-                          cardType: CardTypes.unvisited,
+                          cardsType: CardTypes.unvisited,
                         ),
                       ],
                     ),
@@ -80,7 +80,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                       slivers: [
                         SightList(
                           sights: _visitedSights,
-                          cardType: CardTypes.visited,
+                          cardsType: CardTypes.visited,
                         ),
                       ],
                     ),

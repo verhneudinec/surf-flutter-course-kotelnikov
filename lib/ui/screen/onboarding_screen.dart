@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:places/res/icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/res/localization.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';

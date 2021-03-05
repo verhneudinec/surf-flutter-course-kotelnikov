@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:places/res/card_types.dart';
-import 'package:places/ui/widgets/custom_list_view_builder.dart';
+import 'package:places/res/icons.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:places/ui/widgets/sight_card.dart';
-import 'package:places/ui/widgets/empty_list.dart';
+import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/domain/sight.dart';
 import 'package:provider/provider.dart';
 import 'package:places/models/favorite_sights.dart';
 
 /// The [SightList] widget displays a list of places
-/// if list length > 0 or [EmptyList] - if the array is empty.
+/// if list length > 0 or [ErrorStub] - if the array is empty.
 /// [cardType] - card type [CardTypes.general],
 /// [CardTypes.unvisited], [CardTypes.visited].
 class SightList extends StatelessWidget {
-  final String cardType;
+  final String cardsType;
   final List sights;
-  final onDeleteSight;
+  final void onDeleteSight;
   const SightList({
     Key key,
-    this.cardType,
-    this.sights,
+    @required this.cardsType,
+    @required this.sights,
     this.onDeleteSight,
   }) : super(key: key);
 
@@ -26,7 +27,7 @@ class SightList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildListDelegate(
-        sights.isNotEmpty == true
+        sights.isNotEmpty == false
             ? sights
                 .map((sight) => _sightListItem(
                       context,
@@ -36,10 +37,20 @@ class SightList extends StatelessWidget {
             : [
                 Center(
                   child: SizedBox(
-                    width: 255,
-                    height: MediaQuery.of(context).size.height -
-                        250, // TODO исправить размеры, Expanded
-                    child: EmptyList(cardType: cardType),
+                    height: MediaQuery.of(context).size.height - 330,
+                    child: cardsType == CardTypes.unvisited
+                        ? ErrorStub(
+                            icon: AppIcons.card,
+                            title: AppTextStrings.emptyPageTitle,
+                            subtitle: AppTextStrings.emptyPageSubtitleUnvisited,
+                          )
+                        : ErrorStub(
+                            icon: AppIcons.go,
+                            title: AppTextStrings.emptyPageTitle,
+                            subtitle: cardsType == CardTypes.general
+                                ? AppTextStrings.emptyPageSubtitleDefault
+                                : AppTextStrings.emptyPageSubtitleVisited,
+                          ),
                   ),
                 )
               ],
@@ -51,7 +62,7 @@ class SightList extends StatelessWidget {
     BuildContext context,
     Sight sight,
   ) {
-    return cardType == CardTypes.general
+    return cardsType == CardTypes.general
         ? _sightCardBuilder(sight)
         : _favoriteSightCardBuilder(context, sight);
   }
@@ -68,7 +79,7 @@ class SightList extends StatelessWidget {
       child: SightCard(
         key: ValueKey(sight.name),
         sight: sight,
-        cardType: cardType,
+        cardType: cardsType,
       ),
     );
   }

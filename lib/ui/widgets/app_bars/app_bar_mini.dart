@@ -1,12 +1,9 @@
-///
-/// Виджет [appBarMini] реализует кастомный [AppBar] для страниц с
-/// заголовком размера [AppTextStyles._subtitle].
-/// Также выводит переданный [tabBarIndicator] в подвале.
-///
-
 import 'package:flutter/material.dart';
 import 'package:places/res/text_styles.dart';
 
+/// The [appBarMini] widget implements a custom [AppBar] for pages
+/// with a title of size [AppTextStyles._subtitle].
+/// Also outputs the passed [tabBarIndicator] in the footer.
 class AppBarMini extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget tabBarIndicator;
