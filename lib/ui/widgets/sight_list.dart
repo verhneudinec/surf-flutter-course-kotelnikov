@@ -25,13 +25,17 @@ class SightList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
+    final bool _isPortraitOrientation =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return SliverGrid(
       delegate: SliverChildListDelegate(
-        sights.isNotEmpty == false
+        sights.isNotEmpty
             ? sights
                 .map((sight) => _sightListItem(
                       context,
                       sight,
+                      _isPortraitOrientation,
                     ))
                 .toList()
             : [
@@ -55,12 +59,17 @@ class SightList extends StatelessWidget {
                 )
               ],
       ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: _isPortraitOrientation ? 1 : 2,
+        childAspectRatio: _isPortraitOrientation ? 3 / 1.51 : 3 / 1.7,
+      ),
     );
   }
 
   Widget _sightListItem(
     BuildContext context,
     Sight sight,
+    bool isPortraitOrientation,
   ) {
     return cardsType == CardTypes.general
         ? _sightCardBuilder(sight)
