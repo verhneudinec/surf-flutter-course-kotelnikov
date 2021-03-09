@@ -61,7 +61,7 @@ class SightList extends StatelessWidget {
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _isPortraitOrientation ? 1 : 2,
-        childAspectRatio: _isPortraitOrientation ? 3 / 1.51 : 3 / 1.7,
+        childAspectRatio: _isPortraitOrientation ? 3 / 1.58 : 3 / 1.7,
       ),
     );
   }

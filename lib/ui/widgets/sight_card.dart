@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
@@ -298,25 +301,44 @@ class _SightCardActionButtonsState extends State<SightCardActionButtons> {
 
   /// Modal window for changing the date of visit
   void _onChangeVisitTime() async {
-    DateTime _res = await showDatePicker(
-      context: context,
-      initialDate: _currentDate,
-      firstDate: _currentDate,
-      lastDate: _currentDate.add(
-        Duration(days: 365),
-      ),
-      helpText: AppTextStrings.datePickerHelpText,
-      confirmText: AppTextStrings.datePickerConfrimText,
-      cancelText: AppTextStrings.datePickerCancelText,
-      builder: (_, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            dialogBackgroundColor: Theme.of(context).backgroundColor,
-          ),
-          child: child,
-        );
-      },
-    );
+    DateTime _res;
+
+    if (!Platform.isIOS) {
+      _res = await showDialog(
+          context: context,
+          builder: (context) {
+            return Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: _cupertinoDatePicker(),
+              ),
+            );
+          });
+    } else {
+      _res = await showDatePicker(
+        context: context,
+        initialDate: _currentDate,
+        firstDate: _currentDate,
+        lastDate: _currentDate.add(
+          Duration(days: 365 * 10),
+        ),
+        helpText: AppTextStrings.datePickerHelpText,
+        confirmText: AppTextStrings.datePickerConfrimText,
+        cancelText: AppTextStrings.datePickerCancelText,
+        builder: (_, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              dialogBackgroundColor: Theme.of(context).backgroundColor,
+            ),
+            child: child,
+          );
+        },
+      );
+    }
 
     if (_res != null) {
       setState(() {
@@ -394,6 +416,75 @@ class _SightCardActionButtonsState extends State<SightCardActionButtons> {
           iconPath,
         ),
       ),
+    );
+  }
+
+  /// Modal window for date picker in Cupertino style
+  Widget _cupertinoDatePicker() {
+    // The current date
+    DateTime _currentDate = DateTime.now();
+    // The selected date in the DatePicker
+    DateTime _scheduledDate;
+
+    // Function for closing the window
+    void _onDateTimeSubmitted() {
+      Navigator.of(context).pop(_scheduledDate);
+    }
+
+    // When changing the date in the picker
+    void _onDateTimeChanged(DateTime scheduledDate) {
+      _scheduledDate = scheduledDate;
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LimitedBox(
+          maxHeight: 300,
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            decoration: AppDecorations.addPhotoDialog.copyWith(
+              color: Theme.of(context).backgroundColor,
+            ),
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              initialDateTime: _currentDate,
+              maximumDate: _currentDate.add(Duration(days: 365 * 10)),
+              minimumDate: _currentDate,
+              onDateTimeChanged: (scheduledDate) =>
+                  _onDateTimeChanged(scheduledDate),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextButton(
+          onPressed: () => _onDateTimeSubmitted(),
+          child: Text(
+            AppTextStrings.datePickerConfrimText.toUpperCase(),
+            style:
+                AppTextStyles.favoritesScreenDatePickerConfrimButton.copyWith(
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          style: Theme.of(context).textButtonTheme.style.copyWith(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).backgroundColor,
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).accentColor,
+                ),
+                elevation: MaterialStateProperty.all<double>(0),
+                minimumSize: MaterialStateProperty.all<Size>(
+                  Size(double.infinity, 48),
+                ),
+              ),
+        ),
+      ],
     );
   }
 }

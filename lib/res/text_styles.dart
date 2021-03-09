@@ -158,4 +158,6 @@ class AppTextStyles {
       onboardingScreenTitle = _title,
       onboardingScreenSubtitle = _textWeight400,
       onBoardingStartButton = _button;
+
+  static final favoritesScreenDatePickerConfrimButton = _smallBold;
 }
