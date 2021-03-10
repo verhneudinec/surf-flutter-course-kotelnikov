@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/net/dio.dart';
 
 /// Provider for an array of application locations.
 /// Initialized with data from [mocks].

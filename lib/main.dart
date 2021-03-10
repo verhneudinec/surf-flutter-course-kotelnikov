@@ -14,8 +14,11 @@ import 'package:places/models/app_settings.dart';
 import 'package:places/models/sight_types.dart';
 import 'package:places/models/sights.dart';
 import 'package:places/models/sights_search.dart';
+import 'package:places/net/dio.dart';
 
-void main() {
+void main() async {
+  final f = await Client().getData();
+  print(f);
   runApp(
     MultiProvider(
       providers: [
