@@ -43,6 +43,8 @@ class _SightListScreenState extends State<SightListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool _isPortraitOrientation =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
         context.watch<SightsSearch>().searchFieldIsNotEmpty;
     List _searchResults = context.watch<SightsSearch>().searchResults;
@@ -62,45 +64,52 @@ class _SightListScreenState extends State<SightListScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            /// Flexible header
-            SliverPersistentHeader(
-              delegate: FlexibleAppBarDelegate(),
-              pinned: true,
-            ),
-
-            /// While the sights are not loaded - display [CircularProgressIndicator]
-            if (_isSightListLoading)
-              SliverToBoxAdapter(
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CircularProgressIndicator(),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                    ],
-                  ),
-                ),
+        child: Padding(
+          padding: _isPortraitOrientation
+              ? const EdgeInsets.all(0.0)
+              : const EdgeInsets.symmetric(horizontal: 16.0),
+          child: CustomScrollView(
+            slivers: [
+              /// Flexible header
+              SliverPersistentHeader(
+                delegate: FlexibleAppBarDelegate(
+                    isPortraitOrientation: _isPortraitOrientation),
+                pinned: _isPortraitOrientation ? true : false,
               ),
 
-            /// Display search results if they exist
-            /// or display the data obtained in the constructor [sightsData]
-            SightList(
-              sights: _searchFieldIsNotEmpty == true
-                  ? _searchResults
-                  : widget.sightsData,
-              cardsType: CardTypes.general,
-            ),
-          ],
+              /// While the sights are not loaded - display [CircularProgressIndicator]
+              if (_isSightListLoading)
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        CircularProgressIndicator(),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              /// Display search results if they exist
+              /// or display the data obtained in the constructor [sightsData]
+              SightList(
+                sights:
+                    _searchFieldIsNotEmpty ? _searchResults : widget.sightsData,
+                cardsType: CardTypes.general,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _createSightButton(),
+      floatingActionButton: _isPortraitOrientation
+          ? _createSightButton()
+          : const SizedBox.shrink(),
       bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 0),
     );
   }

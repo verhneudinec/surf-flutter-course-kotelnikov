@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/domain/sight.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
@@ -26,9 +27,14 @@ class FilterScreen extends StatefulWidget {
 class _FilterScreenState extends State<FilterScreen> {
   @override
   Widget build(BuildContext context) {
+    final bool _isLargeScreenResolution =
+        MediaQuery.of(context).size.height > 800;
+
     int _searchRangeStart = context.watch<SightsSearch>().searchRangeStart;
     int _searchRangeEnd = context.watch<SightsSearch>().searchRangeEnd;
-    final List _searchResults = context.watch<SightsSearch>().searchResults;
+    final List _searchResults = context
+        .watch<SightsSearch>()
+        .searchResults; // TODO Типизировать все List'ы
     final List _sightTypes = context.watch<SightTypes>().sightTypesData;
 
     void _onCleanAllSearchParameters() {
@@ -82,14 +88,15 @@ class _FilterScreenState extends State<FilterScreen> {
         children: [
           _filterScreenHeader(_onCleanAllSearchParameters),
           _filterScreenBody(
-            _searchRangeStart,
-            _searchRangeEnd,
-            _searchResults,
-            _sightTypes,
-            _searchButtonHandler,
-            _onTypeClickHandler,
-            _onMinSliderChangeHandler,
-            _onMaxSliderChangeHandler,
+            isLargeScreenResolution: _isLargeScreenResolution,
+            searchRangeStart: _searchRangeStart,
+            searchRangeEnd: _searchRangeEnd,
+            searchResults: _searchResults,
+            sightTypes: _sightTypes,
+            searchButtonHandler: _searchButtonHandler,
+            onTypeClickHandler: _onTypeClickHandler,
+            onMinSliderChangeHandler: _onMinSliderChangeHandler,
+            onMaxSliderChangeHandler: _onMaxSliderChangeHandler,
           ),
         ],
       ),
@@ -98,8 +105,6 @@ class _FilterScreenState extends State<FilterScreen> {
 
   /// AppBar for [FilterScreen] with [AppBackButton]
   Widget _filterScreenHeader(_onCleanAllSearchParameters) {
-    /// Function for clearing search parameters
-
     return AppBar(
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
@@ -135,16 +140,17 @@ class _FilterScreenState extends State<FilterScreen> {
 
   /// The body of the screen displaying the categories of places,
   /// distance slider and search button.
-  Widget _filterScreenBody(
-    _searchRangeStart,
-    _searchRangeEnd,
-    _searchResults,
-    _sightTypes,
-    _searchButtonHandler,
-    _onTypeClickHandler,
-    _onMinSliderChangeHandler,
-    _onMaxSliderChangeHandler,
-  ) {
+  Widget _filterScreenBody({
+    bool isLargeScreenResolution,
+    int searchRangeStart,
+    int searchRangeEnd,
+    List searchResults,
+    List sightTypes,
+    searchButtonHandler,
+    onTypeClickHandler,
+    onMinSliderChangeHandler,
+    onMaxSliderChangeHandler,
+  }) {
     return Container(
       padding: EdgeInsets.only(
         top: 24,
@@ -154,7 +160,7 @@ class _FilterScreenState extends State<FilterScreen> {
       width: double.infinity,
       height: MediaQuery.of(context).size.height - 118,
       constraints: BoxConstraints(
-        minHeight: 550,
+        minHeight: 350,
       ),
       child: Stack(
         children: [
@@ -173,90 +179,42 @@ class _FilterScreenState extends State<FilterScreen> {
               /// Сategory Container
               Container(
                 width: double.infinity,
-                child: Wrap(
-                  spacing: 44,
-                  runSpacing: 40,
-                  alignment: WrapAlignment.spaceEvenly,
-                  children: [
-                    for (int i = 0; i < _sightTypes.length; i++)
-                      Column(
-                        children: [
-                          /// Category button with text label
-                          Container(
-                            width: 64,
-                            height: 64,
-                            decoration: AppDecorations
-                                .filterScreenCategoryButton
-                                .copyWith(
-                              color: Theme.of(context)
-                                  .accentColor
-                                  .withOpacity(0.16),
-                            ),
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: IconButton(
-                                    onPressed: () => _onTypeClickHandler(i),
-                                    icon: SvgPicture.asset(
-                                      _sightTypes.elementAt(i)["icon"],
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                                  ),
-                                ),
-                                if (_sightTypes.elementAt(i)["selected"] ==
-                                    true)
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Container(
-                                      width: 16,
-                                      height: 16,
-                                      decoration: AppDecorations
-                                          .filterScreenCategoryButton
-                                          .copyWith(
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                      child: InkWell(
-                                        borderRadius: AppDecorations
-                                            .filterScreenCategoryButton
-                                            .borderRadius,
-                                        onTap: () => _onTypeClickHandler(i),
-                                        child: SvgPicture.asset(
-                                          AppIcons.tick,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .categoryTickColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
+                child: isLargeScreenResolution
+                    ? Wrap(
+                        spacing: 44,
+                        runSpacing: 40,
+                        alignment: WrapAlignment.spaceEvenly,
+                        children:
+                            _buildSightTypes(sightTypes, onTypeClickHandler),
+                      )
+                    : LimitedBox(
+                        maxHeight: 92,
+                        maxWidth: 312,
+                        child: ListView.builder(
+                          itemCount: 6,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder:
+                              (BuildContext context, int sightTypeIndex) => Row(
+                            children: [
+                              if (sightTypeIndex == 0)
+                                const SizedBox(width: 25),
+                              _buildSightTypes(sightTypes, onTypeClickHandler)[
+                                  sightTypeIndex],
+                              const SizedBox(width: 20),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Text(
-                            _sightTypes.elementAt(i)["text"],
-                            style:
-                                AppTextStyles.fiterScreenCategoryTitle.copyWith(
-                              color:
-                                  Theme.of(context).textTheme.bodyText1.color,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                  ],
-                ),
               ),
+
               const SizedBox(
                 height: 24,
               ),
 
-              const SizedBox(
-                height: 56,
-              ),
+              if (isLargeScreenResolution)
+                const SizedBox(
+                  height: 56,
+                ),
 
               /// Slider title and
               /// output the selected search distance
@@ -279,13 +237,13 @@ class _FilterScreenState extends State<FilterScreen> {
                           text: AppTextStrings.filterScreenSliderRangeFrom,
                         ),
                         TextSpan(
-                          text: _searchRangeStart.toInt().toString(),
+                          text: searchRangeStart.toInt().toString(),
                         ),
                         TextSpan(
                           text: AppTextStrings.filterScreenSliderRangeUntil,
                         ),
                         TextSpan(
-                          text: _searchRangeEnd.toInt().toString(),
+                          text: searchRangeEnd.toInt().toString(),
                         ),
                         TextSpan(
                           text: AppTextStrings.filterScreenSliderRangeUnit,
@@ -302,44 +260,133 @@ class _FilterScreenState extends State<FilterScreen> {
                 child: CupertinoRangeSlider(
                   min: 100,
                   max: 10000,
-                  minValue: _searchRangeStart.toDouble(),
-                  maxValue: _searchRangeEnd.toDouble(),
+                  minValue: searchRangeStart.toDouble(),
+                  maxValue: searchRangeEnd.toDouble(),
                   activeColor: Theme.of(context).accentColor,
-                  onMinChanged: (value) => _onMinSliderChangeHandler(value),
-                  onMaxChanged: (value) => _onMaxSliderChangeHandler(value),
+                  onMinChanged: (value) => onMinSliderChangeHandler(value),
+                  onMaxChanged: (value) => onMaxSliderChangeHandler(value),
+                ),
+              ),
+
+              if (!isLargeScreenResolution)
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 41,
+                    ),
+                    _buildShowButton(
+                      searchResults: searchResults,
+                      searchButtonHandler: searchButtonHandler,
+                    ),
+                  ],
+                )
+            ],
+          ),
+          if (isLargeScreenResolution)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: _buildShowButton(
+                searchResults: searchResults,
+                searchButtonHandler: searchButtonHandler,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildSightTypes(
+    List sightTypes,
+    onTypeClickHandler,
+  ) =>
+      [
+        for (int i = 0; i < sightTypes.length; i++)
+          Column(
+            children: [
+              /// Category button with text label
+              Container(
+                width: 64,
+                height: 64,
+                decoration: AppDecorations.filterScreenCategoryButton.copyWith(
+                  color: Theme.of(context).accentColor.withOpacity(0.16),
+                ),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: IconButton(
+                        onPressed: () => onTypeClickHandler(i),
+                        icon: SvgPicture.asset(
+                          sightTypes.elementAt(i)["icon"],
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    ),
+                    if (sightTypes.elementAt(i)["selected"] == true)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          width: 16,
+                          height: 16,
+                          decoration: AppDecorations.filterScreenCategoryButton
+                              .copyWith(
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          child: InkWell(
+                            borderRadius: AppDecorations
+                                .filterScreenCategoryButton.borderRadius,
+                            onTap: () => onTypeClickHandler(i),
+                            child: SvgPicture.asset(
+                              AppIcons.tick,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .categoryTickColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                sightTypes.elementAt(i)["text"],
+                style: AppTextStyles.fiterScreenCategoryTitle.copyWith(
+                  color: Theme.of(context).textTheme.bodyText1.color,
                 ),
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width - 32,
-                maxHeight: 48,
+      ];
+
+  Widget _buildShowButton({
+    List searchResults,
+    searchButtonHandler,
+  }) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width - 32,
+        maxHeight: 48,
+      ),
+      child: ElevatedButton(
+        onPressed: () => searchButtonHandler(),
+        child: RichText(
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            style: AppTextStyles.fiterScreenShowButton,
+            children: [
+              TextSpan(
+                  text: AppTextStrings.filterScreenShowButton.toUpperCase() +
+                      " "),
+              TextSpan(
+                text: "(" + searchResults.length.toString() + ")",
               ),
-              child: ElevatedButton(
-                onPressed: () => _searchButtonHandler(),
-                child: RichText(
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    style: AppTextStyles.fiterScreenShowButton,
-                    children: [
-                      TextSpan(
-                          text: AppTextStrings.filterScreenShowButton
-                                  .toUpperCase() +
-                              " "),
-                      TextSpan(
-                        text: "(" + _searchResults.length.toString() + ")",
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
