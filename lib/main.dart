@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:places/models/add_sight.dart';
-import 'package:places/models/favorite_sights.dart';
+import 'package:places/data/interactor/add_sight.dart';
+import 'package:places/data/interactor/favorite_sights.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/map_screen.dart';
@@ -10,15 +10,12 @@ import 'package:places/ui/screen/visiting_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
 import 'package:places/mocks.dart';
 import 'package:provider/provider.dart';
-import 'package:places/models/app_settings.dart';
-import 'package:places/models/sight_types.dart';
-import 'package:places/models/sights.dart';
-import 'package:places/models/sights_search.dart';
-import 'package:places/net/dio.dart';
+import 'package:places/data/interactor/app_settings.dart';
+import 'package:places/data/interactor/sight_types.dart';
+import 'package:places/data/interactor/sights.dart';
+import 'package:places/data/interactor/sights_search.dart';
 
 void main() async {
-  final f = await Client().getData();
-  print(f);
   runApp(
     MultiProvider(
       providers: [

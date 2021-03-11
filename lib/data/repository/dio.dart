@@ -16,7 +16,7 @@ class Client {
     dio.interceptors.add(
       InterceptorsWrapper(
         onError: (e) {
-          print("An error occurred: $e")
+          print("An error occurred: $e");
         },
         onRequest: (options) {
           print("Request sent");

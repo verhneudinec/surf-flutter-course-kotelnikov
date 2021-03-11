@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:places/models/sight_types.dart';
-import 'package:places/models/sights.dart';
-import 'package:places/domain/geo_position.dart';
+import 'package:places/data/interactor/sight_types.dart';
+import 'package:places/data/interactor/sights.dart';
+import 'package:places/data/model/geo_position.dart';
 import 'package:places/utils/filter.dart';
 import 'package:places/mocks.dart';
 

@@ -1,5 +1,5 @@
-import 'package:places/domain/sight.dart';
-import 'package:places/domain/geo_position.dart';
+import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/geo_position.dart';
 
 /// User geolocation for testing filters
 final testGeoPosition = GeoPosition(52.500095, 106.999299);

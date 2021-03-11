@@ -4,9 +4,9 @@ import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/ui/widgets/sight_card.dart';
 import 'package:places/ui/widgets/error_stub.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/data/model/sight.dart';
 import 'package:provider/provider.dart';
-import 'package:places/models/favorite_sights.dart';
+import 'package:places/data/interactor/favorite_sights.dart';
 
 /// The [SightList] widget displays a list of places
 /// if list length > 0 or [ErrorStub] - if the array is empty.

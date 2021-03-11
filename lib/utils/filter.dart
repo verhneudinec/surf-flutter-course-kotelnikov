@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:places/domain/geo_position.dart';
+import 'package:places/data/model/geo_position.dart';
 
 /// Checks if the point [checkPoint] is in the radius
 /// user location [imHere] and conditions specified by it

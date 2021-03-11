@@ -1,4 +1,4 @@
-import 'package:places/domain/geo_position.dart';
+import 'package:places/data/model/geo_position.dart';
 
 /// Template for creating instances of places.
 /// [name] - place name.

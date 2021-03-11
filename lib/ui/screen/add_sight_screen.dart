@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/models/add_sight.dart';
-import 'package:places/models/sights.dart';
+import 'package:places/data/model/sight.dart';
+import 'package:places/data/interactor/add_sight.dart';
+import 'package:places/data/interactor/sights.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';

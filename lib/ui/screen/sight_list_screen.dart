@@ -10,7 +10,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/models/sights_search.dart';
+import 'package:places/data/interactor/sights_search.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
