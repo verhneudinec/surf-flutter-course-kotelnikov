@@ -12,7 +12,7 @@ class Sights with ChangeNotifier {
 
   /// This function is called when sight is added in the [AddSightScreen] screen.
   /// A prepared object of the [Sight] type comes to the function  input.
-  void addSight(Sight newSight) {
+  void addSight(Place newSight) {
     _sights.add(newSight);
 
     print(

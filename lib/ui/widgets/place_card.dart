@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 /// Sight card widget, displays the [sight] data passed to the constructor.
 /// The view changes depending on [cardType].
 class SightCard extends StatelessWidget {
-  final Sight sight;
+  final Place sight;
   final String cardType;
 
   const SightCard({
@@ -141,7 +141,7 @@ class SightCard extends StatelessWidget {
 }
 
 class SightCardHeader extends StatelessWidget {
-  final Sight sight;
+  final Place sight;
   final String cardType;
   const SightCardHeader({
     Key key,
@@ -197,7 +197,7 @@ class SightCardHeader extends StatelessWidget {
 }
 
 class SightCardBody extends StatelessWidget {
-  final Sight sight;
+  final Place sight;
   final String cardType;
   const SightCardBody({Key key, this.sight, this.cardType}) : super(key: key);
 
@@ -281,7 +281,7 @@ class SightCardBody extends StatelessWidget {
 
 /// Action buttons for SightCard: delete, calendar, share
 class SightCardActionButtons extends StatefulWidget {
-  final Sight sight;
+  final Place sight;
   final String cardType;
   final onSightCardDelete;
   const SightCardActionButtons({

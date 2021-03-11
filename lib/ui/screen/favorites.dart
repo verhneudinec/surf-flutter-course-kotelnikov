@@ -41,9 +41,9 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    List<Sight> _visitedSights =
+    List<Place> _visitedSights =
         context.watch<FavoriteSights>().visitedFavoriteSights;
-    List<Sight> _unvisitedSights =
+    List<Place> _unvisitedSights =
         context.watch<FavoriteSights>().unvisitedFavoriteSights;
     return DefaultTabController(
       length: 2,

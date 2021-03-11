@@ -76,8 +76,8 @@ class AddSight with ChangeNotifier {
   }
 
   /// A function for preparing the data of the new [Sight] object.
-  Sight prepareNewSight() {
-    final _newSight = Sight(
+  Place prepareNewSight() {
+    final _newSight = Place(
       _sightNameController.text,
       GeoPosition(
         double.tryParse(_sightLatitudeController.text),

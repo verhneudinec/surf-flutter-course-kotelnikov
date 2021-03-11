@@ -5,12 +5,12 @@ import 'package:places/data/model/place.dart';
 /// Provider for working with the [VisitingScreen] screen.
 /// Initialized with data from [mocks].
 class FavoriteSights with ChangeNotifier {
-  final List<Sight> _favorites = mocks;
+  final List<Place> _favorites = mocks;
 
-  List<Sight> get favorites => _favorites;
-  List<Sight> get visitedFavoriteSights =>
+  List<Place> get favorites => _favorites;
+  List<Place> get visitedFavoriteSights =>
       _favorites.where((sight) => sight.isVisited).toList();
-  List<Sight> get unvisitedFavoriteSights =>
+  List<Place> get unvisitedFavoriteSights =>
       _favorites.where((sight) => !sight.isVisited).toList();
 
   void deleteSightFromFavorites(String sightName) {
@@ -27,14 +27,14 @@ class FavoriteSights with ChangeNotifier {
     int oldIndex,
     int newIndex,
   ) {
-    Sight temp = _favorites[oldIndex];
+    Place temp = _favorites[oldIndex];
     _favorites.removeAt(oldIndex);
     _favorites.insert(newIndex, temp);
     notifyListeners();
   }
 
   int getSightId({
-    Sight sight,
+    Place sight,
   }) {
     return _favorites.indexOf(sight);
   }

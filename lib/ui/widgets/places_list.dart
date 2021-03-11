@@ -68,7 +68,7 @@ class SightList extends StatelessWidget {
 
   Widget _sightListItem(
     BuildContext context,
-    Sight sight,
+    Place sight,
     bool isPortraitOrientation,
   ) {
     return cardsType == CardTypes.general
@@ -77,7 +77,7 @@ class SightList extends StatelessWidget {
   }
 
   /// Builder for a regular card with the CardTypes.general type
-  Widget _sightCardBuilder(Sight sight) {
+  Widget _sightCardBuilder(Place sight) {
     return Container(
       color: Colors.transparent,
       margin: EdgeInsets.only(
@@ -94,7 +94,7 @@ class SightList extends StatelessWidget {
   }
 
   /// Builder for "Favorites" page cards
-  Widget _favoriteSightCardBuilder(BuildContext context, Sight sight) {
+  Widget _favoriteSightCardBuilder(BuildContext context, Place sight) {
     /// [_onDraggingSight] called when dragging an item in the list
     void _onDraggingSight(int oldIndex, int newIndex) {
       context.read<FavoriteSights>().onDraggingSight(oldIndex, newIndex);
@@ -126,7 +126,7 @@ class SightList extends StatelessWidget {
     );
   }
 
-  Widget _draggableSightFeedback(BuildContext context, Sight sight) {
+  Widget _draggableSightFeedback(BuildContext context, Place sight) {
     return Material(
       color: Colors.transparent,
       child: ConstrainedBox(

@@ -28,7 +28,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   /// sight from [AddSight] and writes them to
   /// array of mock data from [Sights].
   void _onSightCreate() {
-    Sight _newSight = context.read<AddSight>().prepareNewSight();
+    Place _newSight = context.read<AddSight>().prepareNewSight();
 
     context.read<Sights>().addSight(_newSight);
 

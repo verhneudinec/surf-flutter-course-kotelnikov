@@ -7,7 +7,7 @@ import 'package:places/data/model/geo_position.dart';
 /// [details] - description.
 /// [type] - place type, category.
 /// [workingTime] - working hours.
-class Sight {
+class Place {
   final String name;
   final GeoPosition geoPosition;
   final List<String> urls;
@@ -16,7 +16,7 @@ class Sight {
   final String workingTime;
   final bool isVisited;
 
-  Sight(
+  Place(
     this.name,
     this.geoPosition,
     this.urls,
