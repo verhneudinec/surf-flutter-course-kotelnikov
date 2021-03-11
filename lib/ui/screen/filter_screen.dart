@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
@@ -8,7 +8,7 @@ import 'package:places/res/themes.dart';
 import 'package:places/ui/common/back_button.dart';
 import 'package:places/data/interactor/sights_search.dart';
 import 'package:places/data/interactor/sight_types.dart';
-import 'package:places/ui/screen/sight_list_screen.dart';
+import 'package:places/ui/screen/places_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:places/res/icons.dart';

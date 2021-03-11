@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
-import 'package:places/ui/widgets/sight_card.dart';
+import 'package:places/ui/widgets/place_card.dart';
 import 'package:places/ui/widgets/error_stub.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 import 'package:provider/provider.dart';
 import 'package:places/data/interactor/favorite_sights.dart';
 

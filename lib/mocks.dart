@@ -1,4 +1,4 @@
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/data/model/geo_position.dart';
 
 /// User geolocation for testing filters

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/data/interactor/add_sight.dart';
 import 'package:places/data/interactor/sights.dart';
 import 'package:places/res/decorations.dart';
@@ -9,7 +9,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/ui/screen/selecting_sight_type.dart';
+import 'package:places/ui/screen/selecting_place_type_screen.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:provider/provider.dart';

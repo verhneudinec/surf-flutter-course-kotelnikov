@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
-import 'package:places/ui/screen/sight_list_screen.dart';
+import 'package:places/ui/screen/places_list_screen.dart';
 
 import '../../mocks.dart';
 

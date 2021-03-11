@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/data/interactor/favorite_sights.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
@@ -12,7 +12,7 @@ import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
-import 'package:places/ui/screen/sight_details.dart';
+import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
 
 /// Sight card widget, displays the [sight] data passed to the constructor.

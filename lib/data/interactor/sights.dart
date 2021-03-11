@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/dio.dart';
 
 /// Provider for an array of application locations.

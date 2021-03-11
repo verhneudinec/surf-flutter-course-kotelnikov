@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/model/geo_position.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/model/place.dart';
 
 /// State for screen [AddSightScreen].
 class AddSight with ChangeNotifier {

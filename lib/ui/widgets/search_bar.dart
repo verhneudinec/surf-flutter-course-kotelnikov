@@ -6,7 +6,7 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
 import 'package:provider/provider.dart';
 import 'package:places/data/interactor/sights_search.dart';
-import 'package:places/ui/screen/sight_search_screen.dart';
+import 'package:places/ui/screen/places_search_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 
 /// [SearchBar] displays the search bar for sights.
