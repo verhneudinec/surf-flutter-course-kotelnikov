@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/sight_types.dart';
+import 'package:places/data/interactor/place_types.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:provider/provider.dart';
 
 /// Screen for selecting a seat category.
-///Opened when adding sight in [AddSightScreen].
-class SelectingSightTypeScreen extends StatefulWidget {
-  const SelectingSightTypeScreen({Key key}) : super(key: key);
+///Opened when adding place in [AddPlaceScreen].
+class SelectingPlaceTypeScreen extends StatefulWidget {
+  const SelectingPlaceTypeScreen({Key key}) : super(key: key);
 
   @override
-  _SelectingSightTypeScreenState createState() =>
-      _SelectingSightTypeScreenState();
+  _SelectingPlaceTypeScreenState createState() =>
+      _SelectingPlaceTypeScreenState();
 }
 
-class _SelectingSightTypeScreenState extends State<SelectingSightTypeScreen> {
+class _SelectingPlaceTypeScreenState extends State<SelectingPlaceTypeScreen> {
   @override
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,8 @@ class _SelectingSightTypeScreenState extends State<SelectingSightTypeScreen> {
         child: TextButton(
           onPressed: () => print("save"),
           child: Text(
-            AppTextStrings.selectingSightTypeScreenSaveButton.toUpperCase(),
-            style: AppTextStyles.selectingSightTypeScreenSaveButton,
+            AppTextStrings.selectingPlaceTypeScreenSaveButton.toUpperCase(),
+            style: AppTextStyles.selectingPlaceTypeScreenSaveButton,
           ),
           style: Theme.of(context).elevatedButtonTheme.style.copyWith(
                 backgroundColor: MaterialStateProperty.all<Color>(
@@ -54,14 +54,14 @@ class _SelectingSightTypeScreenState extends State<SelectingSightTypeScreen> {
 
   Widget _header() {
     return AppBarCustom(
-      title: AppTextStrings.selectingSightTypeScreenTitle,
+      title: AppTextStrings.selectingPlaceTypeScreenTitle,
       backButtonEnabled: true,
     );
   }
 
   Widget _body() {
-    // [_sightTypesData] stores place types from provider [SightTypes].
-    final _sightTypesData = context.watch<SightTypes>().sightTypesData;
+    // [_placeTypesData] stores place types from provider [PlaceTypes].
+    final _placeTypesData = context.watch<PlaceTypes>().placeTypesData;
 
     return Container(
       width: double.infinity,
@@ -71,11 +71,11 @@ class _SelectingSightTypeScreenState extends State<SelectingSightTypeScreen> {
           const SizedBox(
             height: 24,
           ),
-          for (int i = 0; i < _sightTypesData.length; i++)
+          for (int i = 0; i < _placeTypesData.length; i++)
             Column(
               children: [
                 _typeButton(
-                  text: _sightTypesData[i]["text"],
+                  text: _placeTypesData[i]["text"],
                 ),
                 _divider(),
               ],
@@ -85,7 +85,7 @@ class _SelectingSightTypeScreenState extends State<SelectingSightTypeScreen> {
     );
   }
 
-  // The list item - the category of the sight.
+  // The list item - the category of the place.
   Widget _typeButton({text}) {
     return InkWell(
       onTap: () => {},
@@ -98,7 +98,7 @@ class _SelectingSightTypeScreenState extends State<SelectingSightTypeScreen> {
         width: double.infinity,
         child: Text(
           text,
-          style: AppTextStyles.selectingSightTypeScreenElement.copyWith(
+          style: AppTextStyles.selectingPlaceTypeScreenElement.copyWith(
             color: Theme.of(context).textTheme.headline5.color,
           ),
         ),

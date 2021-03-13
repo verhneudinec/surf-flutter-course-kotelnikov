@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/res/place_types_strings.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_styles.dart';
@@ -10,14 +11,14 @@ import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 
 /// Screen with detailed information about the place
-/// [SightDetails] contains a header [SightDetailsHeader]
-/// and body [SightDetailsBody] with basic information about the place
-class SightDetails extends StatelessWidget {
-  final Place sight;
+/// [PlaceDetails] contains a header [PlaceDetailsHeader]
+/// and body [PlaceDetailsBody] with basic information about the place
+class PlaceDetails extends StatelessWidget {
+  final Place place;
   final bool isBottomSheet;
-  const SightDetails({
+  const PlaceDetails({
     Key key,
-    @required this.sight,
+    @required this.place,
     this.isBottomSheet = false,
   }) : super(key: key);
 
@@ -38,8 +39,8 @@ class SightDetails extends StatelessWidget {
                   automaticallyImplyLeading: false,
                   expandedHeight: 360,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: SightDetailsHeader(
-                      sight: sight,
+                    background: PlaceDetailsHeader(
+                      place: place,
                       isBottomSheet: isBottomSheet,
                     ),
                   ),
@@ -48,7 +49,7 @@ class SightDetails extends StatelessWidget {
                   delegate: SliverChildListDelegate([
                     Padding(
                       padding: const EdgeInsets.only(bottom: 30),
-                      child: SightDetailsBody(sight: sight),
+                      child: PlaceDetailsBody(place: place),
                     ),
                   ]),
                 )
@@ -61,17 +62,17 @@ class SightDetails extends StatelessWidget {
   }
 }
 
-class SightDetailsHeader extends StatefulWidget {
-  final Place sight;
+class PlaceDetailsHeader extends StatefulWidget {
+  final Place place;
   final bool isBottomSheet;
-  const SightDetailsHeader({Key key, this.sight, this.isBottomSheet})
+  const PlaceDetailsHeader({Key key, this.place, this.isBottomSheet})
       : super(key: key);
 
   @override
-  _SightDetailsHeaderState createState() => _SightDetailsHeaderState();
+  _PlaceDetailsHeaderState createState() => _PlaceDetailsHeaderState();
 }
 
-class _SightDetailsHeaderState extends State<SightDetailsHeader> {
+class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
   final PageController _photogalleryController = new PageController();
   int _currentPhotogalleryIndex = 0;
 
@@ -89,7 +90,7 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
 
         // Container for creating the gradient effect
         Container(
-          decoration: AppDecorations.sightCardImageGradient,
+          decoration: AppDecorations.placeCardImageGradient,
           width: double.infinity,
           height: 96,
         ),
@@ -135,15 +136,15 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
     );
   }
 
-  /// Photogallery of the sight.
-  /// Displays photos from [widget.sight.urls]
+  /// Photogallery of the place.
+  /// Displays photos from [widget.place.urls]
   Widget _photogallery() {
     return LimitedBox(
       maxWidth: MediaQuery.of(context).size.width,
       maxHeight: 360,
       child: PageView.builder(
         controller: _photogalleryController,
-        itemCount: widget.sight.urls.length,
+        itemCount: widget.place.urls.length,
         physics: Platform.isAndroid
             ? ClampingScrollPhysics()
             : BouncingScrollPhysics(),
@@ -151,9 +152,9 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
           return Container(
             width: double.infinity,
             height: 360,
-            decoration: AppDecorations.sightCardImageGradient,
+            decoration: AppDecorations.placeCardImageGradient,
             child: Image.network(
-              widget.sight.urls.elementAt(index),
+              widget.place.urls.elementAt(index),
               fit: BoxFit.cover,
               loadingBuilder: imageLoaderBuilder,
               errorBuilder: imageErrorBuilder,
@@ -174,40 +175,34 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
       bottom: 0,
       child: Row(
         children: [
-          for (int i = 0; i < widget.sight.urls.length; i++)
-            i == _currentPhotogalleryIndex
-                ? Container(
-                    width: MediaQuery.of(context).size.width /
-                        widget.sight.urls.length,
-                    height: 7.5,
-                    decoration: AppDecorations.galleryIndicator.copyWith(
-                      color: Theme.of(context).iconTheme.color,
+          if (widget.place.urls.length > 1)
+            for (int i = 0; i < widget.place.urls.length; i++)
+              i == _currentPhotogalleryIndex
+                  ? Container(
+                      width: MediaQuery.of(context).size.width /
+                          widget.place.urls.length,
+                      height: 7.5,
+                      decoration: AppDecorations.galleryIndicator.copyWith(
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    )
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width /
+                          widget.place.urls.length,
                     ),
-                  )
-                : SizedBox(
-                    width: MediaQuery.of(context).size.width /
-                        widget.sight.urls.length,
-                  ),
         ],
       ),
     );
   }
 }
 
-class SightDetailsBody extends StatelessWidget {
-  final Place sight;
-  const SightDetailsBody({Key key, this.sight}) : super(key: key);
+class PlaceDetailsBody extends StatelessWidget {
+  final Place place;
+  const PlaceDetailsBody({Key key, this.place}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Map _sightTypes = {
-      "hotel": AppTextStrings.hotel,
-      "restourant": AppTextStrings.restourant,
-      "particular_place": AppTextStrings.particularPlace,
-      "park": AppTextStrings.park,
-      "museum": AppTextStrings.museum,
-      "cafe": AppTextStrings.cafe,
-    };
+    Map _placeTypes = PlaceTypesStrings.map;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -215,14 +210,14 @@ class SightDetailsBody extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Sight name
+          // Place name
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
             child: Text(
-              sight.name,
+              place.name,
               maxLines: 2,
-              style: AppTextStyles.sightDetailsTitle.copyWith(
+              style: AppTextStyles.placeDetailsTitle.copyWith(
                 color: Theme.of(context).textTheme.headline2.color,
               ),
             ),
@@ -230,22 +225,22 @@ class SightDetailsBody extends StatelessWidget {
 
           Row(
             children: [
-              // Type of sight
+              // Type of place
               Container(
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
-                  _sightTypes[sight.type],
-                  style: AppTextStyles.sightDetailsType.copyWith(
+                  _placeTypes[place.placeType],
+                  style: AppTextStyles.placeDetailsType.copyWith(
                     color: Theme.of(context).textTheme.bodyText2.color,
                   ),
                 ),
               ),
 
-              // Opening hours of the sight
+              // Opening hours of the place
               Container(
                 child: Text(
                   "закрыто до 09:00",
-                  style: AppTextStyles.sightDetailsWorkingTime.copyWith(
+                  style: AppTextStyles.placeDetailsWorkingTime.copyWith(
                     color: Theme.of(context).textTheme.caption.color,
                   ),
                 ),
@@ -253,13 +248,13 @@ class SightDetailsBody extends StatelessWidget {
             ],
           ),
 
-          // Sight description
+          // Place description
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
             child: Text(
-              sight.details,
-              style: AppTextStyles.sightDetailsDescription.copyWith(
+              place.description,
+              style: AppTextStyles.placeDetailsDescription.copyWith(
                 color: Theme.of(context).textTheme.bodyText1.color,
               ),
             ),
@@ -313,7 +308,7 @@ class SightDetailsBody extends StatelessWidget {
                       Text(
                         AppTextStrings.planningButton,
                         style:
-                            AppTextStyles.sightDetailsPlanningButton.copyWith(
+                            AppTextStyles.placeDetailsPlanningButton.copyWith(
                           color: Theme.of(context).textTheme.bodyText1.color,
                         ),
                       ),

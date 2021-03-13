@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
@@ -9,20 +10,19 @@ import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/search_bar.dart';
 import 'package:places/ui/widgets/error_stub.dart';
-import 'package:places/data/interactor/sights_search.dart';
+import 'package:places/data/interactor/places_search.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
-import 'package:places/mocks.dart';
 
 /// Screen for searching places by request
-class SightSearchScreen extends StatefulWidget {
-  const SightSearchScreen({Key key}) : super(key: key);
+class PlaceSearchScreen extends StatefulWidget {
+  const PlaceSearchScreen({Key key}) : super(key: key);
 
   @override
-  _SightSearchScreenState createState() => _SightSearchScreenState();
+  _PlaceSearchScreenState createState() => _PlaceSearchScreenState();
 }
 
-class _SightSearchScreenState extends State<SightSearchScreen> {
+class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,12 +47,12 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
 
   Widget _body() {
     bool _searchFieldIsNotEmpty =
-        context.watch<SightsSearch>().searchFieldIsNotEmpty;
-    bool _isSightsNotFound = context.watch<SightsSearch>().isSightsNotFound;
-    List _searchHistory = context.watch<SightsSearch>().searchHistory;
-    List _searchResults = context.watch<SightsSearch>().searchResults;
+        context.watch<PlacesSearch>().searchFieldIsNotEmpty;
+    bool _isPlacesNotFound = context.watch<PlacesSearch>().isPlacesNotFound;
+    List _searchHistory = context.watch<PlacesSearch>().searchHistory;
+    List _searchResults = context.watch<PlacesSearch>().searchResults;
 
-    final Map _sightTypes = {
+    final Map _placeTypes = {
       "hotel": AppTextStrings.hotel,
       "restourant": AppTextStrings.restourant,
       "particular_place": AppTextStrings.particularPlace,
@@ -63,19 +63,19 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
 
     /// When clicking on a query from the search history
     void _onTapQueryFromHistory(searchQuery) {
-      context.read<SightsSearch>().onSearchSubmitted(
+      context.read<PlacesSearch>().onSearchSubmitted(
             searchQuery: searchQuery,
             isTapFromHistory: true,
           );
     }
 
     /// When clicking on a search result
-    void _onSightClick(int sightIndex) {
+    void _onPlaceClick(int placeIndex) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SightDetails(
-            sight: mocks[sightIndex],
+          builder: (context) => PlaceDetails(
+            place: Place(id: 1), // TODO MOCKSmocks[placeIndex],
           ),
         ),
       );
@@ -83,12 +83,12 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
 
     /// When deleting a request from history
     void _onQueryDelete(index) {
-      context.read<SightsSearch>().onQueryDelete(index);
+      context.read<PlacesSearch>().onQueryDelete(index);
     }
 
     /// Deleting all requests from the search history
     void _onCleanHistory() {
-      context.read<SightsSearch>().onCleanHistory();
+      context.read<PlacesSearch>().onCleanHistory();
     }
 
     return Padding(
@@ -116,8 +116,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppTextStrings.sightSearchScreenSearchHistory.toUpperCase(),
-                  style: AppTextStyles.sightSearchScreenSearchHistoryTitle
+                  AppTextStrings.placeSearchScreenSearchHistory.toUpperCase(),
+                  style: AppTextStyles.placeSearchScreenSearchHistoryTitle
                       .copyWith(
                     color: Theme.of(context).disabledColor,
                   ),
@@ -158,8 +158,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                         bottom: 2,
                       ),
                       child: Text(
-                        AppTextStrings.sightSearchScreenCleanHistory,
-                        style: AppTextStyles.sightSearchScreenCleanHistory
+                        AppTextStrings.placeSearchScreenCleanHistory,
+                        style: AppTextStyles.placeSearchScreenCleanHistory
                             .copyWith(
                           color: Theme.of(context).accentColor,
                         ),
@@ -175,12 +175,12 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
               children: [
                 for (int i = 0; i < _searchResults.length; i++)
                   InkWell(
-                    onTap: () => _onSightClick(i),
+                    onTap: () => _onPlaceClick(i),
                     child: ListTile(
                       contentPadding: EdgeInsets.all(0),
                       leading: ClipRRect(
                         borderRadius: AppDecorations
-                            .sightSearchScreenSearchListTileImage.borderRadius,
+                            .placeSearchScreenSearchListTileImage.borderRadius,
                         child: Container(
                           color: Theme.of(context).backgroundColor,
                           width: 56,
@@ -196,15 +196,15 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                       title: Text(
                         _searchResults[i].name,
                         style: AppTextStyles
-                            .sightSearchScreenSearchListTileTitle
+                            .placeSearchScreenSearchListTileTitle
                             .copyWith(
                           color: Theme.of(context).textTheme.headline5.color,
                         ),
                       ),
                       subtitle: Text(
-                        _sightTypes[_searchResults[i].type],
+                        _placeTypes[_searchResults[i].type],
                         style: AppTextStyles
-                            .sightSearchScreenSearchListTileSubtitle
+                            .placeSearchScreenSearchListTileSubtitle
                             .copyWith(
                           color: Theme.of(context).disabledColor,
                         ),
@@ -215,7 +215,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
             ),
 
           /// If nothing was found
-          if (_searchFieldIsNotEmpty == true && _isSightsNotFound == true)
+          if (_searchFieldIsNotEmpty == true && _isPlacesNotFound == true)
             Center(
               child: SizedBox(
                 width: 255,
@@ -223,8 +223,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                     300, // TODO исправить размеры, Expanded
                 child: ErrorStub(
                   icon: AppIcons.search,
-                  title: AppTextStrings.sightsNotFoundTitle,
-                  subtitle: AppTextStrings.sightsNotFoundSubtitle,
+                  title: AppTextStrings.placesNotFoundTitle,
+                  subtitle: AppTextStrings.placesNotFoundSubtitle,
                 ),
               ),
             )
@@ -253,7 +253,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
             Expanded(
               child: Text(
                 text,
-                style: AppTextStyles.sightSearchScreenSearchHistoryElement
+                style: AppTextStyles.placeSearchScreenSearchHistoryElement
                     .copyWith(
                   color: Theme.of(context).textTheme.caption.color,
                 ),

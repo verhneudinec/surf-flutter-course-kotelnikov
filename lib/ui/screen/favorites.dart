@@ -6,13 +6,13 @@ import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
-import 'package:places/data/interactor/favorite_sights.dart';
+import 'package:places/data/interactor/favorite_places.dart';
 import 'package:provider/provider.dart';
 
 ///The [VisitingScreen] displays the Favorites section.
 ///Lists "Visited" or "Want to visit" via DefaultTabController.
 ///[TabIndicator] is used to indicate the current tab.
-///The state is controlled by the [FavoriteSights] provider
+///The state is controlled by the [FavoritePlaces] provider
 class VisitingScreen extends StatefulWidget {
   const VisitingScreen({Key key}) : super(key: key);
 
@@ -41,10 +41,10 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    List<Place> _visitedSights =
-        context.watch<FavoriteSights>().visitedFavoriteSights;
-    List<Place> _unvisitedSights =
-        context.watch<FavoriteSights>().unvisitedFavoriteSights;
+    List<Place> _visitedPlaces =
+        context.watch<FavoritePlaces>().visitedFavoritePlaces;
+    List<Place> _unvisitedPlaces =
+        context.watch<FavoritePlaces>().unvisitedFavoritePlaces;
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
@@ -70,16 +70,16 @@ class _VisitingScreenState extends State<VisitingScreen>
                   children: [
                     CustomScrollView(
                       slivers: [
-                        SightList(
-                          sights: _unvisitedSights,
+                        PlaceList(
+                          places: _unvisitedPlaces,
                           cardsType: CardTypes.unvisited,
                         ),
                       ],
                     ),
                     CustomScrollView(
                       slivers: [
-                        SightList(
-                          sights: _visitedSights,
+                        PlaceList(
+                          places: _visitedPlaces,
                           cardsType: CardTypes.visited,
                         ),
                       ],
@@ -97,8 +97,8 @@ class _VisitingScreenState extends State<VisitingScreen>
             //   child: TabBarView(
             //     controller: tabController,
             //     children: [
-            //       SightList(cardType: CardTypes.unvisited),
-            //       SightList(cardType: "visited"),
+            //       PlaceList(cardType: CardTypes.unvisited),
+            //       PlaceList(cardType: "visited"),
             //     ],
             //   ),
             // ),

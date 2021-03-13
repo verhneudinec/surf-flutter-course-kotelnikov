@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/interactor/places.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
@@ -10,44 +12,49 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/data/interactor/sights_search.dart';
+import 'package:places/data/interactor/places_search.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-/// [SightListScreen] - a screen with a list of interesting places.
+/// [PlaceListScreen] - a screen with a list of interesting places.
 /// Displays in the header [SliverPersistentHeader] with [FlexibleAppBarDelegate],
-/// in the footer [AppBottomNavigationBar] and list of sights with [SightList].
-class SightListScreen extends StatefulWidget {
-  final List sightsData;
-  SightListScreen({
-    Key key,
-    this.sightsData,
-  }) : super(key: key);
-
+/// in the footer [AppBottomNavigationBar] and list of places with [PlaceList].
+class PlaceListScreen extends StatefulWidget {
   @override
-  _SightListScreenState createState() => _SightListScreenState();
+  _PlaceListScreenState createState() => _PlaceListScreenState();
 }
 
-class _SightListScreenState extends State<SightListScreen> {
-  bool _isSightListLoading = true;
+class _PlaceListScreenState extends State<PlaceListScreen> {
+  bool _isPlaceListLoading = true;
 
-  /// To go to the [AddSightScreen] screen
+  /// To go to the [AddPlaceScreen] screen
   void _onClickCreateButton() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddSightScreen(),
+        builder: (context) => AddPlaceScreen(),
       ),
     );
   }
 
   @override
+  void initState() {
+    super.initState();
+    _initPlaces();
+  }
+
+  void _initPlaces() async {
+    await context.read<Places>().getPlaces();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<Place> places = context.watch<Places>().places;
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
-        context.watch<SightsSearch>().searchFieldIsNotEmpty;
-    List _searchResults = context.watch<SightsSearch>().searchResults;
+        context.watch<PlacesSearch>().searchFieldIsNotEmpty;
+    List _searchResults = context.watch<PlacesSearch>().searchResults;
 
     // TODO Временное решение для лоадера списка, пока не прошли
     // работу с сетью и не подключились к api
@@ -57,7 +64,7 @@ class _SightListScreenState extends State<SightListScreen> {
       ),
       () {
         setState(() {
-          _isSightListLoading = false;
+          _isPlaceListLoading = false;
         });
       },
     );
@@ -77,8 +84,8 @@ class _SightListScreenState extends State<SightListScreen> {
                 pinned: _isPortraitOrientation ? true : false,
               ),
 
-              /// While the sights are not loaded - display [CircularProgressIndicator]
-              if (_isSightListLoading)
+              /// While the places are not loaded - display [CircularProgressIndicator]
+              if (_isPlaceListLoading)
                 SliverToBoxAdapter(
                   child: Center(
                     child: Column(
@@ -96,10 +103,9 @@ class _SightListScreenState extends State<SightListScreen> {
                 ),
 
               /// Display search results if they exist
-              /// or display the data obtained in the constructor [sightsData]
-              SightList(
-                sights:
-                    _searchFieldIsNotEmpty ? _searchResults : widget.sightsData,
+              /// or display the data obtained in the constructor [places]
+              PlaceList(
+                places: _searchFieldIsNotEmpty ? _searchResults : places,
                 cardsType: CardTypes.general,
               ),
             ],
@@ -108,21 +114,21 @@ class _SightListScreenState extends State<SightListScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _isPortraitOrientation
-          ? _createSightButton()
+          ? _createPlaceButton()
           : const SizedBox.shrink(),
       bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 0),
     );
   }
 
-  /// [_createSightButton] - action button for adding a new location in SightListScreen
-  Widget _createSightButton() {
+  /// [_createPlaceButton] - action button for adding a new location in PlaceListScreen
+  Widget _createPlaceButton() {
     return ClipRRect(
       borderRadius: AppDecorations.createPlaceButton.borderRadius,
       child: Container(
         width: 177,
         height: 48,
         decoration: BoxDecoration(
-          gradient: Theme.of(context).colorScheme.createSightButtonGradient,
+          gradient: Theme.of(context).colorScheme.createPlaceButtonGradient,
         ),
         child: TextButton.icon(
           onPressed: () => _onClickCreateButton(),
@@ -132,8 +138,8 @@ class _SightListScreenState extends State<SightListScreen> {
             height: 24,
           ),
           label: Text(
-            AppTextStrings.createSightButton.toUpperCase(),
-            style: AppTextStyles.createSightButton.copyWith(
+            AppTextStrings.createPlaceButton.toUpperCase(),
+            style: AppTextStyles.createPlaceButton.copyWith(
               color:
                   Theme.of(context).floatingActionButtonTheme.foregroundColor,
             ),

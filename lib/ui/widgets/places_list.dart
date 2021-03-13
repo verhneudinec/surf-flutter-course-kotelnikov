@@ -6,21 +6,21 @@ import 'package:places/ui/widgets/place_card.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/data/model/place.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/favorite_sights.dart';
+import 'package:places/data/interactor/favorite_places.dart';
 
-/// The [SightList] widget displays a list of places
+/// The [PlaceList] widget displays a list of places
 /// if list length > 0 or [ErrorStub] - if the array is empty.
 /// [cardType] - card type [CardTypes.general],
 /// [CardTypes.unvisited], [CardTypes.visited].
-class SightList extends StatelessWidget {
+class PlaceList extends StatelessWidget {
   final String cardsType;
-  final List sights;
-  final void onDeleteSight;
-  const SightList({
+  final List places;
+  final void onDeletePlace;
+  const PlaceList({
     Key key,
     @required this.cardsType,
-    @required this.sights,
-    this.onDeleteSight,
+    @required this.places,
+    this.onDeletePlace,
   }) : super(key: key);
 
   @override
@@ -30,11 +30,11 @@ class SightList extends StatelessWidget {
 
     return SliverGrid(
       delegate: SliverChildListDelegate(
-        sights.isNotEmpty
-            ? sights
-                .map((sight) => _sightListItem(
+        places.isNotEmpty
+            ? places
+                .map((place) => _placeListItem(
                       context,
-                      sight,
+                      place,
                       _isPortraitOrientation,
                     ))
                 .toList()
@@ -66,18 +66,18 @@ class SightList extends StatelessWidget {
     );
   }
 
-  Widget _sightListItem(
+  Widget _placeListItem(
     BuildContext context,
-    Place sight,
+    Place place,
     bool isPortraitOrientation,
   ) {
     return cardsType == CardTypes.general
-        ? _sightCardBuilder(sight)
-        : _favoriteSightCardBuilder(context, sight);
+        ? _placeCardBuilder(place)
+        : _favoritePlaceCardBuilder(context, place);
   }
 
   /// Builder for a regular card with the CardTypes.general type
-  Widget _sightCardBuilder(Place sight) {
+  Widget _placeCardBuilder(Place place) {
     return Container(
       color: Colors.transparent,
       margin: EdgeInsets.only(
@@ -85,54 +85,54 @@ class SightList extends StatelessWidget {
         right: 16,
         bottom: 16,
       ),
-      child: SightCard(
-        key: ValueKey(sight.name),
-        sight: sight,
+      child: PlaceCard(
+        key: ValueKey(place.name),
+        place: place,
         cardType: cardsType,
       ),
     );
   }
 
   /// Builder for "Favorites" page cards
-  Widget _favoriteSightCardBuilder(BuildContext context, Place sight) {
-    /// [_onDraggingSight] called when dragging an item in the list
-    void _onDraggingSight(int oldIndex, int newIndex) {
-      context.read<FavoriteSights>().onDraggingSight(oldIndex, newIndex);
+  Widget _favoritePlaceCardBuilder(BuildContext context, Place place) {
+    /// [_onDraggingPlace] called when dragging an item in the list
+    void _onDraggingPlace(int oldIndex, int newIndex) {
+      context.read<FavoritePlaces>().onDraggingPlace(oldIndex, newIndex);
     }
 
-    int _sightId = context.watch<FavoriteSights>().getSightId(sight: sight);
+    int _placeId = context.watch<FavoritePlaces>().getPlaceId(place: place);
 
     return Material(
       type: MaterialType.transparency,
       child: LongPressDraggable<String>(
-        key: ValueKey(sight.name),
-        data: _sightId.toString(), // TODO Sight.id
+        key: ValueKey(place.name),
+        data: _placeId.toString(), // TODO Place.id
         axis: Axis.vertical,
-        feedback: _draggableSightFeedback(context, sight),
+        feedback: _draggablePlaceFeedback(context, place),
         childWhenDragging: SizedBox.shrink(),
         child: DragTarget<String>(
           builder:
               (BuildContext context, List<String> incoming, List rejected) {
-            return _sightCardBuilder(sight);
+            return _placeCardBuilder(place);
           },
           onWillAccept: (oldIndex) {
             return true;
           },
           onAccept: (oldIndex) {
-            _onDraggingSight(int.tryParse(oldIndex), _sightId);
+            _onDraggingPlace(int.tryParse(oldIndex), _placeId);
           },
         ),
       ),
     );
   }
 
-  Widget _draggableSightFeedback(BuildContext context, Place sight) {
+  Widget _draggablePlaceFeedback(BuildContext context, Place place) {
     return Material(
       color: Colors.transparent,
       child: ConstrainedBox(
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-        child: _sightCardBuilder(sight),
+        child: _placeCardBuilder(place),
       ),
     );
   }

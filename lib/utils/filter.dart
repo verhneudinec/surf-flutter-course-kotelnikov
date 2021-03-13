@@ -18,7 +18,7 @@ bool isPointInsideRange({
   return distance >= minDistance && distance <= maxDistance;
 }
 
-class IsSightInsideSearchRange {
+class IsPlaceInsideSearchRange {
   bool check({
     GeoPosition checkPoint,
     GeoPosition imHere,

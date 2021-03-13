@@ -5,11 +5,11 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/sights_search.dart';
+import 'package:places/data/interactor/places_search.dart';
 import 'package:places/ui/screen/places_search_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 
-/// [SearchBar] displays the search bar for sights.
+/// [SearchBar] displays the search bar for places.
 class SearchBar extends StatelessWidget {
   final bool readonly;
 
@@ -21,7 +21,7 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController _searchFieldController =
-        context.watch<SightsSearch>().searchFieldController;
+        context.watch<PlacesSearch>().searchFieldController;
 
     /// When clicking on an inactive [SeachBar].
     void _onClickSearchBar() {
@@ -29,7 +29,7 @@ class SearchBar extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SightSearchScreen(),
+            builder: (context) => PlaceSearchScreen(),
           ),
         );
     }
@@ -46,20 +46,20 @@ class SearchBar extends StatelessWidget {
 
     /// If the value in the request has changed
     void _onSearchChanged(String searchQuery) {
-      context.read<SightsSearch>().onSearchChanged();
+      context.read<PlacesSearch>().onSearchChanged();
     }
 
     /// When submitting the search form
     void _onSearchSubmitted(String searchQuery) {
       if (searchQuery.isNotEmpty)
-        context.read<SightsSearch>().onSearchSubmitted(
+        context.read<PlacesSearch>().onSearchSubmitted(
               searchQuery: searchQuery,
             );
     }
 
     /// When clicking on the "Clear" button in the form
     void _onClearTextValue() {
-      context.read<SightsSearch>().onClearTextValue();
+      context.read<PlacesSearch>().onClearTextValue();
     }
 
     return ClipRRect(

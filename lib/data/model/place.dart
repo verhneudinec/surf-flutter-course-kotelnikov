@@ -1,28 +1,29 @@
 import 'package:places/data/model/geo_position.dart';
 
-/// Template for creating instances of places.
+/// This is a place data model.
+/// [id] - id of the place int the database.
+/// [lat] - latitude, [lon] - longitude.
 /// [name] - place name.
-/// [geoPosition] - an instance of the [GeoPosition] class.
-/// [url] - a picture of the place.
-/// [details] - description.
-/// [type] - place type, category.
-/// [workingTime] - working hours.
+/// [urls] - links to photos of the place.
+/// [placeType] - place type, category.
+/// [description] - place description.
 class Place {
+  final int id;
+  final double lat;
+  final double lng;
   final String name;
-  final GeoPosition geoPosition;
   final List<String> urls;
-  final String details;
-  final String type;
-  final String workingTime;
-  final bool isVisited;
+  final String placeType;
+  final String description;
+  //final bool isVisited;
 
-  Place(
+  Place({
+    this.id,
+    this.lat,
+    this.lng,
     this.name,
-    this.geoPosition,
     this.urls,
-    this.details,
-    this.type,
-    this.workingTime,
-    this.isVisited,
-  );
+    this.placeType,
+    this.description,
+  });
 }

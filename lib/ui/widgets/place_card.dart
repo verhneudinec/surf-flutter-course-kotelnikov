@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/data/interactor/favorite_sights.dart';
+import 'package:places/data/interactor/favorite_places.dart';
 import 'package:places/res/icons.dart';
+import 'package:places/res/place_types_strings.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
@@ -15,35 +16,37 @@ import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
 
-/// Sight card widget, displays the [sight] data passed to the constructor.
+import '../../res/text_strings.dart';
+
+/// Place card widget, displays the [place] data passed to the constructor.
 /// The view changes depending on [cardType].
-class SightCard extends StatelessWidget {
-  final Place sight;
+class PlaceCard extends StatelessWidget {
+  final Place place;
   final String cardType;
 
-  const SightCard({
+  const PlaceCard({
     Key key,
-    this.sight,
+    this.place,
     this.cardType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     /// Removes the list item from provider
-    void _onSightCardDelete() {
-      context.read<FavoriteSights>().deleteSightFromFavorites(sight.name);
+    void _onPlaceCardDelete() {
+      context.read<FavoritePlaces>().deletePlaceFromFavorites(place.name);
     }
 
     /// Open a window with details of the place,
     /// if there was a click on the card
-    void _onSightClick() {
+    void _onPlaceClick() {
       showModalBottomSheet(
         context: context,
         builder: (_) {
           return Container(
             margin: EdgeInsets.only(top: 84),
-            child: SightDetails(
-              sight: sight,
+            child: PlaceDetails(
+              place: place,
               isBottomSheet: true,
             ),
           );
@@ -51,13 +54,13 @@ class SightCard extends StatelessWidget {
         isScrollControlled: true,
       );
 
-      /// TODO Go to the screen with sight details
+      /// TODO Go to the screen with place details
       /// when clicking on the card
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(
-      //     builder: (context) => SightDetails(
-      //       sight: sight,
+      //     builder: (context) => PlaceDetails(
+      //       place: place,
       //     ),
       //   ),
       // );
@@ -65,14 +68,14 @@ class SightCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      decoration: AppDecorations.sightCardContainer.copyWith(
+      decoration: AppDecorations.placeCardContainer.copyWith(
         color: Theme.of(context).cardColor,
       ),
       clipBehavior: Clip.antiAlias,
       child: Dismissible(
-        key: ValueKey(sight.name),
+        key: ValueKey(place.name),
         direction: DismissDirection.endToStart,
-        onDismissed: (direction) => _onSightCardDelete(),
+        onDismissed: (direction) => _onPlaceCardDelete(),
         background: _dismissibleBackground(context),
         child: Stack(
           children: [
@@ -80,12 +83,12 @@ class SightCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SightCardHeader(
-                  sight: sight,
+                PlaceCardHeader(
+                  place: place,
                   cardType: cardType ?? CardTypes.general,
                 ),
-                SightCardBody(
-                  sight: sight,
+                PlaceCardBody(
+                  place: place,
                   cardType: cardType ?? CardTypes.general,
                 ),
               ],
@@ -97,16 +100,16 @@ class SightCard extends StatelessWidget {
                 type: MaterialType.transparency,
                 child: InkWell(
                   splashColor: Theme.of(context).splashColor,
-                  onTap: () => _onSightClick(),
+                  onTap: () => _onPlaceClick(),
                 ),
               ),
             ),
 
-            /// Action buttons: delete sight, calendar, share
-            SightCardActionButtons(
-              sight: sight,
+            /// Action buttons: delete place, calendar, share
+            PlaceCardActionButtons(
+              place: place,
               cardType: cardType ?? CardTypes.general,
-              onSightCardDelete: _onSightCardDelete,
+              onPlaceCardDelete: _onPlaceCardDelete,
             ),
           ],
         ),
@@ -116,7 +119,7 @@ class SightCard extends StatelessWidget {
 
   Widget _dismissibleBackground(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.sightCardDismissibleBackground,
+      color: Theme.of(context).colorScheme.placeCardDismissibleBackground,
       child: Container(
         margin: EdgeInsets.only(right: 16),
         alignment: AlignmentDirectional.centerEnd,
@@ -129,9 +132,9 @@ class SightCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               AppTextStrings.delete,
-              style: AppTextStyles.sightCardDismissibleText.copyWith(
+              style: AppTextStyles.placeCardDismissibleText.copyWith(
                   color:
-                      Theme.of(context).colorScheme.sightCardDismissibleText),
+                      Theme.of(context).colorScheme.placeCardDismissibleText),
             ),
           ],
         ),
@@ -140,25 +143,18 @@ class SightCard extends StatelessWidget {
   }
 }
 
-class SightCardHeader extends StatelessWidget {
-  final Place sight;
+class PlaceCardHeader extends StatelessWidget {
+  final Place place;
   final String cardType;
-  const SightCardHeader({
+  const PlaceCardHeader({
     Key key,
-    this.sight,
+    this.place,
     this.cardType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Map _sightTypes = {
-      "hotel": AppTextStrings.hotel,
-      "restourant": AppTextStrings.restourant,
-      "particular_place": AppTextStrings.particularPlace,
-      "park": AppTextStrings.park,
-      "museum": AppTextStrings.museum,
-      "cafe": AppTextStrings.cafe,
-    };
+    Map _placeTypes = PlaceTypesStrings.map;
     return Stack(
       children: [
         // Main photo of the place
@@ -166,7 +162,7 @@ class SightCardHeader extends StatelessWidget {
           width: double.infinity,
           height: 96,
           child: Image.network(
-            sight.urls.elementAt(0),
+            place.urls.elementAt(0),
             fit: BoxFit.cover,
             loadingBuilder: imageLoaderBuilder,
             errorBuilder: imageErrorBuilder,
@@ -175,7 +171,7 @@ class SightCardHeader extends StatelessWidget {
 
         // Container for creating the gradient effect
         Container(
-          decoration: AppDecorations.sightCardImageGradient,
+          decoration: AppDecorations.placeCardImageGradient,
           width: double.infinity,
           height: 96,
         ),
@@ -185,9 +181,9 @@ class SightCardHeader extends StatelessWidget {
           top: 16,
           left: 16,
           child: Text(
-            _sightTypes[sight.type],
-            style: AppTextStyles.sightCardType.copyWith(
-              color: Theme.of(context).colorScheme.sightCardTypeColor,
+            _placeTypes[place.placeType],
+            style: AppTextStyles.placeCardType.copyWith(
+              color: Theme.of(context).colorScheme.placeCardTypeColor,
             ),
           ),
         ),
@@ -196,10 +192,10 @@ class SightCardHeader extends StatelessWidget {
   }
 }
 
-class SightCardBody extends StatelessWidget {
-  final Place sight;
+class PlaceCardBody extends StatelessWidget {
+  final Place place;
   final String cardType;
-  const SightCardBody({Key key, this.sight, this.cardType}) : super(key: key);
+  const PlaceCardBody({Key key, this.place, this.cardType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -219,10 +215,10 @@ class SightCardBody extends StatelessWidget {
               maxWidth: cardType == CardTypes.general ? 296 : double.infinity,
             ),
             child: Text(
-              sight.name,
+              place.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.sightCardTitle.copyWith(
+              style: AppTextStyles.placeCardTitle.copyWith(
                 color: Theme.of(context).textTheme.headline4.color,
               ),
             ),
@@ -240,7 +236,7 @@ class SightCardBody extends StatelessWidget {
               child: Text(
                 AppTextStrings.scheduledDate,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.sightCardScheduledDate.copyWith(
+                style: AppTextStyles.placeCardScheduledDate.copyWith(
                   color: Theme.of(context).textTheme.subtitle1.color,
                 ),
               ),
@@ -253,7 +249,7 @@ class SightCardBody extends StatelessWidget {
               child: Text(
                 AppTextStrings.goalAchieved,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.sightCardGoalAchieved.copyWith(
+                style: AppTextStyles.placeCardGoalAchieved.copyWith(
                   color: Theme.of(context).textTheme.subtitle2.color,
                 ),
               ),
@@ -266,9 +262,9 @@ class SightCardBody extends StatelessWidget {
           // Working hours
           Container(
             child: Text(
-              sight.workingTime,
+              AppTextStrings.placesNotFoundTitle, // TODO Время работы
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.sightCardWorkingTime.copyWith(
+              style: AppTextStyles.placeCardWorkingTime.copyWith(
                 color: Theme.of(context).textTheme.subtitle1.color,
               ),
             ),
@@ -279,23 +275,23 @@ class SightCardBody extends StatelessWidget {
   }
 }
 
-/// Action buttons for SightCard: delete, calendar, share
-class SightCardActionButtons extends StatefulWidget {
-  final Place sight;
+/// Action buttons for PlaceCard: delete, calendar, share
+class PlaceCardActionButtons extends StatefulWidget {
+  final Place place;
   final String cardType;
-  final onSightCardDelete;
-  const SightCardActionButtons({
+  final onPlaceCardDelete;
+  const PlaceCardActionButtons({
     Key key,
-    this.sight,
+    this.place,
     this.cardType,
-    this.onSightCardDelete,
+    this.onPlaceCardDelete,
   }) : super(key: key);
 
   @override
-  _SightCardActionButtonsState createState() => _SightCardActionButtonsState();
+  _PlaceCardActionButtonsState createState() => _PlaceCardActionButtonsState();
 }
 
-class _SightCardActionButtonsState extends State<SightCardActionButtons> {
+class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
   DateTime _scheduledDate;
   DateTime _currentDate = DateTime.now();
 
@@ -370,7 +366,7 @@ class _SightCardActionButtonsState extends State<SightCardActionButtons> {
               right: 16,
               child: _iconButton(
                 iconPath: AppIcons.delete,
-                onPressed: () => widget.onSightCardDelete(),
+                onPressed: () => widget.onPlaceCardDelete(),
               ),
             ),
 

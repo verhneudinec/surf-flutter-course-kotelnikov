@@ -6,8 +6,8 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/common/back_button.dart';
-import 'package:places/data/interactor/sights_search.dart';
-import 'package:places/data/interactor/sight_types.dart';
+import 'package:places/data/interactor/places_search.dart';
+import 'package:places/data/interactor/place_types.dart';
 import 'package:places/ui/screen/places_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
@@ -30,43 +30,43 @@ class _FilterScreenState extends State<FilterScreen> {
     final bool _isLargeScreenResolution =
         MediaQuery.of(context).size.height > 800;
 
-    int _searchRangeStart = context.watch<SightsSearch>().searchRangeStart;
-    int _searchRangeEnd = context.watch<SightsSearch>().searchRangeEnd;
+    int _searchRangeStart = context.watch<PlacesSearch>().searchRangeStart;
+    int _searchRangeEnd = context.watch<PlacesSearch>().searchRangeEnd;
     final List _searchResults = context
-        .watch<SightsSearch>()
+        .watch<PlacesSearch>()
         .searchResults; // TODO Типизировать все List'ы
-    final List _sightTypes = context.watch<SightTypes>().sightTypesData;
+    final List _placeTypes = context.watch<PlaceTypes>().placeTypesData;
 
     void _onCleanAllSearchParameters() {
-      context.read<SightsSearch>().onCleanRange();
-      context.read<SightTypes>().onCleanAllSelectedTypes();
+      context.read<PlacesSearch>().onCleanRange();
+      context.read<PlaceTypes>().onCleanAllSelectedTypes();
     }
 
     void _searchButtonHandler() {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SightListScreen(),
+          builder: (context) => PlaceListScreen(),
         ),
       );
     }
 
     void _onSearchSubmited() {
-      context.read<SightsSearch>().onSearchSubmitted(
+      context.read<PlacesSearch>().onSearchSubmitted(
             isSearchFromFilterScreen: true,
           );
     }
 
     /// The handler is triggered when clicking on a category of a place
     void _onTypeClickHandler(index) {
-      context.read<SightTypes>().onTypeClickHandler(index);
+      context.read<PlaceTypes>().onTypeClickHandler(index);
       _onSearchSubmited();
     }
 
     /// The handler is triggered when the minimum distance change
     /// in slider.
     void _onMinSliderChangeHandler(searchRangeStart) {
-      context.read<SightsSearch>().onSearchRangeStartChanged(
+      context.read<PlacesSearch>().onSearchRangeStartChanged(
             searchRangeStart.toInt(),
           );
       _onSearchSubmited();
@@ -76,7 +76,7 @@ class _FilterScreenState extends State<FilterScreen> {
     /// The handler is triggered when the maximum distance change
     /// in slider.
     void _onMaxSliderChangeHandler(searchRangeEnd) {
-      context.read<SightsSearch>().onSearchRangeEndChanged(
+      context.read<PlacesSearch>().onSearchRangeEndChanged(
             searchRangeEnd.toInt(),
           );
       _onSearchSubmited();
@@ -92,7 +92,7 @@ class _FilterScreenState extends State<FilterScreen> {
             searchRangeStart: _searchRangeStart,
             searchRangeEnd: _searchRangeEnd,
             searchResults: _searchResults,
-            sightTypes: _sightTypes,
+            placeTypes: _placeTypes,
             searchButtonHandler: _searchButtonHandler,
             onTypeClickHandler: _onTypeClickHandler,
             onMinSliderChangeHandler: _onMinSliderChangeHandler,
@@ -145,7 +145,7 @@ class _FilterScreenState extends State<FilterScreen> {
     int searchRangeStart,
     int searchRangeEnd,
     List searchResults,
-    List sightTypes,
+    List placeTypes,
     searchButtonHandler,
     onTypeClickHandler,
     onMinSliderChangeHandler,
@@ -185,7 +185,7 @@ class _FilterScreenState extends State<FilterScreen> {
                         runSpacing: 40,
                         alignment: WrapAlignment.spaceEvenly,
                         children:
-                            _buildSightTypes(sightTypes, onTypeClickHandler),
+                            _buildPlaceTypes(placeTypes, onTypeClickHandler),
                       )
                     : LimitedBox(
                         maxHeight: 92,
@@ -194,12 +194,12 @@ class _FilterScreenState extends State<FilterScreen> {
                           itemCount: 6,
                           scrollDirection: Axis.horizontal,
                           itemBuilder:
-                              (BuildContext context, int sightTypeIndex) => Row(
+                              (BuildContext context, int placeTypeIndex) => Row(
                             children: [
-                              if (sightTypeIndex == 0)
+                              if (placeTypeIndex == 0)
                                 const SizedBox(width: 25),
-                              _buildSightTypes(sightTypes, onTypeClickHandler)[
-                                  sightTypeIndex],
+                              _buildPlaceTypes(placeTypes, onTypeClickHandler)[
+                                  placeTypeIndex],
                               const SizedBox(width: 20),
                             ],
                           ),
@@ -296,12 +296,12 @@ class _FilterScreenState extends State<FilterScreen> {
     );
   }
 
-  List<Widget> _buildSightTypes(
-    List sightTypes,
+  List<Widget> _buildPlaceTypes(
+    List placeTypes,
     onTypeClickHandler,
   ) =>
       [
-        for (int i = 0; i < sightTypes.length; i++)
+        for (int i = 0; i < placeTypes.length; i++)
           Column(
             children: [
               /// Category button with text label
@@ -317,12 +317,12 @@ class _FilterScreenState extends State<FilterScreen> {
                       child: IconButton(
                         onPressed: () => onTypeClickHandler(i),
                         icon: SvgPicture.asset(
-                          sightTypes.elementAt(i)["icon"],
+                          placeTypes.elementAt(i)["icon"],
                           color: Theme.of(context).accentColor,
                         ),
                       ),
                     ),
-                    if (sightTypes.elementAt(i)["selected"] == true)
+                    if (placeTypes.elementAt(i)["selected"] == true)
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -353,7 +353,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 12,
               ),
               Text(
-                sightTypes.elementAt(i)["text"],
+                placeTypes.elementAt(i)["text"],
                 style: AppTextStyles.fiterScreenCategoryTitle.copyWith(
                   color: Theme.of(context).textTheme.bodyText1.color,
                 ),

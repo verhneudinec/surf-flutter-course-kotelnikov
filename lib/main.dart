@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/add_sight.dart';
-import 'package:places/data/interactor/favorite_sights.dart';
+import 'package:places/data/interactor/add_place.dart';
+import 'package:places/data/interactor/favorite_places.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/map_screen.dart';
@@ -8,56 +9,58 @@ import 'package:places/ui/screen/places_list_screen.dart';
 import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/ui/screen/favorites.dart';
 import 'package:places/ui/screen/settings_screen.dart';
-import 'package:places/mocks.dart';
 import 'package:provider/provider.dart';
 import 'package:places/data/interactor/app_settings.dart';
-import 'package:places/data/interactor/sight_types.dart';
-import 'package:places/data/interactor/sights.dart';
-import 'package:places/data/interactor/sights_search.dart';
+import 'package:places/data/interactor/place_types.dart';
+import 'package:places/data/interactor/places.dart';
+import 'package:places/data/interactor/places_search.dart';
 
-void main() async {
+void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppSettings()),
-        ChangeNotifierProvider(create: (_) => AddSight()),
-        ChangeNotifierProvider(create: (_) => SightTypes()),
-        ChangeNotifierProvider(create: (_) => Sights()),
-        ChangeNotifierProvider(create: (_) => SightsSearch()),
-        ChangeNotifierProvider(create: (_) => FavoriteSights()),
+        ChangeNotifierProvider(create: (_) => AddPlace()),
+        ChangeNotifierProvider(create: (_) => PlaceTypes()),
+        ChangeNotifierProvider(create: (_) => Places()),
+        ChangeNotifierProvider(create: (_) => PlacesSearch()),
+        ChangeNotifierProvider(create: (_) => FavoritePlaces()),
       ],
       child: App(),
     ),
   );
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     bool _isDarkMode = context.watch<AppSettings>().isDarkMode;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      home: SplashScreen(),
+      home: PlaceListScreen(),
       routes: {
-        AppRoutes.home: (context) => SightListScreen(
-              sightsData: mocks,
-            ),
+        AppRoutes.home: (BuildContext context) => PlaceListScreen(),
         AppRoutes.map: (BuildContext context) => MapScreen(),
         AppRoutes.favorites: (BuildContext context) => VisitingScreen(),
         AppRoutes.settings: (BuildContext context) => SettingsScreen(),
       },
       // home: OnboardingScreen(),
-      // home: SightDetails(sight: mocks[2]),
-      // home: AddSightScreen(),
-      // home: SelectingSightTypeScreen(),
+      // home: PlaceDetails(place: mocks[2]),
+      // home: AddPlaceScreen(),
+      // home: SelectingPlaceTypeScreen(),
       // home: SettingsScreen(),
       // home: FilterScreen(),
       // home: VisitingScreen(),
-      // home: SightListScreen(
-      //   sightsData: mocks,
+      // home: PlaceListScreen(
+      //   placesData: mocks,
       // ),
-      // home: SightSearchScreen(),
+      // home: PlaceSearchScreen(),
     );
   }
 }

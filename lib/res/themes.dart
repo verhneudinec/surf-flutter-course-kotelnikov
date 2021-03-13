@@ -30,7 +30,7 @@ final lightTheme = ThemeData(
       color: lmMainColor,
     ),
     headline2: TextStyle(
-      // sightDetails
+      // placeDetails
       // заголовок OnboardingScreen
       color: lmSecondaryColor,
     ),
@@ -57,7 +57,7 @@ final lightTheme = ThemeData(
       color: lmSecondaryColor,
     ),
     bodyText2: TextStyle(
-      /// тип места в [SightDetails]; текст иконки в категории
+      /// тип места в [PlaceDetails]; текст иконки в категории
       color: lmSecondaryColor,
     ),
     subtitle1: TextStyle(
@@ -169,7 +169,7 @@ final darkTheme = ThemeData(
       color: whiteColor,
     ),
     headline2: TextStyle(
-      // sightDetails
+      // placeDetails
       color: whiteColor,
     ),
     headline3: TextStyle(
@@ -225,13 +225,13 @@ extension ComponentsColor on ColorScheme {
   /// Otherwise - dark theme.
   bool isLightTheme() => brightness == Brightness.light ? true : false;
 
-  Color get sightCardTypeColor => whiteColor;
-  Color get sightCardDismissibleText => whiteColor;
-  Color get sightCardDismissibleBackground =>
+  Color get placeCardTypeColor => whiteColor;
+  Color get placeCardDismissibleText => whiteColor;
+  Color get placeCardDismissibleBackground =>
       isLightTheme() ? lmRedColor : dmRedColor;
-  Color get addSightScreenPhotoDeleteButton => whiteColor;
+  Color get addPlaceScreenPhotoDeleteButton => whiteColor;
   Color get categoryTickColor => whiteColor;
-  LinearGradient get createSightButtonGradient => isLightTheme()
+  LinearGradient get createPlaceButtonGradient => isLightTheme()
       ? LinearGradient(
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,

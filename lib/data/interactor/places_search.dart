@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/sight_types.dart';
-import 'package:places/data/interactor/sights.dart';
+import 'package:places/data/interactor/place_types.dart';
+import 'package:places/data/interactor/places.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/utils/filter.dart';
-import 'package:places/mocks.dart';
 
-/// Provider for SightsSearchScreen.
-class SightsSearch with ChangeNotifier {
+/// Provider for PlacesSearchScreen.
+class PlacesSearch with ChangeNotifier {
   /// [_searchHistory] - the history of search queries.
   final List _searchHistory = [];
 
@@ -25,8 +24,8 @@ class SightsSearch with ChangeNotifier {
   /// [_searchFieldIsNotEmpty] - true if the search controller is empty
   bool _searchFieldIsNotEmpty = false;
 
-  /// [_isSightsNotFound] - if nothing was added to [_searchResults]
-  bool _isSightsNotFound = false;
+  /// [_isPlacesNotFound] - if nothing was added to [_searchResults]
+  bool _isPlacesNotFound = false;
 
   /// getters for fields with the same name
   List get searchHistory => _searchHistory;
@@ -34,13 +33,13 @@ class SightsSearch with ChangeNotifier {
   int get searchRangeStart => _searchRangeStart;
   int get searchRangeEnd => _searchRangeEnd;
   bool get searchFieldIsNotEmpty => _searchFieldIsNotEmpty;
-  bool get isSightsNotFound => _isSightsNotFound;
+  bool get isPlacesNotFound => _isPlacesNotFound;
   TextEditingController get searchFieldController => _searchFieldController;
 
   /// [onSearchChanged] called when a change
   /// has been made to the search field
   void onSearchChanged() {
-    _isSightsNotFound = false;
+    _isPlacesNotFound = false;
     _searchResults.clear();
     _searchFieldIsNotEmpty = _searchFieldController.value.text.isNotEmpty;
     notifyListeners();
@@ -124,79 +123,79 @@ class SightsSearch with ChangeNotifier {
     print(searchQuery);
 
     if (_searchResults.isNotEmpty) _searchResults.clear();
-    _isSightsNotFound = false;
+    _isPlacesNotFound = false;
 
-    /// [_sights] - array with places.
-    final List _sights =
-        Sights().sights; // TODO брать места из провайдера мест Sights
-    /// [_sightTypesData] - array with sight types.
-    final List _sightTypesData =
-        SightTypes().sightTypesData; // TODO брать типы из провайдера SightTypes
+    /// [_places] - array with places.
+    final List _places =
+        Places().places; // TODO брать места из провайдера мест Places
+    /// [_placeTypesData] - array with place types.
+    final List _placeTypesData =
+        PlaceTypes().placeTypesData; // TODO брать типы из провайдера PlaceTypes
 
     /// An array of places types selected in the filter
     final List _selectedTypes = [];
 
     /// Places found by type and range
-    final List _foundSightsByTypesAndRange = [];
+    final List _foundPlacesByTypesAndRange = [];
 
     /// Test user location
-    final GeoPosition _testGeoPosition = testGeoPosition;
+    final GeoPosition _testGeoPosition = GeoPosition(0.0, 0.0);
 
     /// create a list [_selectedTypes] only with
     /// selected categories
-    _sightTypesData.forEach(
+    _placeTypesData.forEach(
       (
-        sightType,
+        placeType,
       ) {
-        if (sightType["selected"] == true) {
-          _selectedTypes.add(sightType["name"]);
+        if (placeType["selected"] == true) {
+          _selectedTypes.add(placeType["name"]);
         }
       },
     );
 
-    /// create a list [_foundSightsBySelectedTypes] with filtered
+    /// create a list [_foundPlacesBySelectedTypes] with filtered
     /// data from by [_selectedTypes], [_searchRangeStart], [_searchRangeEnd]
     /// and the user's location [_testGeoPosition]
-    if (_selectedTypes.isNotEmpty && _sights.isNotEmpty) {
-      _sights.forEach((
-        sight,
+    if (_selectedTypes.isNotEmpty && _places.isNotEmpty) {
+      _places.forEach((
+        place,
       ) {
         _selectedTypes.forEach(
           (selectedType) {
-            // if the sight type matches the active categories from the filter
-            if (selectedType == sight.type) {
-              bool _isSightInsideRange = IsSightInsideSearchRange().check(
+            // if the place type matches the active categories from the filter
+            if (selectedType == place.placeType) {
+              bool _isPlaceInsideRange = IsPlaceInsideSearchRange().check(
                 imHere: _testGeoPosition,
-                checkPoint: sight.geoPosition,
+                checkPoint: place.geoPosition,
                 minDistance: _searchRangeStart.toDouble(),
                 maxDistance: _searchRangeEnd.toDouble(),
               );
 
-              // if the sight is in the search range
-              if (_isSightInsideRange) _foundSightsByTypesAndRange.add(sight);
+              // if the place is in the search range
+              if (_isPlaceInsideRange) _foundPlacesByTypesAndRange.add(place);
             }
           },
         );
       });
     }
 
-    /// Filter [_foundSightsBySelectedTypes] by
+    /// Filter [_foundPlacesBySelectedTypes] by
     /// search query, if it is set and create
     /// ready array of found locations [_searchResults].
-    if (_foundSightsByTypesAndRange.isNotEmpty) {
-      _foundSightsByTypesAndRange.forEach(
-        (sight) {
+    if (_foundPlacesByTypesAndRange.isNotEmpty) {
+      _foundPlacesByTypesAndRange.forEach(
+        (place) {
           if (searchQuery.isNotEmpty) {
             bool _isSearchQueryMatchName =
-                sight.name.toLowerCase().contains(searchQuery.toLowerCase());
-            if (_isSearchQueryMatchName) _searchResults.add(sight);
+                place.name.toLowerCase().contains(searchQuery.toLowerCase());
+            if (_isSearchQueryMatchName) _searchResults.add(place);
           } else
-            _searchResults.add(sight);
+            _searchResults.add(place);
         },
       );
     }
 
-    /// If no sights 1were found for the request.
-    if (_searchResults.isEmpty) _isSightsNotFound = true;
+    /// If no places 1were found for the request.
+    if (_searchResults.isEmpty) _isPlacesNotFound = true;
   }
 }

@@ -86,23 +86,23 @@ class AppTextStyles {
   static final appBarTitle = _largeTitle, //
       appBarMiniTitle = _subtitle;
 
-  // Sight card
-  static final sightCardTitle = _text,
-      sightCardScheduledDate = _small,
-      sightCardGoalAchieved = _small,
-      sightCardType = _smallBold,
-      sightCardDescription = _small,
-      sightCardWorkingTime = _small,
-      sightCardDismissibleText = _superSmallWeight500;
+  // Place card
+  static final placeCardTitle = _text,
+      placeCardScheduledDate = _small,
+      placeCardGoalAchieved = _small,
+      placeCardType = _smallBold,
+      placeCardDescription = _small,
+      placeCardWorkingTime = _small,
+      placeCardDismissibleText = _superSmallWeight500;
 
   // A page with a description of the place
-  static final sightDetailsTitle = _title,
-      sightDetailsType = _smallBold,
-      sightDetailsWorkingTime = _small,
-      sightDetailsDescription = _small,
-      sightDetailsPloteRouteButton = _button,
-      sightDetailsPlanningButton = _small,
-      sightDetailsFavoritesButton = _small;
+  static final placeDetailsTitle = _title,
+      placeDetailsType = _smallBold,
+      placeDetailsWorkingTime = _small,
+      placeDetailsDescription = _small,
+      placeDetailsPloteRouteButton = _button,
+      placeDetailsPlanningButton = _small,
+      placeDetailsFavoritesButton = _small;
 
   // Favorites page
   static final visitingScreenActiveTab = _smallBold, //
@@ -124,34 +124,34 @@ class AppTextStyles {
   static final settingsScreenEnableDarkTheme = _textWeight400,
       settingsScreenWatchTutorial = _textWeight400;
 
-  // Page with adding sight
-  static final addSightScreenLabel = _superSmall,
-      addSightScreenHint = _textWeight400,
-      addSightScreenSightFieldText = _textWeight400,
-      addSightScreenSightSpecifyCoordinatesButton = _text,
-      addSightScreenSightCreateButton = _button,
-      addSightScreenPhotoDialogCancelButton = _smallBold,
-      addSightScreenPhotoDialogTextButtons = _textWeight400;
+  // Page with adding place
+  static final addPlaceScreenLabel = _superSmall,
+      addPlaceScreenHint = _textWeight400,
+      addPlaceScreenPlaceFieldText = _textWeight400,
+      addPlaceScreenPlaceSpecifyCoordinatesButton = _text,
+      addPlaceScreenPlaceCreateButton = _button,
+      addPlaceScreenPhotoDialogCancelButton = _smallBold,
+      addPlaceScreenPhotoDialogTextButtons = _textWeight400;
 
   // Appbar
   static final appBarCustomCancelButton = _text;
 
   // Page with the choice of the type of place
-  static final selectingSightTypeScreenElement = _textWeight400,
-      selectingSightTypeScreenSaveButton = _button;
+  static final selectingPlaceTypeScreenElement = _textWeight400,
+      selectingPlaceTypeScreenSaveButton = _button;
 
   // Button to create a place on the main
-  static final createSightButton = _button;
+  static final createPlaceButton = _button;
 
   // SearchBar hint
   static final searchBarHintText = _textWeight400;
 
-  // Sight search screen
-  static final sightSearchScreenSearchHistoryTitle = _superSmall,
-      sightSearchScreenSearchHistoryElement = _textWeight400,
-      sightSearchScreenCleanHistory = _text,
-      sightSearchScreenSearchListTileTitle = _textWeight400,
-      sightSearchScreenSearchListTileSubtitle = _small;
+  // Place search screen
+  static final placeSearchScreenSearchHistoryTitle = _superSmall,
+      placeSearchScreenSearchHistoryElement = _textWeight400,
+      placeSearchScreenCleanHistory = _text,
+      placeSearchScreenSearchListTileTitle = _textWeight400,
+      placeSearchScreenSearchListTileSubtitle = _small;
 
   // Onboarding screen
   static final onboardingSkipButton = _text,

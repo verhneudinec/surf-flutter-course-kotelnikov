@@ -8,7 +8,7 @@ import 'package:places/ui/screen/onboarding_screen.dart';
 /// [SplashScreen] is shown whenever you enter the application.
 /// The application data is initialized and proceeds to the next screen.
 /// If the entry is the first, then the transition will be to [OnboardingScreen],
-/// if not - to the screen [SightListScreen].
+/// if not - to the screen [PlaceListScreen].
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key key}) : super(key: key);
 
