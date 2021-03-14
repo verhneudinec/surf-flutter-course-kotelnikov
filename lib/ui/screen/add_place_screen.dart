@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/interactor/add_place.dart';
-import 'package:places/data/interactor/places.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
@@ -30,7 +30,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   void _onPlaceCreate() {
     Place _newPlace = context.read<AddPlace>().prepareNewPlace();
 
-    context.read<Places>().addPlace(_newPlace);
+    context.read<PlacesInteractor>().addNewPlace(_newPlace);
 
     Navigator.of(context).pop();
     // TODO Сделать экран с уведомлением о том, что место добавлено

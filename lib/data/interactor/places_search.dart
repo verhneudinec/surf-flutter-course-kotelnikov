@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/place_types.dart';
-import 'package:places/data/interactor/places.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/utils/filter.dart';
 
@@ -127,7 +127,7 @@ class PlacesSearch with ChangeNotifier {
 
     /// [_places] - array with places.
     final List _places =
-        Places().places; // TODO брать места из провайдера мест Places
+        PlacesInteractor().places; // TODO брать места из провайдера мест Places
     /// [_placeTypesData] - array with place types.
     final List _placeTypesData =
         PlaceTypes().placeTypesData; // TODO брать типы из провайдера PlaceTypes
@@ -164,15 +164,15 @@ class PlacesSearch with ChangeNotifier {
           (selectedType) {
             // if the place type matches the active categories from the filter
             if (selectedType == place.placeType) {
-              bool _isPlaceInsideRange = IsPlaceInsideSearchRange().check(
-                imHere: _testGeoPosition,
-                checkPoint: place.geoPosition,
-                minDistance: _searchRangeStart.toDouble(),
-                maxDistance: _searchRangeEnd.toDouble(),
-              );
+              // TODO bool _isPlaceInsideRange = IsPlaceInsideSearchRange().check(
+              //   imHere: _testGeoPosition,
+              //   checkPoint: place.geoPosition,
+              //   minDistance: _searchRangeStart.toDouble(),
+              //   maxDistance: _searchRangeEnd.toDouble(),
+              // );
 
               // if the place is in the search range
-              if (_isPlaceInsideRange) _foundPlacesByTypesAndRange.add(place);
+              //TODO if (_isPlaceInsideRange) _foundPlacesByTypesAndRange.add(place);
             }
           },
         );

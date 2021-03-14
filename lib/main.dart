@@ -12,7 +12,7 @@ import 'package:places/ui/screen/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:places/data/interactor/app_settings.dart';
 import 'package:places/data/interactor/place_types.dart';
-import 'package:places/data/interactor/places.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/interactor/places_search.dart';
 
 void main() {
@@ -22,9 +22,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => AppSettings()),
         ChangeNotifierProvider(create: (_) => AddPlace()),
         ChangeNotifierProvider(create: (_) => PlaceTypes()),
-        ChangeNotifierProvider(create: (_) => Places()),
+        ChangeNotifierProvider(create: (_) => PlacesInteractor()),
         ChangeNotifierProvider(create: (_) => PlacesSearch()),
-        ChangeNotifierProvider(create: (_) => FavoritePlaces()),
       ],
       child: App(),
     ),

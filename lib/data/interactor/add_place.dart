@@ -80,9 +80,7 @@ class AddPlace with ChangeNotifier {
       name: _placeNameController.text,
       lat: double.tryParse(_placeLatitudeController.text),
       lng: double.tryParse(_placeLongitudeController.text),
-      urls: [
-        "https://melbourneartcritic.files.wordpress.com/2018/06/fullsizeoutput_62.jpeg"
-      ],
+      urls: ["https://i.ytimg.com/vi/OCQFglqRqJo/maxresdefault.jpg"],
       description: _placeDescriptionController.text,
       placeType: _placeTypeController.text,
     );

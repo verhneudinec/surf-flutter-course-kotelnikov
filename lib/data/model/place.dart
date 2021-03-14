@@ -1,5 +1,3 @@
-import 'package:places/data/model/geo_position.dart';
-
 /// This is a place data model.
 /// [id] - id of the place int the database.
 /// [lat] - latitude, [lon] - longitude.
@@ -15,7 +13,9 @@ class Place {
   final List<String> urls;
   final String placeType;
   final String description;
-  //final bool isVisited;
+
+  double distance;
+  bool isVisited;
 
   Place({
     this.id,
@@ -25,5 +25,7 @@ class Place {
     this.urls,
     this.placeType,
     this.description,
+    this.isVisited,
+    this.distance,
   });
 }

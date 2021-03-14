@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/places.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
@@ -14,7 +14,6 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/data/interactor/places_search.dart';
 import 'package:provider/provider.dart';
-import 'dart:async';
 
 /// [PlaceListScreen] - a screen with a list of interesting places.
 /// Displays in the header [SliverPersistentHeader] with [FlexibleAppBarDelegate],
@@ -44,30 +43,20 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   }
 
   void _initPlaces() async {
-    await context.read<Places>().getPlaces();
+    await context.read<PlacesInteractor>().loadPlaces();
+    setState(() {
+      _isPlaceListLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Place> places = context.watch<Places>().places;
+    List<Place> places = context.watch<PlacesInteractor>().places;
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
         context.watch<PlacesSearch>().searchFieldIsNotEmpty;
     List _searchResults = context.watch<PlacesSearch>().searchResults;
-
-    // TODO Временное решение для лоадера списка, пока не прошли
-    // работу с сетью и не подключились к api
-    Timer(
-      Duration(
-        seconds: 2,
-      ),
-      () {
-        setState(() {
-          _isPlaceListLoading = false;
-        });
-      },
-    );
 
     return Scaffold(
       body: SafeArea(
@@ -104,10 +93,11 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
               /// Display search results if they exist
               /// or display the data obtained in the constructor [places]
-              PlaceList(
-                places: _searchFieldIsNotEmpty ? _searchResults : places,
-                cardsType: CardTypes.general,
-              ),
+              if (!_isPlaceListLoading)
+                PlaceList(
+                  places: _searchFieldIsNotEmpty ? _searchResults : places,
+                  cardsType: CardTypes.general,
+                ),
             ],
           ),
         ),

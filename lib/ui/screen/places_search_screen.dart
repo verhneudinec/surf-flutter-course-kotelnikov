@@ -75,7 +75,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => PlaceDetails(
-            place: Place(id: 1), // TODO MOCKSmocks[placeIndex],
+            placeId: placeIndex, // TODO MOCKSmocks[placeIndex],
           ),
         ),
       );
