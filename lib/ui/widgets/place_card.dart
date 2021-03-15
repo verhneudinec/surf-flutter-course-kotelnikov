@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/data/interactor/favorite_places.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/place_types_strings.dart';
 import 'package:places/res/text_strings.dart';
@@ -16,8 +14,6 @@ import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
-
-import '../../res/text_strings.dart';
 
 /// Place card widget, displays the [place] data passed to the constructor.
 /// The view changes depending on [cardType].

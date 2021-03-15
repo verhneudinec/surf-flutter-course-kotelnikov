@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/add_place.dart';
-import 'package:places/data/interactor/favorite_places.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
@@ -10,7 +9,7 @@ import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/ui/screen/favorites.dart';
 import 'package:places/ui/screen/settings_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/app_settings.dart';
+import 'package:places/data/interactor/settings_interactor.dart';
 import 'package:places/data/interactor/place_types.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
@@ -19,7 +18,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppSettings()),
+        ChangeNotifierProvider(create: (_) => SettingsInteractor()),
         ChangeNotifierProvider(create: (_) => AddPlace()),
         ChangeNotifierProvider(create: (_) => PlaceTypes()),
         ChangeNotifierProvider(create: (_) => PlacesInteractor()),
@@ -38,7 +37,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    bool _isDarkMode = context.watch<AppSettings>().isDarkMode;
+    bool _isDarkMode = context.watch<SettingsInteractor>().isDarkMode;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,

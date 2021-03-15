@@ -7,7 +7,6 @@ import 'package:places/ui/widgets/place_card.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/data/model/place.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/favorite_places.dart';
 
 /// The [PlaceList] widget displays a list of places
 /// if list length > 0 or [ErrorStub] - if the array is empty.
