@@ -64,8 +64,8 @@ class PlaceList extends StatelessWidget {
         childAspectRatio: _isPortraitOrientation &&
                 cardsType ==
                     CardTypes.general // TODO Fix orientation aspect ratio
-            ? 3 / 1.58
-            : 3 / 1.7,
+            ? 3 / 1.35
+            : 3 / 1.55,
       ),
     );
   }

@@ -31,7 +31,7 @@ class PlacesInteractor with ChangeNotifier {
 
   /// Function for loading place details from API
   Future<Place> loadPlaceDetails({int id}) async {
-    final Place place = await PlaceRepository().getPlaceDetails(id: 33);
+    final Place place = await PlaceRepository().getPlaceDetails(id: id);
     return place;
   }
 
