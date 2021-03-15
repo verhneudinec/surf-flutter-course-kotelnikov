@@ -37,7 +37,7 @@ class PlacesInteractor with ChangeNotifier {
 
   /// Function for sorting [_favoritePlaces] list
   void sortFavoritePlaces() {
-    final GeoPosition userGeoposition = GeoPosition(1, 1);
+    final GeoPosition userGeoposition = GeoPosition(59.914455, 29.770945);
 
     _favoritePlaces.forEach((element) {
       element.distance = DistanceToPlace().check(
