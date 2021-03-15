@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/place_repository.dart';
-import 'package:places/utils/filter.dart';
+import 'package:places/utils/check_distance.dart';
 
 /// Provider for an array of application locations.
 /// Initialized with data from API.
@@ -40,8 +40,8 @@ class PlacesInteractor with ChangeNotifier {
     final GeoPosition userGeoposition = GeoPosition(1, 1);
 
     _favoritePlaces.forEach((element) {
-      element.distance = IsPlaceInsideSearchRange().check(
-        imHere: userGeoposition,
+      element.distance = DistanceToPlace().check(
+        userPoint: userGeoposition,
         checkPoint: GeoPosition(element.lat, element.lng),
       );
     });

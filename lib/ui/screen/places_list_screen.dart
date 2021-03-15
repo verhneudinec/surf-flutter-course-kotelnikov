@@ -12,7 +12,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/data/interactor/places_search.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:provider/provider.dart';
 
 /// [PlaceListScreen] - a screen with a list of interesting places.
@@ -55,8 +55,8 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
-        context.watch<PlacesSearch>().searchFieldIsNotEmpty;
-    List _searchResults = context.watch<PlacesSearch>().searchResults;
+        context.watch<PlacesSearchInteractor>().searchFieldIsNotEmpty;
+    List _searchResults = context.watch<PlacesSearchInteractor>().searchResults;
 
     return Scaffold(
       body: SafeArea(

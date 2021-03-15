@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/place_types.dart';
-import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/geo_position.dart';
-import 'package:places/utils/filter.dart';
+import 'package:places/data/model/place.dart';
+import 'package:places/data/repository/filtered_places_repository.dart';
 
 /// Provider for PlacesSearchScreen.
-class PlacesSearch with ChangeNotifier {
+class PlacesSearchInteractor with ChangeNotifier {
   /// [_searchHistory] - the history of search queries.
-  final List _searchHistory = [];
+  final List<String> _searchHistory = [];
 
   /// [_searchFieldController] - controller for search field.
   final TextEditingController _searchFieldController = TextEditingController();
 
   /// [_searchResults] - search results by type, range and search query.
-  final List _searchResults = [];
+  List<Place> _searchResults = [];
 
   /// [_searchRangeStart] - the initial search range.
   int _searchRangeStart = 100;
@@ -27,13 +27,17 @@ class PlacesSearch with ChangeNotifier {
   /// [_isPlacesNotFound] - if nothing was added to [_searchResults]
   bool _isPlacesNotFound = false;
 
+  /// [_isPlacesLoading] - if places are loaded from the server
+  bool _isPlacesLoading = false;
+
   /// getters for fields with the same name
-  List get searchHistory => _searchHistory;
-  List get searchResults => _searchResults;
+  List<String> get searchHistory => _searchHistory;
+  List<Place> get searchResults => _searchResults;
   int get searchRangeStart => _searchRangeStart;
   int get searchRangeEnd => _searchRangeEnd;
   bool get searchFieldIsNotEmpty => _searchFieldIsNotEmpty;
   bool get isPlacesNotFound => _isPlacesNotFound;
+  bool get isPlacesLoading => _isPlacesLoading;
   TextEditingController get searchFieldController => _searchFieldController;
 
   /// [onSearchChanged] called when a change
@@ -64,10 +68,12 @@ class PlacesSearch with ChangeNotifier {
   /// [isSearchFromFilterScreen] - true if there was a call from the filter screen.
   void onSearchSubmitted({
     String searchQuery,
-    isTapFromHistory = false,
-    isSearchFromFilterScreen = false,
+    bool isTapFromHistory = false,
+    bool isSearchFromFilterScreen = false,
   }) {
     searchQuery = searchQuery ?? _searchFieldController.value.text;
+
+    _isPlacesLoading = true;
 
     if (searchQuery.isNotEmpty && !isSearchFromFilterScreen) {
       _searchFieldIsNotEmpty = true;
@@ -83,7 +89,7 @@ class PlacesSearch with ChangeNotifier {
       _searchFieldController.text = searchQuery;
     }
 
-    searchHandler(searchQuery);
+    searchPlaces(searchQuery);
 
     notifyListeners();
   }
@@ -115,87 +121,52 @@ class PlacesSearch with ChangeNotifier {
     notifyListeners();
   }
 
-  /// [searchHandler] search request handler.
+  /// [searchPlaces] - is a search request handler.
   /// Found locations are added to [_searchResults].
-  void searchHandler(String searchQuery) {
-    searchQuery = _searchFieldController
-        .value.text; // TODO исправить баг с поисковым запросом.
-    print(searchQuery);
+  void searchPlaces(String searchQuery) async {
+    searchQuery = searchFieldController.value.text;
 
-    if (_searchResults.isNotEmpty) _searchResults.clear();
+    if (searchResults.isNotEmpty) searchResults.clear();
     _isPlacesNotFound = false;
 
-    /// [_places] - array with places.
-    final List _places =
-        PlacesInteractor().places; // TODO брать места из провайдера мест Places
-    /// [_placeTypesData] - array with place types.
-    final List _placeTypesData =
+    final List placeTypesData =
         PlaceTypes().placeTypesData; // TODO брать типы из провайдера PlaceTypes
 
     /// An array of places types selected in the filter
-    final List _selectedTypes = [];
-
-    /// Places found by type and range
-    final List _foundPlacesByTypesAndRange = [];
+    final List selectedTypes = [];
 
     /// Test user location
-    final GeoPosition _testGeoPosition = GeoPosition(0.0, 0.0);
+    final GeoPosition testGeoPosition = GeoPosition(59.884866, 29.904859);
+
+    /// In [searchResponse] will be the data from the server
+    List<Place> searchResponse = [];
 
     /// create a list [_selectedTypes] only with
     /// selected categories
-    _placeTypesData.forEach(
+    placeTypesData.forEach(
       (
         placeType,
       ) {
         if (placeType["selected"] == true) {
-          _selectedTypes.add(placeType["name"]);
+          selectedTypes.add(placeType["name"]);
         }
       },
     );
 
-    /// create a list [_foundPlacesBySelectedTypes] with filtered
-    /// data from by [_selectedTypes], [_searchRangeStart], [_searchRangeEnd]
-    /// and the user's location [_testGeoPosition]
-    if (_selectedTypes.isNotEmpty && _places.isNotEmpty) {
-      _places.forEach((
-        place,
-      ) {
-        _selectedTypes.forEach(
-          (selectedType) {
-            // if the place type matches the active categories from the filter
-            if (selectedType == place.placeType) {
-              // TODO bool _isPlaceInsideRange = IsPlaceInsideSearchRange().check(
-              //   imHere: _testGeoPosition,
-              //   checkPoint: place.geoPosition,
-              //   minDistance: _searchRangeStart.toDouble(),
-              //   maxDistance: _searchRangeEnd.toDouble(),
-              // );
+    searchResponse = await FilteredPlaceRepository().searchPlaces(
+      searchQuery: searchQuery,
+      geoposition: testGeoPosition,
+      selectedTypes: selectedTypes,
+      searchRadius: searchRangeEnd,
+    );
 
-              // if the place is in the search range
-              //TODO if (_isPlaceInsideRange) _foundPlacesByTypesAndRange.add(place);
-            }
-          },
-        );
-      });
-    }
+    _searchResults = searchResponse;
 
-    /// Filter [_foundPlacesBySelectedTypes] by
-    /// search query, if it is set and create
-    /// ready array of found locations [_searchResults].
-    if (_foundPlacesByTypesAndRange.isNotEmpty) {
-      _foundPlacesByTypesAndRange.forEach(
-        (place) {
-          if (searchQuery.isNotEmpty) {
-            bool _isSearchQueryMatchName =
-                place.name.toLowerCase().contains(searchQuery.toLowerCase());
-            if (_isSearchQueryMatchName) _searchResults.add(place);
-          } else
-            _searchResults.add(place);
-        },
-      );
-    }
-
-    /// If no places 1were found for the request.
+    /// If no places were found for the request.
     if (_searchResults.isEmpty) _isPlacesNotFound = true;
+
+    _isPlacesLoading = false;
+
+    notifyListeners();
   }
 }

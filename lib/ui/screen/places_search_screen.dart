@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
+import 'package:places/res/place_types_strings.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
@@ -10,7 +11,7 @@ import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/search_bar.dart';
 import 'package:places/ui/widgets/error_stub.dart';
-import 'package:places/data/interactor/places_search.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 
@@ -46,24 +47,22 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   }
 
   Widget _body() {
-    bool _searchFieldIsNotEmpty =
-        context.watch<PlacesSearch>().searchFieldIsNotEmpty;
-    bool _isPlacesNotFound = context.watch<PlacesSearch>().isPlacesNotFound;
-    List _searchHistory = context.watch<PlacesSearch>().searchHistory;
-    List _searchResults = context.watch<PlacesSearch>().searchResults;
+    bool searchFieldIsNotEmpty =
+        context.watch<PlacesSearchInteractor>().searchFieldIsNotEmpty;
+    bool isPlacesNotFound =
+        context.watch<PlacesSearchInteractor>().isPlacesNotFound;
+    bool isPlacesLoading =
+        context.watch<PlacesSearchInteractor>().isPlacesLoading;
+    List<String> searchHistory =
+        context.watch<PlacesSearchInteractor>().searchHistory;
+    List<Place> searchResults =
+        context.watch<PlacesSearchInteractor>().searchResults;
 
-    final Map _placeTypes = {
-      "hotel": AppTextStrings.hotel,
-      "restourant": AppTextStrings.restourant,
-      "particular_place": AppTextStrings.particularPlace,
-      "park": AppTextStrings.park,
-      "museum": AppTextStrings.museum,
-      "cafe": AppTextStrings.cafe,
-    };
+    final Map placeTypes = PlaceTypesStrings.map;
 
     /// When clicking on a query from the search history
     void _onTapQueryFromHistory(searchQuery) {
-      context.read<PlacesSearch>().onSearchSubmitted(
+      context.read<PlacesSearchInteractor>().onSearchSubmitted(
             searchQuery: searchQuery,
             isTapFromHistory: true,
           );
@@ -83,12 +82,12 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
 
     /// When deleting a request from history
     void _onQueryDelete(index) {
-      context.read<PlacesSearch>().onQueryDelete(index);
+      context.read<PlacesSearchInteractor>().onQueryDelete(index);
     }
 
     /// Deleting all requests from the search history
     void _onCleanHistory() {
-      context.read<PlacesSearch>().onCleanHistory();
+      context.read<PlacesSearchInteractor>().onCleanHistory();
     }
 
     return Padding(
@@ -111,7 +110,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
           ),
 
           /// Display search history
-          if (_searchHistory.isNotEmpty && _searchFieldIsNotEmpty == false)
+          if (searchHistory.isNotEmpty && searchFieldIsNotEmpty == false)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,14 +124,14 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                 const SizedBox(
                   height: 4,
                 ),
-                for (int i = 0; i < _searchHistory.length; i++)
+                for (int i = 0; i < searchHistory.length; i++)
                   Column(
                     children: [
                       Row(
                         children: [
                           Expanded(
                             child: _searchHistoryButton(
-                              text: _searchHistory[i],
+                              text: searchHistory[i],
                               onTapQueryFromHistory: _onTapQueryFromHistory,
                               onQueryDelete: _onQueryDelete,
                               index: i,
@@ -149,7 +148,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                 ),
 
                 // Clean hostory
-                if (_searchHistory.isNotEmpty)
+                if (searchHistory.isNotEmpty)
                   InkWell(
                     onTap: () => _onCleanHistory(),
                     child: Padding(
@@ -170,10 +169,10 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
             ),
 
           /// Display search results if the conditions are met
-          if (_searchFieldIsNotEmpty == true && _searchResults.isNotEmpty)
+          if (searchFieldIsNotEmpty && searchResults.isNotEmpty)
             Column(
               children: [
-                for (int i = 0; i < _searchResults.length; i++)
+                for (int i = 0; i < searchResults.length; i++)
                   InkWell(
                     onTap: () => _onPlaceClick(i),
                     child: ListTile(
@@ -186,7 +185,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                           width: 56,
                           height: 56,
                           child: Image.network(
-                            _searchResults[i].url,
+                            searchResults[i].urls[0],
                             fit: BoxFit.cover,
                             loadingBuilder: imageLoaderBuilder,
                             errorBuilder: imageErrorBuilder,
@@ -194,7 +193,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                         ),
                       ),
                       title: Text(
-                        _searchResults[i].name,
+                        searchResults[i].name,
                         style: AppTextStyles
                             .placeSearchScreenSearchListTileTitle
                             .copyWith(
@@ -202,7 +201,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        _placeTypes[_searchResults[i].type],
+                        placeTypes[searchResults[i].placeType],
                         style: AppTextStyles
                             .placeSearchScreenSearchListTileSubtitle
                             .copyWith(
@@ -214,8 +213,17 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
               ],
             ),
 
+          /// Place loading loader
+          if (isPlacesLoading)
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 300,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+
           /// If nothing was found
-          if (_searchFieldIsNotEmpty == true && _isPlacesNotFound == true)
+          if (searchFieldIsNotEmpty == true && isPlacesNotFound == true)
             Center(
               child: SizedBox(
                 width: 255,

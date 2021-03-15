@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:places/data/interactor/app_settings.dart';
 import 'package:places/data/interactor/place_types.dart';
 import 'package:places/data/interactor/places_interactor.dart';
-import 'package:places/data/interactor/places_search.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 
 void main() {
   runApp(
@@ -23,7 +23,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AddPlace()),
         ChangeNotifierProvider(create: (_) => PlaceTypes()),
         ChangeNotifierProvider(create: (_) => PlacesInteractor()),
-        ChangeNotifierProvider(create: (_) => PlacesSearch()),
+        ChangeNotifierProvider(create: (_) => PlacesSearchInteractor()),
       ],
       child: App(),
     ),

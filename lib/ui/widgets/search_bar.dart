@@ -5,7 +5,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/places_search.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/ui/screen/places_search_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 
@@ -21,7 +21,7 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController _searchFieldController =
-        context.watch<PlacesSearch>().searchFieldController;
+        context.watch<PlacesSearchInteractor>().searchFieldController;
 
     /// When clicking on an inactive [SeachBar].
     void _onClickSearchBar() {
@@ -46,20 +46,20 @@ class SearchBar extends StatelessWidget {
 
     /// If the value in the request has changed
     void _onSearchChanged(String searchQuery) {
-      context.read<PlacesSearch>().onSearchChanged();
+      context.read<PlacesSearchInteractor>().onSearchChanged();
     }
 
     /// When submitting the search form
     void _onSearchSubmitted(String searchQuery) {
       if (searchQuery.isNotEmpty)
-        context.read<PlacesSearch>().onSearchSubmitted(
+        context.read<PlacesSearchInteractor>().onSearchSubmitted(
               searchQuery: searchQuery,
             );
     }
 
     /// When clicking on the "Clear" button in the form
     void _onClearTextValue() {
-      context.read<PlacesSearch>().onClearTextValue();
+      context.read<PlacesSearchInteractor>().onClearTextValue();
     }
 
     return ClipRRect(
