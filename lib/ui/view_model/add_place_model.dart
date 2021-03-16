@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
+import 'package:provider/provider.dart';
 
 /// State for screen [AddPlaceScreen].
 class AddPlace with ChangeNotifier {
@@ -76,9 +78,15 @@ class AddPlace with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Add a new place through the [PlacesInteractor]
+  void addNewPlace(BuildContext context) {
+    final Place place = prepareNewPlace();
+    context.read<PlacesInteractor>().addNewPlace(place);
+  }
+
   /// A function for preparing the data of the new [Place] object.
   Place prepareNewPlace() {
-    final Place _newPlace = Place(
+    final Place newPlace = Place(
       name: _placeNameController.text,
       lat: double.tryParse(_placeLatitudeController.text),
       lng: double.tryParse(_placeLongitudeController.text),
@@ -86,6 +94,6 @@ class AddPlace with ChangeNotifier {
       description: _placeDescriptionController.text,
       placeType: _placeTypeController.text,
     );
-    return _newPlace;
+    return newPlace;
   }
 }
