@@ -10,7 +10,7 @@ import 'package:places/ui/screen/favorites.dart';
 import 'package:places/ui/screen/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:places/data/interactor/settings_interactor.dart';
-import 'package:places/data/interactor/place_types.dart';
+import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
 

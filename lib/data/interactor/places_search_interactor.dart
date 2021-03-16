@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/place_types.dart';
+import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/filtered_places_repository.dart';

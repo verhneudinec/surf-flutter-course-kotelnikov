@@ -4,7 +4,7 @@ import 'package:places/res/text_strings.dart';
 
 /// Provider for place types.
 class PlaceTypes with ChangeNotifier {
-  final List _placeTypesData = [
+  final List<Map<String, dynamic>> _placeTypesData = [
     {
       "name": "hotel",
       "text": AppTextStrings.hotel,
@@ -43,7 +43,7 @@ class PlaceTypes with ChangeNotifier {
     },
   ];
 
-  List get placeTypesData => _placeTypesData;
+  List<Map<String, dynamic>> get placeTypesData => _placeTypesData;
 
   /// Function to clear all active (selected) types
   void onCleanAllSelectedTypes() {
@@ -55,18 +55,11 @@ class PlaceTypes with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Function to clear a specific selected type by index
-  void onCleanSelectedType(index) {
-    _placeTypesData.elementAt(index).selected = false;
-    notifyListeners();
-  }
-
   /// The function is called when you click on a place type.
   /// Inverts the value of the selected type (by index)
   void onTypeClickHandler(index) {
     _placeTypesData.elementAt(index)["selected"] =
         !_placeTypesData.elementAt(index)["selected"];
-
     notifyListeners();
   }
 }

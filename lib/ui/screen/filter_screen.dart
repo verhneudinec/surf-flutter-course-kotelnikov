@@ -7,7 +7,7 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/common/back_button.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
-import 'package:places/data/interactor/place_types.dart';
+import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/ui/screen/places_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
