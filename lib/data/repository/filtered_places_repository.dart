@@ -36,6 +36,7 @@ class FilteredPlaceRepository {
 
     List<Place> placeList = [];
 
+    // TODO Вынести в отдельную сущность
     if (response.statusCode == 200)
       placeList = List<Place>.from(
         response.data.map(

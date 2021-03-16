@@ -10,6 +10,7 @@ import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/ui/screen/places_list_screen.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
+import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:places/res/icons.dart';
 import 'package:provider/provider.dart';
@@ -30,17 +31,15 @@ class _FilterScreenState extends State<FilterScreen> {
     final bool _isLargeScreenResolution =
         MediaQuery.of(context).size.height > 800;
 
-    int _searchRangeStart =
-        context.watch<PlacesSearchInteractor>().searchRangeStart;
-    int _searchRangeEnd =
-        context.watch<PlacesSearchInteractor>().searchRangeEnd;
-    final List _searchResults = context
-        .watch<PlacesSearchInteractor>()
-        .searchResults; // TODO Типизировать все List'ы
-    final List _placeTypes = context.watch<PlaceTypes>().placeTypesData;
+    int _searchRangeStart = context.watch<PlacesSearchModel>().searchRangeStart;
+    int _searchRangeEnd = context.watch<PlacesSearchModel>().searchRangeEnd;
+    final List<Place> _searchResults =
+        context.watch<PlacesSearchInteractor>().searchResults;
+    final List<Map<String, Object>> _placeTypes =
+        context.watch<PlaceTypes>().placeTypesData;
 
     void _onCleanAllSearchParameters() {
-      context.read<PlacesSearchInteractor>().onCleanRange();
+      context.read<PlacesSearchModel>().onCleanRange(context);
       context.read<PlaceTypes>().onCleanAllSelectedTypes();
     }
 
@@ -54,7 +53,8 @@ class _FilterScreenState extends State<FilterScreen> {
     }
 
     void _onSearchSubmited() {
-      context.read<PlacesSearchInteractor>().onSearchSubmitted(
+      context.read<PlacesSearchModel>().onSearchSubmitted(
+            context: context,
             isSearchFromFilterScreen: true,
           );
     }
@@ -68,7 +68,7 @@ class _FilterScreenState extends State<FilterScreen> {
     /// The handler is triggered when the minimum distance change
     /// in slider.
     void _onMinSliderChangeHandler(searchRangeStart) {
-      context.read<PlacesSearchInteractor>().onSearchRangeStartChanged(
+      context.read<PlacesSearchModel>().onSearchRangeStartChanged(
             searchRangeStart.toInt(),
           );
       _onSearchSubmited();
@@ -78,7 +78,7 @@ class _FilterScreenState extends State<FilterScreen> {
     /// The handler is triggered when the maximum distance change
     /// in slider.
     void _onMaxSliderChangeHandler(searchRangeEnd) {
-      context.read<PlacesSearchInteractor>().onSearchRangeEndChanged(
+      context.read<PlacesSearchModel>().onSearchRangeEndChanged(
             searchRangeEnd.toInt(),
           );
       _onSearchSubmited();
