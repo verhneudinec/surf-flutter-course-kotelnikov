@@ -23,7 +23,7 @@ class PlacesInteractor with ChangeNotifier {
 
   /// Function for loading places from [PlacesRepository]
   Future<void> loadPlaces({int radius, String category}) async {
-    final response = await PlaceRepository().loadPlace();
+    final response = await PlaceRepository().loadPlaces();
     _places = response;
 
     notifyListeners();
