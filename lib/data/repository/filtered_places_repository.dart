@@ -43,6 +43,6 @@ class FilteredPlaceRepository {
         ),
       );
 
-    return placeList.isNotEmpty ? placeList : response.statusMessage;
+    return placeList;
   }
 }

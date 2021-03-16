@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/data/interactor/add_place.dart';
+import 'package:places/ui/view_model/add_place.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';

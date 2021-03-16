@@ -4,20 +4,20 @@ import 'package:places/data/model/place.dart';
 /// State for screen [AddPlaceScreen].
 class AddPlace with ChangeNotifier {
   /// Controllers for text fields.
-  final _placeTypeController = TextEditingController(),
+  final TextEditingController _placeTypeController = TextEditingController(),
       _placeNameController = TextEditingController(),
       _placeLatitudeController = TextEditingController(),
       _placeLongitudeController = TextEditingController(),
       _placeDescriptionController = TextEditingController();
 
   /// Photogallery of the place
-  List _placePhotogallery = [];
+  List<String> _placePhotogallery = [];
 
   /// Fullness of text fields.
   bool _isFieldsFilled = false;
 
   /// FocusNodes for the corresponding text fields.
-  final _nameFieldFocusNode = FocusNode(),
+  final FocusNode _nameFieldFocusNode = FocusNode(),
       _latitudeFieldFocusNode = FocusNode(),
       _longitideFieldFocusNode = FocusNode(),
       _detailsFieldFocusNode = FocusNode();
@@ -32,7 +32,7 @@ class AddPlace with ChangeNotifier {
       _placeDescriptionController;
 
   /// Photogallery of the place
-  List get placePhotogallery => _placePhotogallery;
+  List<String> get placePhotogallery => _placePhotogallery;
 
   /// Fullness of text fields.
   bool get isFieldsFilled => _isFieldsFilled;
@@ -64,7 +64,9 @@ class AddPlace with ChangeNotifier {
 
   /// Add a photo to the gallery
   void addPlacePhoto() {
-    _placePhotogallery.add(_placePhotogallery.length);
+    // We don't know how to work with photos yet,
+    // so just add a new number to the array.
+    _placePhotogallery.add(_placePhotogallery.length.toString());
     notifyListeners();
   }
 
@@ -76,7 +78,7 @@ class AddPlace with ChangeNotifier {
 
   /// A function for preparing the data of the new [Place] object.
   Place prepareNewPlace() {
-    final _newPlace = Place(
+    final Place _newPlace = Place(
       name: _placeNameController.text,
       lat: double.tryParse(_placeLatitudeController.text),
       lng: double.tryParse(_placeLongitudeController.text),

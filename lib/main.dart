@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/add_place.dart';
+import 'package:places/ui/view_model/add_place.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
