@@ -47,7 +47,7 @@ class AddPlace with ChangeNotifier {
 
   /// The function is called whenever the text field changes.
   /// Checks if all fields are filled and writes the value to [_isFieldsFilled].
-  void changeTextValue(controller, value) {
+  void changeTextValue(TextEditingController controller, String value) {
     if (_placeNameController.text.isNotEmpty &&
         _placeLongitudeController.text.isNotEmpty &&
         _placeLatitudeController.text.isNotEmpty &&

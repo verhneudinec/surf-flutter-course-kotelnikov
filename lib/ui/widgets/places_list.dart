@@ -101,7 +101,7 @@ class PlaceList extends StatelessWidget {
   Widget _favoritePlaceCardBuilder(BuildContext context, Place place) {
     /// [_onDraggingPlace] called when dragging an item in the list
     void _onDraggingPlace(int oldIndex, int newIndex) {
-      context.read<PlacesInteractor>().onDraggingPlace(oldIndex, newIndex);
+      context.read<PlacesInteractor>().swapFavoriteItems(oldIndex, newIndex);
     }
 
     int _placeId = context.watch<PlacesInteractor>().getPlaceId(place: place);
