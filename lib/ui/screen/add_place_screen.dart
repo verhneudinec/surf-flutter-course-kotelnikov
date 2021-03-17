@@ -1,47 +1,44 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/models/add_sight.dart';
-import 'package:places/models/sights.dart';
+import 'package:places/data/model/place.dart';
+import 'package:places/ui/view_model/add_place_model.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/ui/screen/selecting_sight_type.dart';
+import 'package:places/ui/screen/selecting_place_type_screen.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:provider/provider.dart';
 
 /// Screen for adding and editing a place
-/// State is controlled by [AddSight]
-class AddSightScreen extends StatefulWidget {
-  const AddSightScreen({Key key}) : super(key: key);
+/// State is controlled by [AddPlace]
+class AddPlaceScreen extends StatefulWidget {
+  const AddPlaceScreen({Key key}) : super(key: key);
 
   @override
-  _AddSightScreenState createState() => _AddSightScreenState();
+  _AddPlaceScreenState createState() => _AddPlaceScreenState();
 }
 
-class _AddSightScreenState extends State<AddSightScreen> {
-  /// [_onSightCreate] takes the prepared data of the new
-  /// sight from [AddSight] and writes them to
-  /// array of mock data from [Sights].
-  void _onSightCreate() {
-    Sight _newSight = context.read<AddSight>().prepareNewSight();
-
-    context.read<Sights>().addSight(_newSight);
-
+class _AddPlaceScreenState extends State<AddPlaceScreen> {
+  /// [_onPlaceCreate] takes the prepared data of the new
+  /// place from [AddPlace] and writes them to
+  /// array of mock data from [Places].
+  void _onPlaceCreate() {
+    context.read<AddPlace>().addNewPlace(context);
     Navigator.of(context).pop();
     // TODO Сделать экран с уведомлением о том, что место добавлено
   }
 
   /// When clicking on the category selection button
-  void _onSelectSightType() {
+  void _onSelectPlaceType() {
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (BuildContext context) => SelectingSightTypeScreen(),
+        builder: (BuildContext context) => SelectingPlaceTypeScreen(),
       ),
     );
   }
@@ -50,7 +47,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   Widget build(BuildContext context) {
     /// [_isFieldsFilled] check for filling in all fields.
     /// The "Save" button becomes active when this field is true.
-    bool _isFieldsFilled = context.watch<AddSight>().isFieldsFilled;
+    bool _isFieldsFilled = context.watch<AddPlace>().isFieldsFilled;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -61,34 +58,34 @@ class _AddSightScreenState extends State<AddSightScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _createSightButton(
+      bottomNavigationBar: _createPlaceButton(
         _isFieldsFilled,
-        _onSightCreate,
+        _onPlaceCreate,
       ),
     );
   }
 
   Widget _header() {
     return AppBarCustom(
-      title: AppTextStrings.addSightScreenTitle,
+      title: AppTextStrings.addPlaceScreenTitle,
       cancelButtonEnabled: true,
     );
   }
 
   Widget _body() {
     /// Controllers for text fields
-    final TextEditingController _sightTypeController =
-            context.watch<AddSight>().sightTypeController,
-        _sightNameController = context.watch<AddSight>().sightNameController,
-        _sightLatitudeController =
-            context.watch<AddSight>().sightLatitudeController,
-        _sightLongitudeController =
-            context.watch<AddSight>().sightLongitudeController,
-        _sightDescriptionController =
-            context.watch<AddSight>().sightDescriptionController;
+    final TextEditingController _placeTypeController =
+            context.watch<AddPlace>().placeTypeController,
+        _placeNameController = context.watch<AddPlace>().placeNameController,
+        _placeLatitudeController =
+            context.watch<AddPlace>().placeLatitudeController,
+        _placeLongitudeController =
+            context.watch<AddPlace>().placeLongitudeController,
+        _placeDescriptionController =
+            context.watch<AddPlace>().placeDescriptionController;
 
     /// Photogallery of the place
-    List _sightPhotogallery = context.watch<AddSight>().sightPhotogallery;
+    List _placePhotogallery = context.watch<AddPlace>().placePhotogallery;
 
     return Container(
       width: double.infinity,
@@ -98,7 +95,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
           const SizedBox(
             height: 24,
           ),
-          _photogallery(_sightPhotogallery),
+          _photogallery(_placePhotogallery),
           const SizedBox(
             height: 24,
           ),
@@ -110,16 +107,16 @@ class _AddSightScreenState extends State<AddSightScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _sightType(_sightTypeController, _onSelectSightType),
+                _placeType(_placeTypeController, _onSelectPlaceType),
 
                 const SizedBox(
                   height: 24,
                 ),
 
-                /// Sight name
+                /// Place name
                 Text(
-                  AppTextStrings.addSightScreenSightNameLabel.toUpperCase(),
-                  style: AppTextStyles.addSightScreenLabel.copyWith(
+                  AppTextStrings.addPlaceScreenPlaceNameLabel.toUpperCase(),
+                  style: AppTextStyles.addPlaceScreenLabel.copyWith(
                     color: Theme.of(context).disabledColor,
                   ),
                 ),
@@ -129,20 +126,20 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 ),
 
                 _outlinedTextField(
-                  hintText: AppTextStrings.addSightScreenTextFormFieldEmpty,
-                  controller: _sightNameController,
-                  focusNode: context.watch<AddSight>().nameFieldFocusNode,
+                  hintText: AppTextStrings.addPlaceScreenTextFormFieldEmpty,
+                  controller: _placeNameController,
+                  focusNode: context.watch<AddPlace>().nameFieldFocusNode,
                   nextFocusNode:
-                      context.watch<AddSight>().latitudeFieldFocusNode,
+                      context.watch<AddPlace>().latitudeFieldFocusNode,
                 ),
 
                 const SizedBox(
                   height: 24,
                 ),
 
-                _sightGeolocation(
-                  _sightLatitudeController,
-                  _sightLongitudeController,
+                _placeGeolocation(
+                  _placeLatitudeController,
+                  _placeLongitudeController,
                 ),
 
                 const SizedBox(
@@ -156,9 +153,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 ),
 
                 Text(
-                  AppTextStrings.addSightScreenSightDescriptionLabel
+                  AppTextStrings.addPlaceScreenPlaceDescriptionLabel
                       .toUpperCase(),
-                  style: AppTextStyles.addSightScreenLabel.copyWith(
+                  style: AppTextStyles.addPlaceScreenLabel.copyWith(
                     color: Theme.of(context).disabledColor,
                   ),
                 ),
@@ -168,12 +165,12 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 ),
 
                 _outlinedTextField(
-                  hintText: AppTextStrings.addSightScreenTextFormFieldEmpty,
+                  hintText: AppTextStrings.addPlaceScreenTextFormFieldEmpty,
                   maxLines: 4,
-                  focusNode: context.watch<AddSight>().detailsFieldFocusNode,
-                  controller: _sightDescriptionController,
+                  focusNode: context.watch<AddPlace>().detailsFieldFocusNode,
+                  controller: _placeDescriptionController,
                   nextFocusNode:
-                      context.watch<AddSight>().detailsFieldFocusNode,
+                      context.watch<AddPlace>().detailsFieldFocusNode,
                   isLastField: true,
                 ),
               ],
@@ -184,8 +181,8 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
   }
 
-  /// "Add a new sight" button
-  Widget _createSightButton(bool _isFieldsFilled, _onSightCreate) {
+  /// "Add a new place" button
+  Widget _createPlaceButton(bool _isFieldsFilled, _onPlaceCreate) {
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 8.0,
@@ -194,13 +191,13 @@ class _AddSightScreenState extends State<AddSightScreen> {
       child: TextButton(
         onPressed: () {
           if (_isFieldsFilled == true)
-            _onSightCreate();
+            _onPlaceCreate();
           else
             print("Не все поля заполнены"); // TODO Shake bar
         },
         child: Text(
-          AppTextStrings.addSightScreenSightCreateButton.toUpperCase(),
-          style: AppTextStyles.addSightScreenSightCreateButton,
+          AppTextStrings.addPlaceScreenPlaceCreateButton.toUpperCase(),
+          style: AppTextStyles.addPlaceScreenPlaceCreateButton,
         ),
         style: _isFieldsFilled == true
             ? Theme.of(context).elevatedButtonTheme.style
@@ -232,7 +229,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
     /// [_clearTextValue] clears the text field
     /// by clicking on the cross.
     void _clearTextValue() {
-      context.read<AddSight>().clearTextValue(controller);
+      context.read<AddPlace>().clearTextValue(controller);
     }
 
     return TextFormField(
@@ -242,7 +239,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
           ? TextInputType.number
           : TextInputType.text,
       onChanged: (String value) {
-        context.read<AddSight>().changeTextValue(controller, value);
+        context.read<AddPlace>().changeTextValue(controller, value);
       },
       textInputAction:
           isLastField == false ? TextInputAction.next : TextInputAction.done,
@@ -259,7 +256,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
           left: 16,
           right: 8,
         ),
-        hintStyle: AppTextStyles.addSightScreenHint.copyWith(
+        hintStyle: AppTextStyles.addPlaceScreenHint.copyWith(
           color: Theme.of(context).disabledColor,
         ),
         hintText: hintText,
@@ -298,35 +295,35 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
   }
 
-  /// Type of sight
-  Widget _sightType(
-    TextEditingController _sightTypeController,
-    _onSelectSightType,
+  /// Type of place
+  Widget _placeType(
+    TextEditingController _placeTypeController,
+    _onSelectPlaceType,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppTextStrings.addSightScreenCategoryLabel.toUpperCase(),
-          style: AppTextStyles.addSightScreenLabel.copyWith(
+          AppTextStrings.addPlaceScreenCategoryLabel.toUpperCase(),
+          style: AppTextStyles.addPlaceScreenLabel.copyWith(
             color: Theme.of(context).disabledColor,
           ),
         ),
         InkWell(
           onTap: () => {},
           child: TextFormField(
-            controller: _sightTypeController,
+            controller: _placeTypeController,
             readOnly: true,
-            onTap: () => _onSelectSightType(),
+            onTap: () => _onSelectPlaceType(),
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 14,
                 horizontal: 0,
               ),
-              hintStyle: AppTextStyles.addSightScreenHint.copyWith(
+              hintStyle: AppTextStyles.addPlaceScreenHint.copyWith(
                 color: Theme.of(context).textTheme.caption.color,
               ),
-              hintText: AppTextStrings.addSightScreenTextFormFieldNotSelected,
+              hintText: AppTextStrings.addPlaceScreenTextFormFieldNotSelected,
               suffixIcon: SvgPicture.asset(
                 AppIcons.view,
                 color: Theme.of(context).iconTheme.color,
@@ -354,10 +351,10 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
   }
 
-  /// Geolocation of the sight
-  Widget _sightGeolocation(
-    TextEditingController _sightLatitudeController,
-    TextEditingController _sightLongitudeController,
+  /// Geolocation of the place
+  Widget _placeGeolocation(
+    TextEditingController _placeLatitudeController,
+    TextEditingController _placeLongitudeController,
   ) {
     return Container(
       width: double.infinity,
@@ -373,9 +370,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    AppTextStrings.addSightScreenSightLatitudeLabel
+                    AppTextStrings.addPlaceScreenPlaceLatitudeLabel
                         .toUpperCase(),
-                    style: AppTextStyles.addSightScreenLabel.copyWith(
+                    style: AppTextStyles.addPlaceScreenLabel.copyWith(
                       color: Theme.of(context).disabledColor,
                     ),
                   ),
@@ -385,12 +382,12 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 ),
                 _outlinedTextField(
                   hintText:
-                      AppTextStrings.addSightScreenTextFormFieldNotSpecified,
-                  controller: _sightLatitudeController,
+                      AppTextStrings.addPlaceScreenTextFormFieldNotSpecified,
+                  controller: _placeLatitudeController,
                   numberKeyboardType: true,
-                  focusNode: context.watch<AddSight>().latitudeFieldFocusNode,
+                  focusNode: context.watch<AddPlace>().latitudeFieldFocusNode,
                   nextFocusNode:
-                      context.watch<AddSight>().longitideFieldFocusNode,
+                      context.watch<AddPlace>().longitideFieldFocusNode,
                 ),
               ],
             ),
@@ -407,9 +404,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    AppTextStrings.addSightScreenSightLongitudeLabel
+                    AppTextStrings.addPlaceScreenPlaceLongitudeLabel
                         .toUpperCase(),
-                    style: AppTextStyles.addSightScreenLabel.copyWith(
+                    style: AppTextStyles.addPlaceScreenLabel.copyWith(
                       color: Theme.of(context).disabledColor,
                     ),
                   ),
@@ -419,12 +416,12 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 ),
                 _outlinedTextField(
                   hintText:
-                      AppTextStrings.addSightScreenTextFormFieldNotSpecified,
-                  controller: _sightLongitudeController,
+                      AppTextStrings.addPlaceScreenTextFormFieldNotSpecified,
+                  controller: _placeLongitudeController,
                   numberKeyboardType: true,
-                  focusNode: context.watch<AddSight>().longitideFieldFocusNode,
+                  focusNode: context.watch<AddPlace>().longitideFieldFocusNode,
                   nextFocusNode:
-                      context.watch<AddSight>().detailsFieldFocusNode,
+                      context.watch<AddPlace>().detailsFieldFocusNode,
                 ),
               ],
             ),
@@ -434,7 +431,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
   }
 
-  // Specify coordinates of sight on the map
+  // Specify coordinates of place on the map
   Widget _specifyCoordinatesOnMap() {
     return InkWell(
       onTap: () => print("Указать на карте"),
@@ -444,8 +441,8 @@ class _AddSightScreenState extends State<AddSightScreen> {
           bottom: 2,
         ),
         child: Text(
-          AppTextStrings.addSightScreenSightSpecifyCoordinates,
-          style: AppTextStyles.addSightScreenSightSpecifyCoordinatesButton
+          AppTextStrings.addPlaceScreenPlaceSpecifyCoordinates,
+          style: AppTextStyles.addPlaceScreenPlaceSpecifyCoordinatesButton
               .copyWith(
             color: Theme.of(context).accentColor,
           ),
@@ -454,9 +451,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
   }
 
-  Widget _photogallery(List _sightPhotogallery) {
+  Widget _photogallery(List _placePhotogallery) {
     /// Dialog box with options for adding a photo
-    void _addSightPhoto() {
+    void _addPlacePhoto() {
       showDialog(
         context: context,
         builder: (_) {
@@ -467,7 +464,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 horizontal: 16,
                 vertical: 8,
               ),
-              child: _addSightPhotoDialog(),
+              child: _addPlacePhotoDialog(),
             ),
           );
         },
@@ -476,8 +473,8 @@ class _AddSightScreenState extends State<AddSightScreen> {
     }
 
     ///  Delete a photo from the gallery
-    void _deleteSightPhoto(index) {
-      context.read<AddSight>().deleteSightPhoto(index);
+    void _deletePlacePhoto(index) {
+      context.read<AddPlace>().deletePlacePhoto(index);
     }
 
     return CustomListViewBuilder(
@@ -490,13 +487,13 @@ class _AddSightScreenState extends State<AddSightScreen> {
           margin: EdgeInsets.only(left: 16),
           child: Ink(
             decoration:
-                AppDecorations.addSightScreenGalleryPrimaryElement.copyWith(
+                AppDecorations.addPlaceScreenGalleryPrimaryElement.copyWith(
               border: Border.all(
                 color: Theme.of(context).accentColor.withOpacity(0.48),
               ),
             ),
             child: GestureDetector(
-              onTap: () => _addSightPhoto(),
+              onTap: () => _addPlacePhoto(),
               child: SvgPicture.asset(
                 AppIcons.union,
                 color: Theme.of(context).accentColor,
@@ -505,14 +502,14 @@ class _AddSightScreenState extends State<AddSightScreen> {
             ),
           ),
         ),
-        for (int i = 0; i < _sightPhotogallery.length; i++)
+        for (int i = 0; i < _placePhotogallery.length; i++)
           Row(
             children: [
               const SizedBox(width: 16),
               Dismissible(
                 key: UniqueKey(),
                 direction: DismissDirection.vertical,
-                onDismissed: (direction) => _deleteSightPhoto(i),
+                onDismissed: (direction) => _deletePlacePhoto(i),
                 background: Align(
                   alignment: Alignment.bottomCenter,
                   child: RotatedBox(
@@ -529,7 +526,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                     width: 72,
                     height: 72,
                     decoration: AppDecorations
-                        .addSightScreenGallerySecondaryElement
+                        .addPlaceScreenGallerySecondaryElement
                         .copyWith(
                       color: Theme.of(context).accentColor.withOpacity(.70),
                     ),
@@ -539,12 +536,12 @@ class _AddSightScreenState extends State<AddSightScreen> {
                           top: 6,
                           right: 6,
                           child: InkWell(
-                            onTap: () => _deleteSightPhoto(i),
+                            onTap: () => _deletePlacePhoto(i),
                             child: SvgPicture.asset(
                               AppIcons.subtract,
                               color: Theme.of(context)
                                   .colorScheme
-                                  .addSightScreenPhotoDeleteButton,
+                                  .addPlaceScreenPhotoDeleteButton,
                             ),
                           ),
                         ),
@@ -560,7 +557,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   }
 
   /// Custom implementation of the [AlertDialog] widget
-  Widget _addSightPhotoDialog() {
+  Widget _addPlacePhotoDialog() {
     // Function for closing the window
     void _closeDialog() {
       Navigator.of(context).pop();
@@ -582,14 +579,14 @@ class _AddSightScreenState extends State<AddSightScreen> {
               _dialogActionButton(
                   icon: AppIcons.camera,
                   title:
-                      AppTextStrings.addSightScreenAddPhotoDialogButtonCamera),
+                      AppTextStrings.addPlaceScreenAddPhotoDialogButtonCamera),
               _dialogActionButton(
                   icon: AppIcons.photo,
                   title:
-                      AppTextStrings.addSightScreenAddPhotoDialogButtonPhoto),
+                      AppTextStrings.addPlaceScreenAddPhotoDialogButtonPhoto),
               _dialogActionButton(
                 icon: AppIcons.file,
-                title: AppTextStrings.addSightScreenAddPhotoDialogButtonFile,
+                title: AppTextStrings.addPlaceScreenAddPhotoDialogButtonFile,
                 isShowDivider: false,
               ),
             ],
@@ -601,9 +598,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
         TextButton(
           onPressed: () => _closeDialog(),
           child: Text(
-            AppTextStrings.addSightScreenAddPhotoDialogCancelButton
+            AppTextStrings.addPlaceScreenAddPhotoDialogCancelButton
                 .toUpperCase(),
-            style: AppTextStyles.addSightScreenPhotoDialogCancelButton.copyWith(
+            style: AppTextStyles.addPlaceScreenPhotoDialogCancelButton.copyWith(
               color: Theme.of(context).accentColor,
             ),
           ),
@@ -624,7 +621,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
   }
 
-  /// Action button for [_addSightPhotoDialog].
+  /// Action button for [_addPlacePhotoDialog].
   /// [Icon] - path to the svg icon.
   /// [Title] - text for the button.
   /// [isShowDivider] - whether to show the separator.
@@ -649,7 +646,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
               Text(
                 title,
                 style:
-                    AppTextStyles.addSightScreenPhotoDialogTextButtons.copyWith(
+                    AppTextStyles.addPlaceScreenPhotoDialogTextButtons.copyWith(
                   color: Theme.of(context).textTheme.caption.color,
                 ),
               ),

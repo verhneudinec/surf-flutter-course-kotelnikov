@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 
 /// Dio-client for working with the API
-class Client {
-  final dio = Dio(
+class ApiClient {
+  Dio get dio => _dio;
+
+  final Dio _dio = Dio(
     BaseOptions(
-      // baseUrl: "https://test-backend-flutter.surfstudio.ru",
+      baseUrl: "https://test-backend-flutter.surfstudio.ru",
       connectTimeout: 5000,
       sendTimeout: 5000,
       receiveTimeout: 5000,
@@ -12,33 +14,29 @@ class Client {
     ),
   );
 
-  void _initInterceptors() {
+  void initInterceptors() {
     dio.interceptors.add(
       InterceptorsWrapper(
-        onError: (e) {
-          print("An error occurred: $e")
+        onError: (DioError error) {
+          print("An error occurred: $error");
         },
-        onRequest: (options) {
+        onRequest: (RequestOptions options) {
           print("Request sent");
         },
-        onResponse: (e) {
+        onResponse: (Response response) {
           print("Response received");
         },
       ),
     );
   }
 
-  /// Function for getting data from the API
-  Future<dynamic> getData() async {
-    _initInterceptors();
-    final postResponse = await dio.get(
-      "https://jsonplaceholder.typicode.com/users",
-    );
-
+  // Response handler
+  Object responseHandler(Response postResponse) {
     if (postResponse.statusCode == 200) {
       return postResponse.data;
-    } else
+    } else {
       throw Exception(
           "Http request error. Error code ${postResponse.statusCode}");
+    }
   }
 }

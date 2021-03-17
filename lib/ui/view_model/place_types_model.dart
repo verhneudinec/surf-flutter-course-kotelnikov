@@ -3,8 +3,8 @@ import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 
 /// Provider for place types.
-class SightTypes with ChangeNotifier {
-  final List _sightTypesData = [
+class PlaceTypes with ChangeNotifier {
+  final List<Map<String, Object>> _placeTypesData = [
     {
       "name": "hotel",
       "text": AppTextStrings.hotel,
@@ -12,7 +12,7 @@ class SightTypes with ChangeNotifier {
       "selected": true,
     },
     {
-      "name": "restourant",
+      "name": "restaurant",
       "text": AppTextStrings.restourant,
       "icon": AppIcons.restourant,
       "selected": true,
@@ -43,30 +43,23 @@ class SightTypes with ChangeNotifier {
     },
   ];
 
-  List get sightTypesData => _sightTypesData;
+  List<Map<String, Object>> get placeTypesData => _placeTypesData;
 
   /// Function to clear all active (selected) types
   void onCleanAllSelectedTypes() {
-    _sightTypesData.forEach(
-      (sightType) {
-        sightType["selected"] = false;
+    _placeTypesData.forEach(
+      (placeType) {
+        placeType["selected"] = false;
       },
     );
     notifyListeners();
   }
 
-  /// Function to clear a specific selected type by index
-  void onCleanSelectedType(index) {
-    _sightTypesData.elementAt(index).selected = false;
-    notifyListeners();
-  }
-
-  /// The function is called when you click on a sight type.
+  /// The function is called when you click on a place type.
   /// Inverts the value of the selected type (by index)
-  void onTypeClickHandler(index) {
-    _sightTypesData.elementAt(index)["selected"] =
-        !_sightTypesData.elementAt(index)["selected"];
-
+  void onTypeClickHandler(int index) {
+    _placeTypesData.elementAt(index)["selected"] =
+        !_placeTypesData.elementAt(index)["selected"];
     notifyListeners();
   }
 }

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 /// This file describes the radius of the blocks
 /// and sometimes the gradients and backgrounds.
 class AppDecorations {
-  /// Sight card container in the [SightCard] widget
-  static final sightCardContainer = BoxDecoration(
+  /// Place card container in the [PlaceCard] widget
+  static final placeCardContainer = BoxDecoration(
         borderRadius: BorderRadius.circular(16),
       ),
-      sightCardContainerWithShadow = BoxDecoration(
+      placeCardContainerWithShadow = BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -19,7 +19,7 @@ class AppDecorations {
           ),
         ],
       ),
-      sightCardImageGradient = BoxDecoration(
+      placeCardImageGradient = BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -44,7 +44,7 @@ class AppDecorations {
     borderRadius: BorderRadius.circular(12),
   );
 
-  /// Gallery slider in [SightDetails]
+  /// Gallery slider in [PlaceDetails]
   static final galleryIndicator = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
   );
@@ -54,7 +54,7 @@ class AppDecorations {
     borderRadius: BorderRadius.circular(12.0),
   );
 
-  /// Schedule button for [SightDetails]
+  /// Schedule button for [PlaceDetails]
   static final planningButton = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
   );
@@ -90,16 +90,16 @@ class AppDecorations {
         borderRadius: BorderRadius.circular(40),
       );
 
-  /// Styles for [AddSightScreen]
-  static final addSightScreenGalleryPrimaryElement = BoxDecoration(
+  /// Styles for [AddPlaceScreen]
+  static final addPlaceScreenGalleryPrimaryElement = BoxDecoration(
         borderRadius: BorderRadius.circular(12),
       ),
-      addSightScreenGallerySecondaryElement = BoxDecoration(
+      addPlaceScreenGallerySecondaryElement = BoxDecoration(
         borderRadius: BorderRadius.circular(12),
       );
 
-  /// Styles for [SightSearchScreen]
-  static final sightSearchScreenSearchListTileImage = BoxDecoration(
+  /// Styles for [PlaceSearchScreen]
+  static final placeSearchScreenSearchListTileImage = BoxDecoration(
     borderRadius: BorderRadius.circular(12),
   );
 
