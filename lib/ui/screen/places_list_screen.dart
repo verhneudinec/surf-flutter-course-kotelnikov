@@ -3,6 +3,7 @@ import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
+import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/places_list.dart';
@@ -12,7 +13,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/data/interactor/places_search.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:provider/provider.dart';
 
 /// [PlaceListScreen] - a screen with a list of interesting places.
@@ -55,8 +56,8 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
-        context.watch<PlacesSearch>().searchFieldIsNotEmpty;
-    List _searchResults = context.watch<PlacesSearch>().searchResults;
+        context.watch<PlacesSearchModel>().searchFieldIsNotEmpty;
+    List _searchResults = context.watch<PlacesSearchInteractor>().searchResults;
 
     return Scaffold(
       body: SafeArea(

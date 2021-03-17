@@ -12,7 +12,7 @@ class PlaceRepository {
 
   /// Function for getting data from the API.
   /// Returns list of places.
-  Future<dynamic> loadPlace() async {
+  Future<Object> loadPlaces() async {
     _client.initInterceptors();
     final response = await _client.dio.get(
       ApiUrls.place,
@@ -28,13 +28,13 @@ class PlaceRepository {
   }
 
   /// Function for getting place details from the API
-  Future<dynamic> getPlaceDetails({int id}) async {
+  Future<Object> getPlaceDetails({int id}) async {
     _client.initInterceptors();
     final response = await _client.dio.get(
       ApiUrls.place + "/" + id.toString(),
     );
 
-    dynamic place = response.data;
+    Object place = response.data;
 
     return ApiMapping().placeFromJson(place);
   }

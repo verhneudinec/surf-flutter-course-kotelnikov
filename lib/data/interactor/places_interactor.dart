@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/place_repository.dart';
-import 'package:places/utils/filter.dart';
+import 'package:places/utils/check_distance.dart';
 
 /// Provider for an array of application locations.
 /// Initialized with data from API.
@@ -23,7 +23,7 @@ class PlacesInteractor with ChangeNotifier {
 
   /// Function for loading places from [PlacesRepository]
   Future<void> loadPlaces({int radius, String category}) async {
-    final response = await PlaceRepository().loadPlace();
+    final response = await PlaceRepository().loadPlaces();
     _places = response;
 
     notifyListeners();
@@ -31,17 +31,17 @@ class PlacesInteractor with ChangeNotifier {
 
   /// Function for loading place details from API
   Future<Place> loadPlaceDetails({int id}) async {
-    final Place place = await PlaceRepository().getPlaceDetails(id: 33);
+    final Place place = await PlaceRepository().getPlaceDetails(id: id);
     return place;
   }
 
   /// Function for sorting [_favoritePlaces] list
   void sortFavoritePlaces() {
-    final GeoPosition userGeoposition = GeoPosition(1, 1);
+    final GeoPosition userGeoposition = GeoPosition(59.914455, 29.770945);
 
     _favoritePlaces.forEach((element) {
-      element.distance = IsPlaceInsideSearchRange().check(
-        imHere: userGeoposition,
+      element.distance = DistanceToPlace().check(
+        userPoint: userGeoposition,
         checkPoint: GeoPosition(element.lat, element.lng),
       );
     });
@@ -87,8 +87,10 @@ class PlacesInteractor with ChangeNotifier {
     notifyListeners();
   }
 
-  /// When dragging an item in the list
-  void onDraggingPlace(
+  /// Function for swapping favorite items.
+  /// [oldIndex] - current element index,
+  /// [newIndex] - index where the element should be inserted.
+  void swapFavoriteItems(
     int oldIndex,
     int newIndex,
   ) {

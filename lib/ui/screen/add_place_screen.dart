@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/data/interactor/add_place.dart';
+import 'package:places/ui/view_model/add_place_model.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
@@ -28,10 +28,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   /// place from [AddPlace] and writes them to
   /// array of mock data from [Places].
   void _onPlaceCreate() {
-    Place _newPlace = context.read<AddPlace>().prepareNewPlace();
-
-    context.read<PlacesInteractor>().addNewPlace(_newPlace);
-
+    context.read<AddPlace>().addNewPlace(context);
     Navigator.of(context).pop();
     // TODO Сделать экран с уведомлением о том, что место добавлено
   }
