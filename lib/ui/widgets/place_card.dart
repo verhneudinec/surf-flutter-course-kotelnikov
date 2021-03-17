@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/data/interactor/favorite_places.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/place_types_strings.dart';
 import 'package:places/res/text_strings.dart';
@@ -15,8 +14,6 @@ import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
-
-import '../../res/text_strings.dart';
 
 /// Place card widget, displays the [place] data passed to the constructor.
 /// The view changes depending on [cardType].
@@ -33,8 +30,12 @@ class PlaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Removes the list item from provider
-    void _onPlaceCardDelete() {
-      context.read<FavoritePlaces>().deletePlaceFromFavorites(place.name);
+    void _onRemoveFromFavorites() {
+      context.read<PlacesInteractor>().removeFromFavorites(place);
+    }
+
+    void _onAddingToFavorites() {
+      context.read<PlacesInteractor>().addToFavorites(place);
     }
 
     /// Open a window with details of the place,
@@ -46,7 +47,7 @@ class PlaceCard extends StatelessWidget {
           return Container(
             margin: EdgeInsets.only(top: 84),
             child: PlaceDetails(
-              place: place,
+              placeId: place.id,
               isBottomSheet: true,
             ),
           );
@@ -75,7 +76,7 @@ class PlaceCard extends StatelessWidget {
       child: Dismissible(
         key: ValueKey(place.name),
         direction: DismissDirection.endToStart,
-        onDismissed: (direction) => _onPlaceCardDelete(),
+        onDismissed: (direction) => _onRemoveFromFavorites(),
         background: _dismissibleBackground(context),
         child: Stack(
           children: [
@@ -109,7 +110,8 @@ class PlaceCard extends StatelessWidget {
             PlaceCardActionButtons(
               place: place,
               cardType: cardType ?? CardTypes.general,
-              onPlaceCardDelete: _onPlaceCardDelete,
+              onAddingToFavorites: _onAddingToFavorites,
+              onRemoveFromFavorites: _onRemoveFromFavorites,
             ),
           ],
         ),
@@ -181,7 +183,7 @@ class PlaceCardHeader extends StatelessWidget {
           top: 16,
           left: 16,
           child: Text(
-            _placeTypes[place.placeType],
+            _placeTypes[place.placeType] ?? place.placeType,
             style: AppTextStyles.placeCardType.copyWith(
               color: Theme.of(context).colorScheme.placeCardTypeColor,
             ),
@@ -259,10 +261,13 @@ class PlaceCardBody extends StatelessWidget {
             height: 2,
           ),
 
-          // Working hours
+          // Brief description of the place
           Container(
             child: Text(
-              AppTextStrings.placesNotFoundTitle, // TODO Время работы
+              cardType == CardTypes.general
+                  ? place.description
+                  : (place.distance / 1000).toStringAsFixed(2) +
+                      AppTextStrings.cardWidgetDistanceToPlace,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.placeCardWorkingTime.copyWith(
                 color: Theme.of(context).textTheme.subtitle1.color,
@@ -279,12 +284,14 @@ class PlaceCardBody extends StatelessWidget {
 class PlaceCardActionButtons extends StatefulWidget {
   final Place place;
   final String cardType;
-  final onPlaceCardDelete;
+  final onAddingToFavorites;
+  final onRemoveFromFavorites;
   const PlaceCardActionButtons({
     Key key,
     this.place,
     this.cardType,
-    this.onPlaceCardDelete,
+    this.onRemoveFromFavorites,
+    this.onAddingToFavorites,
   }) : super(key: key);
 
   @override
@@ -345,6 +352,9 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
 
   @override
   Widget build(BuildContext context) {
+    final bool _isPlaceInFavorites =
+        context.watch<PlacesInteractor>().isPlaceInFavorites(widget.place);
+
     return SizedBox(
       height: 96,
       width: double.infinity,
@@ -354,9 +364,15 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
             Positioned(
               top: 16,
               right: 16,
-              child: _iconButton(
-                iconPath: AppIcons.heart,
-              ),
+              child: _isPlaceInFavorites
+                  ? _iconButton(
+                      iconPath: AppIcons.heartFull,
+                      onPressed: () => widget.onRemoveFromFavorites(),
+                    )
+                  : _iconButton(
+                      iconPath: AppIcons.heart,
+                      onPressed: () => widget.onAddingToFavorites(),
+                    ),
             ),
 
           // "Remove from list" button
@@ -366,7 +382,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
               right: 16,
               child: _iconButton(
                 iconPath: AppIcons.delete,
-                onPressed: () => widget.onPlaceCardDelete(),
+                onPressed: () => widget.onRemoveFromFavorites(),
               ),
             ),
 
@@ -410,6 +426,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
         constraints: BoxConstraints(),
         icon: SvgPicture.asset(
           iconPath,
+          color: Theme.of(context).colorScheme.placeCardHeartButtonColor,
         ),
       ),
     );

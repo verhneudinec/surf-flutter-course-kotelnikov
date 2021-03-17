@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/text_strings.dart';
@@ -6,7 +7,6 @@ import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
-import 'package:places/data/interactor/favorite_places.dart';
 import 'package:provider/provider.dart';
 
 ///The [VisitingScreen] displays the Favorites section.
@@ -23,6 +23,8 @@ class VisitingScreen extends StatefulWidget {
 class _VisitingScreenState extends State<VisitingScreen>
     with SingleTickerProviderStateMixin {
   TabController tabController;
+  List<Place> _favoritePlaces = [];
+  List<Place> _visitedPlaces = [];
 
   @override
   void initState() {
@@ -41,10 +43,20 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    List<Place> _visitedPlaces =
-        context.watch<FavoritePlaces>().visitedFavoritePlaces;
-    List<Place> _unvisitedPlaces =
-        context.watch<FavoritePlaces>().unvisitedFavoritePlaces;
+    void loadFavorites(BuildContext context) async {
+      context.read<PlacesInteractor>().sortFavoritePlaces();
+      List<Place> favoritePlaces =
+          context.watch<PlacesInteractor>().getFavoritePlaces;
+      List<Place> visitedPlaces =
+          context.watch<PlacesInteractor>().getVisitedPlaces;
+      setState(() {
+        _favoritePlaces = favoritePlaces;
+        _visitedPlaces = visitedPlaces;
+      });
+    }
+
+    loadFavorites(context);
+
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
@@ -60,8 +72,9 @@ class _VisitingScreenState extends State<VisitingScreen>
             const SizedBox(
               height: 24,
             ),
+
             LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height - 238,
+              maxHeight: MediaQuery.of(context).size.height - 290,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: IndexedStack(
@@ -71,7 +84,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                     CustomScrollView(
                       slivers: [
                         PlaceList(
-                          places: _unvisitedPlaces,
+                          places: _favoritePlaces,
                           cardsType: CardTypes.unvisited,
                         ),
                       ],

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
+import 'package:provider/provider.dart';
 
 /// State for screen [AddPlaceScreen].
 class AddPlace with ChangeNotifier {
   /// Controllers for text fields.
-  final _placeTypeController = TextEditingController(),
+  final TextEditingController _placeTypeController = TextEditingController(),
       _placeNameController = TextEditingController(),
       _placeLatitudeController = TextEditingController(),
       _placeLongitudeController = TextEditingController(),
       _placeDescriptionController = TextEditingController();
 
   /// Photogallery of the place
-  List _placePhotogallery = [];
+  List<String> _placePhotogallery = [];
 
   /// Fullness of text fields.
   bool _isFieldsFilled = false;
 
   /// FocusNodes for the corresponding text fields.
-  final _nameFieldFocusNode = FocusNode(),
+  final FocusNode _nameFieldFocusNode = FocusNode(),
       _latitudeFieldFocusNode = FocusNode(),
       _longitideFieldFocusNode = FocusNode(),
       _detailsFieldFocusNode = FocusNode();
@@ -32,7 +34,7 @@ class AddPlace with ChangeNotifier {
       _placeDescriptionController;
 
   /// Photogallery of the place
-  List get placePhotogallery => _placePhotogallery;
+  List<String> get placePhotogallery => _placePhotogallery;
 
   /// Fullness of text fields.
   bool get isFieldsFilled => _isFieldsFilled;
@@ -45,7 +47,7 @@ class AddPlace with ChangeNotifier {
 
   /// The function is called whenever the text field changes.
   /// Checks if all fields are filled and writes the value to [_isFieldsFilled].
-  void changeTextValue(controller, value) {
+  void changeTextValue(TextEditingController controller, String value) {
     if (_placeNameController.text.isNotEmpty &&
         _placeLongitudeController.text.isNotEmpty &&
         _placeLatitudeController.text.isNotEmpty &&
@@ -64,7 +66,9 @@ class AddPlace with ChangeNotifier {
 
   /// Add a photo to the gallery
   void addPlacePhoto() {
-    _placePhotogallery.add(_placePhotogallery.length);
+    // We don't know how to work with photos yet,
+    // so just add a new number to the array.
+    _placePhotogallery.add(_placePhotogallery.length.toString());
     notifyListeners();
   }
 
@@ -74,18 +78,22 @@ class AddPlace with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Add a new place through the [PlacesInteractor]
+  void addNewPlace(BuildContext context) {
+    final Place place = prepareNewPlace();
+    context.read<PlacesInteractor>().addNewPlace(place);
+  }
+
   /// A function for preparing the data of the new [Place] object.
   Place prepareNewPlace() {
-    final _newPlace = Place(
+    final Place newPlace = Place(
       name: _placeNameController.text,
       lat: double.tryParse(_placeLatitudeController.text),
       lng: double.tryParse(_placeLongitudeController.text),
-      urls: [
-        "https://melbourneartcritic.files.wordpress.com/2018/06/fullsizeoutput_62.jpeg"
-      ],
+      urls: ["https://i.ytimg.com/vi/OCQFglqRqJo/maxresdefault.jpg"],
       description: _placeDescriptionController.text,
       placeType: _placeTypeController.text,
     );
-    return _newPlace;
+    return newPlace;
   }
 }

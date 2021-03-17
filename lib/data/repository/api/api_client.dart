@@ -17,10 +17,10 @@ class ApiClient {
   void initInterceptors() {
     dio.interceptors.add(
       InterceptorsWrapper(
-        onError: (e) {
-          print("An error occurred: $e");
+        onError: (DioError error) {
+          print("An error occurred: $error");
         },
-        onRequest: (options) {
+        onRequest: (RequestOptions options) {
           print("Request sent");
         },
         onResponse: (Response response) {
@@ -31,8 +31,7 @@ class ApiClient {
   }
 
   // Response handler
-  dynamic responseHandler(Response postResponse) {
-    print(postResponse.data.elementAt(0)["id"]);
+  Object responseHandler(Response postResponse) {
     if (postResponse.statusCode == 200) {
       return postResponse.data;
     } else {

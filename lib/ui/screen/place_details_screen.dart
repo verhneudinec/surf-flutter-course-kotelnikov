@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/place_types_strings.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
@@ -8,19 +9,45 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
+import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 
 /// Screen with detailed information about the place
 /// [PlaceDetails] contains a header [PlaceDetailsHeader]
 /// and body [PlaceDetailsBody] with basic information about the place
-class PlaceDetails extends StatelessWidget {
-  final Place place;
+class PlaceDetails extends StatefulWidget {
+  final int placeId;
   final bool isBottomSheet;
   const PlaceDetails({
     Key key,
-    @required this.place,
+    @required this.placeId,
     this.isBottomSheet = false,
   }) : super(key: key);
+
+  @override
+  _PlaceDetailsState createState() => _PlaceDetailsState();
+}
+
+class _PlaceDetailsState extends State<PlaceDetails> {
+  Place _place;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPlaceDetails();
+  }
+
+  void _getPlaceDetails() async {
+    Place response =
+        await PlacesInteractor().loadPlaceDetails(id: widget.placeId);
+    setState(
+      () {
+        _place = response;
+        _isLoading = false;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +58,34 @@ class PlaceDetails extends StatelessWidget {
         return ClipRRect(
           borderRadius: AppDecorations.bottomSheetBorderRadius,
           child: Scaffold(
-            body: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: Colors.transparent,
-                  automaticallyImplyLeading: false,
-                  expandedHeight: 360,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: PlaceDetailsHeader(
-                      place: place,
-                      isBottomSheet: isBottomSheet,
-                    ),
+            body: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor: Colors.transparent,
+                        automaticallyImplyLeading: false,
+                        expandedHeight: 360,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: PlaceDetailsHeader(
+                            place: _place,
+                            isBottomSheet: widget.isBottomSheet,
+                          ),
+                        ),
+                      ),
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: PlaceDetailsBody(place: _place),
+                          ),
+                        ]),
+                      )
+                    ],
                   ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
-                      child: PlaceDetailsBody(place: place),
-                    ),
-                  ]),
-                )
-              ],
-            ),
           ),
         );
       },
@@ -196,13 +227,30 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
   }
 }
 
-class PlaceDetailsBody extends StatelessWidget {
+class PlaceDetailsBody extends StatefulWidget {
   final Place place;
   const PlaceDetailsBody({Key key, this.place}) : super(key: key);
 
   @override
+  _PlaceDetailsBodyState createState() => _PlaceDetailsBodyState();
+}
+
+class _PlaceDetailsBodyState extends State<PlaceDetailsBody> {
+  void _onRemoveFromFavorites() {
+    context.read<PlacesInteractor>().removeFromFavorites(widget.place);
+  }
+
+  void _onAddingToFavorites() {
+    context.read<PlacesInteractor>().addToFavorites(widget.place);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Map _placeTypes = PlaceTypesStrings.map;
+    final bool isPlaceInFavorites =
+        context.watch<PlacesInteractor>().isPlaceInFavorites(widget.place);
+
+    Map _placeTypes = PlaceTypesStrings
+        .map; // TODO Убрать подчеркивания у всех локальных переменных
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -215,7 +263,7 @@ class PlaceDetailsBody extends StatelessWidget {
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
             child: Text(
-              place.name,
+              widget.place.name,
               maxLines: 2,
               style: AppTextStyles.placeDetailsTitle.copyWith(
                 color: Theme.of(context).textTheme.headline2.color,
@@ -229,7 +277,7 @@ class PlaceDetailsBody extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
-                  _placeTypes[place.placeType],
+                  _placeTypes[widget.place.placeType],
                   style: AppTextStyles.placeDetailsType.copyWith(
                     color: Theme.of(context).textTheme.bodyText2.color,
                   ),
@@ -253,7 +301,7 @@ class PlaceDetailsBody extends StatelessWidget {
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
             child: Text(
-              place.description,
+              widget.place.description,
               style: AppTextStyles.placeDetailsDescription.copyWith(
                 color: Theme.of(context).textTheme.bodyText1.color,
               ),
@@ -319,18 +367,31 @@ class PlaceDetailsBody extends StatelessWidget {
 
               // "Add to favorites" button
               Expanded(
-                child: TextButton.icon(
-                  onPressed: () => print("to favorites button"),
-                  icon: SvgPicture.asset(
-                    AppIcons.heart,
-                    width: 24,
-                    height: 24,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  label: Text(
-                    AppTextStrings.favoritesButton,
-                  ),
-                ),
+                child: isPlaceInFavorites
+                    ? TextButton.icon(
+                        onPressed: () => _onRemoveFromFavorites(),
+                        icon: SvgPicture.asset(
+                          AppIcons.heartFull,
+                          width: 24,
+                          height: 24,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        label: Text(
+                          AppTextStrings.favoritesButtonActive,
+                        ),
+                      )
+                    : TextButton.icon(
+                        onPressed: () => _onAddingToFavorites(),
+                        icon: SvgPicture.asset(
+                          AppIcons.heart,
+                          width: 24,
+                          height: 24,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        label: Text(
+                          AppTextStrings.favoritesButtonInactive,
+                        ),
+                      ),
               ),
             ],
           ),

@@ -226,6 +226,7 @@ extension ComponentsColor on ColorScheme {
   bool isLightTheme() => brightness == Brightness.light ? true : false;
 
   Color get placeCardTypeColor => whiteColor;
+  Color get placeCardHeartButtonColor => whiteColor;
   Color get placeCardDismissibleText => whiteColor;
   Color get placeCardDismissibleBackground =>
       isLightTheme() ? lmRedColor : dmRedColor;

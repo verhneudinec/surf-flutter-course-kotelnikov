@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/place_types.dart';
+import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';

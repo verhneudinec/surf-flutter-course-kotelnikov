@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
@@ -6,7 +7,6 @@ import 'package:places/ui/widgets/place_card.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/data/model/place.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/favorite_places.dart';
 
 /// The [PlaceList] widget displays a list of places
 /// if list length > 0 or [ErrorStub] - if the array is empty.
@@ -61,7 +61,11 @@ class PlaceList extends StatelessWidget {
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _isPortraitOrientation ? 1 : 2,
-        childAspectRatio: _isPortraitOrientation ? 3 / 1.58 : 3 / 1.7,
+        childAspectRatio: _isPortraitOrientation &&
+                cardsType ==
+                    CardTypes.general // TODO Fix orientation aspect ratio
+            ? 3 / 1.35
+            : 3 / 1.55,
       ),
     );
   }
@@ -97,10 +101,10 @@ class PlaceList extends StatelessWidget {
   Widget _favoritePlaceCardBuilder(BuildContext context, Place place) {
     /// [_onDraggingPlace] called when dragging an item in the list
     void _onDraggingPlace(int oldIndex, int newIndex) {
-      context.read<FavoritePlaces>().onDraggingPlace(oldIndex, newIndex);
+      context.read<PlacesInteractor>().swapFavoriteItems(oldIndex, newIndex);
     }
 
-    int _placeId = context.watch<FavoritePlaces>().getPlaceId(place: place);
+    int _placeId = context.watch<PlacesInteractor>().getPlaceId(place: place);
 
     return Material(
       type: MaterialType.transparency,
