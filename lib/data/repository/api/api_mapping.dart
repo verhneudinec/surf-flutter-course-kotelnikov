@@ -14,7 +14,7 @@ class ApiMapping {
     );
   }
 
-  Object placeToJson(Place place) {
+  Map<String, Object> placeToJson(Place place) {
     return {
       "lat": place.lat,
       "lng": place.lng,

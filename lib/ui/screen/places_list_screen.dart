@@ -3,6 +3,7 @@ import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
+import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/places_list.dart';
@@ -55,7 +56,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
-        context.watch<PlacesSearchInteractor>().searchFieldIsNotEmpty;
+        context.watch<PlacesSearchModel>().searchFieldIsNotEmpty;
     List _searchResults = context.watch<PlacesSearchInteractor>().searchResults;
 
     return Scaffold(

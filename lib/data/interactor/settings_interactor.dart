@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Application settings.
+/// Interactor for application settings.
 /// Provider is used to manage State.
-/// [isDarkMode] - getter of current theme.
-/// The [themeChanger] function changes the current theme.
-class AppSettings with ChangeNotifier {
+
+class SettingsInteractor with ChangeNotifier {
   bool _isDarkMode = false;
 
+  /// [isDarkMode] - getter of current theme.
   bool get isDarkMode => _isDarkMode;
 
+  /// The [themeChanger] function changes the current theme.
   void changeTheme() {
     _isDarkMode = !_isDarkMode;
     notifyListeners();
