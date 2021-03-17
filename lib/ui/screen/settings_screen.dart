@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/data/interactor/app_settings.dart';
+import 'package:places/data/interactor/settings_interactor.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
@@ -15,9 +15,11 @@ import 'package:provider/provider.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool _isDarkMode = context.watch<AppSettings>().isDarkMode;
+    /// Follow the current theme
+    bool _isDarkMode = context.watch<SettingsInteractor>().isDarkMode;
+
     void _changeTheme() {
-      context.read<AppSettings>().changeTheme();
+      context.read<SettingsInteractor>().changeTheme();
     }
 
     /// View the app tutorial
@@ -31,7 +33,7 @@ class SettingsScreen extends StatelessWidget {
     }
 
     return ChangeNotifierProvider(
-      create: (_) => AppSettings(),
+      create: (_) => SettingsInteractor(),
       child: Container(
         child: Scaffold(
           bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 3),
@@ -68,6 +70,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
 
                     _divider(context),
+
                     // "Watch tutorial" button
                     ListTile(
                       onTap: () => _onClickOnboardingButton(),

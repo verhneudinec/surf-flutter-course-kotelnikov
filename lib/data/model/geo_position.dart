@@ -2,10 +2,10 @@
 /// [lat] - latitude, [lon] = longitude.
 class GeoPosition {
   final double lat;
-  final double lon;
+  final double lng;
 
   GeoPosition(
     this.lat,
-    this.lon,
+    this.lng,
   );
 }

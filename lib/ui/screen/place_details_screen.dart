@@ -1,25 +1,53 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/data/model/sight.dart';
+import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/res/place_types_strings.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
+import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 
 /// Screen with detailed information about the place
-/// [SightDetails] contains a header [SightDetailsHeader]
-/// and body [SightDetailsBody] with basic information about the place
-class SightDetails extends StatelessWidget {
-  final Sight sight;
+/// [PlaceDetails] contains a header [PlaceDetailsHeader]
+/// and body [PlaceDetailsBody] with basic information about the place
+class PlaceDetails extends StatefulWidget {
+  final int placeId;
   final bool isBottomSheet;
-  const SightDetails({
+  const PlaceDetails({
     Key key,
-    @required this.sight,
+    @required this.placeId,
     this.isBottomSheet = false,
   }) : super(key: key);
+
+  @override
+  _PlaceDetailsState createState() => _PlaceDetailsState();
+}
+
+class _PlaceDetailsState extends State<PlaceDetails> {
+  Place _place;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPlaceDetails();
+  }
+
+  void _getPlaceDetails() async {
+    Place response =
+        await PlacesInteractor().loadPlaceDetails(id: widget.placeId);
+    setState(
+      () {
+        _place = response;
+        _isLoading = false;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,30 +58,34 @@ class SightDetails extends StatelessWidget {
         return ClipRRect(
           borderRadius: AppDecorations.bottomSheetBorderRadius,
           child: Scaffold(
-            body: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: Colors.transparent,
-                  automaticallyImplyLeading: false,
-                  expandedHeight: 360,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: SightDetailsHeader(
-                      sight: sight,
-                      isBottomSheet: isBottomSheet,
-                    ),
+            body: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor: Colors.transparent,
+                        automaticallyImplyLeading: false,
+                        expandedHeight: 360,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: PlaceDetailsHeader(
+                            place: _place,
+                            isBottomSheet: widget.isBottomSheet,
+                          ),
+                        ),
+                      ),
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: PlaceDetailsBody(place: _place),
+                          ),
+                        ]),
+                      )
+                    ],
                   ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
-                      child: SightDetailsBody(sight: sight),
-                    ),
-                  ]),
-                )
-              ],
-            ),
           ),
         );
       },
@@ -61,17 +93,17 @@ class SightDetails extends StatelessWidget {
   }
 }
 
-class SightDetailsHeader extends StatefulWidget {
-  final Sight sight;
+class PlaceDetailsHeader extends StatefulWidget {
+  final Place place;
   final bool isBottomSheet;
-  const SightDetailsHeader({Key key, this.sight, this.isBottomSheet})
+  const PlaceDetailsHeader({Key key, this.place, this.isBottomSheet})
       : super(key: key);
 
   @override
-  _SightDetailsHeaderState createState() => _SightDetailsHeaderState();
+  _PlaceDetailsHeaderState createState() => _PlaceDetailsHeaderState();
 }
 
-class _SightDetailsHeaderState extends State<SightDetailsHeader> {
+class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
   final PageController _photogalleryController = new PageController();
   int _currentPhotogalleryIndex = 0;
 
@@ -89,7 +121,7 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
 
         // Container for creating the gradient effect
         Container(
-          decoration: AppDecorations.sightCardImageGradient,
+          decoration: AppDecorations.placeCardImageGradient,
           width: double.infinity,
           height: 96,
         ),
@@ -135,15 +167,15 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
     );
   }
 
-  /// Photogallery of the sight.
-  /// Displays photos from [widget.sight.urls]
+  /// Photogallery of the place.
+  /// Displays photos from [widget.place.urls]
   Widget _photogallery() {
     return LimitedBox(
       maxWidth: MediaQuery.of(context).size.width,
       maxHeight: 360,
       child: PageView.builder(
         controller: _photogalleryController,
-        itemCount: widget.sight.urls.length,
+        itemCount: widget.place.urls.length,
         physics: Platform.isAndroid
             ? ClampingScrollPhysics()
             : BouncingScrollPhysics(),
@@ -151,9 +183,9 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
           return Container(
             width: double.infinity,
             height: 360,
-            decoration: AppDecorations.sightCardImageGradient,
+            decoration: AppDecorations.placeCardImageGradient,
             child: Image.network(
-              widget.sight.urls.elementAt(index),
+              widget.place.urls.elementAt(index),
               fit: BoxFit.cover,
               loadingBuilder: imageLoaderBuilder,
               errorBuilder: imageErrorBuilder,
@@ -174,40 +206,51 @@ class _SightDetailsHeaderState extends State<SightDetailsHeader> {
       bottom: 0,
       child: Row(
         children: [
-          for (int i = 0; i < widget.sight.urls.length; i++)
-            i == _currentPhotogalleryIndex
-                ? Container(
-                    width: MediaQuery.of(context).size.width /
-                        widget.sight.urls.length,
-                    height: 7.5,
-                    decoration: AppDecorations.galleryIndicator.copyWith(
-                      color: Theme.of(context).iconTheme.color,
+          if (widget.place.urls.length > 1)
+            for (int i = 0; i < widget.place.urls.length; i++)
+              i == _currentPhotogalleryIndex
+                  ? Container(
+                      width: MediaQuery.of(context).size.width /
+                          widget.place.urls.length,
+                      height: 7.5,
+                      decoration: AppDecorations.galleryIndicator.copyWith(
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    )
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width /
+                          widget.place.urls.length,
                     ),
-                  )
-                : SizedBox(
-                    width: MediaQuery.of(context).size.width /
-                        widget.sight.urls.length,
-                  ),
         ],
       ),
     );
   }
 }
 
-class SightDetailsBody extends StatelessWidget {
-  final Sight sight;
-  const SightDetailsBody({Key key, this.sight}) : super(key: key);
+class PlaceDetailsBody extends StatefulWidget {
+  final Place place;
+  const PlaceDetailsBody({Key key, this.place}) : super(key: key);
+
+  @override
+  _PlaceDetailsBodyState createState() => _PlaceDetailsBodyState();
+}
+
+class _PlaceDetailsBodyState extends State<PlaceDetailsBody> {
+  void _onRemoveFromFavorites() {
+    context.read<PlacesInteractor>().removeFromFavorites(widget.place);
+  }
+
+  void _onAddingToFavorites() {
+    context.read<PlacesInteractor>().addToFavorites(widget.place);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Map _sightTypes = {
-      "hotel": AppTextStrings.hotel,
-      "restourant": AppTextStrings.restourant,
-      "particular_place": AppTextStrings.particularPlace,
-      "park": AppTextStrings.park,
-      "museum": AppTextStrings.museum,
-      "cafe": AppTextStrings.cafe,
-    };
+    final bool isPlaceInFavorites =
+        context.watch<PlacesInteractor>().isPlaceInFavorites(widget.place);
+
+    Map _placeTypes = PlaceTypesStrings
+        .map; // TODO Убрать подчеркивания у всех локальных переменных
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -215,14 +258,14 @@ class SightDetailsBody extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Sight name
+          // Place name
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
             child: Text(
-              sight.name,
+              widget.place.name,
               maxLines: 2,
-              style: AppTextStyles.sightDetailsTitle.copyWith(
+              style: AppTextStyles.placeDetailsTitle.copyWith(
                 color: Theme.of(context).textTheme.headline2.color,
               ),
             ),
@@ -230,22 +273,22 @@ class SightDetailsBody extends StatelessWidget {
 
           Row(
             children: [
-              // Type of sight
+              // Type of place
               Container(
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
-                  _sightTypes[sight.type],
-                  style: AppTextStyles.sightDetailsType.copyWith(
+                  _placeTypes[widget.place.placeType],
+                  style: AppTextStyles.placeDetailsType.copyWith(
                     color: Theme.of(context).textTheme.bodyText2.color,
                   ),
                 ),
               ),
 
-              // Opening hours of the sight
+              // Opening hours of the place
               Container(
                 child: Text(
                   "закрыто до 09:00",
-                  style: AppTextStyles.sightDetailsWorkingTime.copyWith(
+                  style: AppTextStyles.placeDetailsWorkingTime.copyWith(
                     color: Theme.of(context).textTheme.caption.color,
                   ),
                 ),
@@ -253,13 +296,13 @@ class SightDetailsBody extends StatelessWidget {
             ],
           ),
 
-          // Sight description
+          // Place description
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(top: 24),
             child: Text(
-              sight.details,
-              style: AppTextStyles.sightDetailsDescription.copyWith(
+              widget.place.description,
+              style: AppTextStyles.placeDetailsDescription.copyWith(
                 color: Theme.of(context).textTheme.bodyText1.color,
               ),
             ),
@@ -313,7 +356,7 @@ class SightDetailsBody extends StatelessWidget {
                       Text(
                         AppTextStrings.planningButton,
                         style:
-                            AppTextStyles.sightDetailsPlanningButton.copyWith(
+                            AppTextStyles.placeDetailsPlanningButton.copyWith(
                           color: Theme.of(context).textTheme.bodyText1.color,
                         ),
                       ),
@@ -324,18 +367,31 @@ class SightDetailsBody extends StatelessWidget {
 
               // "Add to favorites" button
               Expanded(
-                child: TextButton.icon(
-                  onPressed: () => print("to favorites button"),
-                  icon: SvgPicture.asset(
-                    AppIcons.heart,
-                    width: 24,
-                    height: 24,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  label: Text(
-                    AppTextStrings.favoritesButton,
-                  ),
-                ),
+                child: isPlaceInFavorites
+                    ? TextButton.icon(
+                        onPressed: () => _onRemoveFromFavorites(),
+                        icon: SvgPicture.asset(
+                          AppIcons.heartFull,
+                          width: 24,
+                          height: 24,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        label: Text(
+                          AppTextStrings.favoritesButtonActive,
+                        ),
+                      )
+                    : TextButton.icon(
+                        onPressed: () => _onAddingToFavorites(),
+                        icon: SvgPicture.asset(
+                          AppIcons.heart,
+                          width: 24,
+                          height: 24,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        label: Text(
+                          AppTextStrings.favoritesButtonInactive,
+                        ),
+                      ),
               ),
             ],
           ),
