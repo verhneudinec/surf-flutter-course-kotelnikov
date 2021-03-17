@@ -3,7 +3,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/search_bar.dart';
 
-/// Delegate for [SliverPersistentHeader] in [SightListScreen].
+/// Delegate for [SliverPersistentHeader] in [PlaceListScreen].
 /// Displays a large or small app bar depending on the value of [shrinkOffset].
 /// The big app bar displays [AppTextStrings.appBarTitle] and [SearchBar],
 /// and the small one is [AppTextStrings.appBarMiniTitle].

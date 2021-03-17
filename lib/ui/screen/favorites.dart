@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
-import 'package:places/ui/widgets/sight_list.dart';
+import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
-import 'package:places/models/favorite_sights.dart';
 import 'package:provider/provider.dart';
 
 ///The [VisitingScreen] displays the Favorites section.
 ///Lists "Visited" or "Want to visit" via DefaultTabController.
 ///[TabIndicator] is used to indicate the current tab.
-///The state is controlled by the [FavoriteSights] provider
+///The state is controlled by the [FavoritePlaces] provider
 class VisitingScreen extends StatefulWidget {
   const VisitingScreen({Key key}) : super(key: key);
 
@@ -23,6 +23,8 @@ class VisitingScreen extends StatefulWidget {
 class _VisitingScreenState extends State<VisitingScreen>
     with SingleTickerProviderStateMixin {
   TabController tabController;
+  List<Place> _favoritePlaces = [];
+  List<Place> _visitedPlaces = [];
 
   @override
   void initState() {
@@ -41,10 +43,20 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    List<Sight> _visitedSights =
-        context.watch<FavoriteSights>().visitedFavoriteSights;
-    List<Sight> _unvisitedSights =
-        context.watch<FavoriteSights>().unvisitedFavoriteSights;
+    void loadFavorites(BuildContext context) async {
+      context.read<PlacesInteractor>().sortFavoritePlaces();
+      List<Place> favoritePlaces =
+          context.watch<PlacesInteractor>().getFavoritePlaces;
+      List<Place> visitedPlaces =
+          context.watch<PlacesInteractor>().getVisitedPlaces;
+      setState(() {
+        _favoritePlaces = favoritePlaces;
+        _visitedPlaces = visitedPlaces;
+      });
+    }
+
+    loadFavorites(context);
+
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
@@ -60,8 +72,9 @@ class _VisitingScreenState extends State<VisitingScreen>
             const SizedBox(
               height: 24,
             ),
+
             LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height - 238,
+              maxHeight: MediaQuery.of(context).size.height - 290,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: IndexedStack(
@@ -70,16 +83,16 @@ class _VisitingScreenState extends State<VisitingScreen>
                   children: [
                     CustomScrollView(
                       slivers: [
-                        SightList(
-                          sights: _unvisitedSights,
+                        PlaceList(
+                          places: _favoritePlaces,
                           cardsType: CardTypes.unvisited,
                         ),
                       ],
                     ),
                     CustomScrollView(
                       slivers: [
-                        SightList(
-                          sights: _visitedSights,
+                        PlaceList(
+                          places: _visitedPlaces,
                           cardsType: CardTypes.visited,
                         ),
                       ],
@@ -97,8 +110,8 @@ class _VisitingScreenState extends State<VisitingScreen>
             //   child: TabBarView(
             //     controller: tabController,
             //     children: [
-            //       SightList(cardType: CardTypes.unvisited),
-            //       SightList(cardType: "visited"),
+            //       PlaceList(cardType: CardTypes.unvisited),
+            //       PlaceList(cardType: "visited"),
             //     ],
             //   ),
             // ),
