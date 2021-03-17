@@ -23,7 +23,7 @@ class PlacesInteractor with ChangeNotifier {
 
   /// Function for loading places from [PlacesRepository]
   Future<void> loadPlaces({int radius, String category}) async {
-    final response = await PlaceRepository().loadPlace();
+    final response = await PlaceRepository().loadPlaces();
     _places = response;
 
     notifyListeners();
@@ -87,8 +87,10 @@ class PlacesInteractor with ChangeNotifier {
     notifyListeners();
   }
 
-  /// When dragging an item in the list
-  void onDraggingPlace(
+  /// Function for swapping favorite items.
+  /// [oldIndex] - current element index,
+  /// [newIndex] - index where the element should be inserted.
+  void swapFavoriteItems(
     int oldIndex,
     int newIndex,
   ) {

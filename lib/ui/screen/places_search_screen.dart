@@ -6,6 +6,7 @@ import 'package:places/res/place_types_strings.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
+import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:places/ui/screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
@@ -48,11 +49,9 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
 
   Widget _body() {
     bool searchFieldIsNotEmpty =
-        context.watch<PlacesSearchInteractor>().searchFieldIsNotEmpty;
-    bool isPlacesNotFound =
-        context.watch<PlacesSearchInteractor>().isPlacesNotFound;
-    bool isPlacesLoading =
-        context.watch<PlacesSearchInteractor>().isPlacesLoading;
+        context.watch<PlacesSearchModel>().searchFieldIsNotEmpty;
+    bool isPlacesNotFound = context.watch<PlacesSearchModel>().isPlacesNotFound;
+    bool isPlacesLoading = context.watch<PlacesSearchModel>().isPlacesLoading;
     List<String> searchHistory =
         context.watch<PlacesSearchInteractor>().searchHistory;
     List<Place> searchResults =
@@ -62,7 +61,8 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
 
     /// When clicking on a query from the search history
     void _onTapQueryFromHistory(searchQuery) {
-      context.read<PlacesSearchInteractor>().onSearchSubmitted(
+      context.read<PlacesSearchModel>().onSearchSubmitted(
+            context: context,
             searchQuery: searchQuery,
             isTapFromHistory: true,
           );
@@ -81,13 +81,13 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     }
 
     /// When deleting a request from history
-    void _onQueryDelete(index) {
-      context.read<PlacesSearchInteractor>().onQueryDelete(index);
+    void _onQueryDelete(int index) {
+      context.read<PlacesSearchModel>().onQueryDelete(context, index);
     }
 
     /// Deleting all requests from the search history
     void _onCleanHistory() {
-      context.read<PlacesSearchInteractor>().onCleanHistory();
+      context.read<PlacesSearchModel>().onCleanHistory(context);
     }
 
     return Padding(
