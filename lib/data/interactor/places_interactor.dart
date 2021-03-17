@@ -22,11 +22,10 @@ class PlacesInteractor with ChangeNotifier {
       _favoritePlaces.where((place) => place.isVisited).toList();
 
   /// Function for loading places from [PlacesRepository]
-  Future<void> loadPlaces({int radius, String category}) async {
+  Future<List<Place>> loadPlaces({int radius, String category}) async {
     final response = await PlaceRepository().loadPlaces();
     _places = response;
-
-    notifyListeners();
+    return _places;
   }
 
   /// Function for loading place details from API

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
@@ -6,6 +8,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
+import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/screen/add_place_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,7 +28,9 @@ class PlaceListScreen extends StatefulWidget {
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
-  bool _isPlaceListLoading = true;
+  List<Place> _places;
+  final StreamController<List<Place>> _placeListController =
+      StreamController<List<Place>>();
 
   /// To go to the [AddPlaceScreen] screen
   void _onClickCreateButton() {
@@ -44,15 +49,18 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   }
 
   void _initPlaces() async {
-    await context.read<PlacesInteractor>().loadPlaces();
-    setState(() {
-      _isPlaceListLoading = false;
-    });
+    _places = await context.read<PlacesInteractor>().loadPlaces();
+    _placeListController.sink.add(_places);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _placeListController.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Place> places = context.watch<PlacesInteractor>().places;
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
     bool _searchFieldIsNotEmpty =
@@ -74,31 +82,46 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                 pinned: _isPortraitOrientation ? true : false,
               ),
 
-              /// While the places are not loaded - display [CircularProgressIndicator]
-              if (_isPlaceListLoading)
-                SliverToBoxAdapter(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
+              /// Load places from the server using the [PlacesInteractor] interactor.
+              /// At boot time display the loader.
+              /// If there is an error - display an error message.
+              StreamBuilder<List<Place>>(
+                stream: _placeListController.stream,
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<Place>> snapshot,
+                ) {
+                  if (!snapshot.hasData && !snapshot.hasError)
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CircularProgressIndicator(),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                          ],
                         ),
-                        CircularProgressIndicator(),
-                        const SizedBox(
-                          height: 24,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
+                    );
 
-              /// Display search results if they exist
-              /// or display the data obtained in the constructor [places]
-              if (!_isPlaceListLoading)
-                PlaceList(
-                  places: _searchFieldIsNotEmpty ? _searchResults : places,
-                  cardsType: CardTypes.general,
-                ),
+                  if (snapshot.hasData)
+                    return PlaceList(
+                      places: snapshot.data,
+                      cardsType: CardTypes.general,
+                    );
+
+                  if (snapshot.hasError)
+                    ErrorStub(
+                      icon: AppIcons.card,
+                      title: AppTextStrings.dataLoadingError,
+                      subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+                    );
+                },
+              ),
             ],
           ),
         ),
