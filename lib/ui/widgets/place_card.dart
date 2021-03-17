@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,7 +19,7 @@ import 'package:provider/provider.dart';
 
 /// Place card widget, displays the [place] data passed to the constructor.
 /// The view changes depending on [cardType].
-class PlaceCard extends StatelessWidget {
+class PlaceCard extends StatefulWidget {
   final Place place;
   final String cardType;
 
@@ -28,16 +30,21 @@ class PlaceCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _PlaceCardState createState() => _PlaceCardState();
+}
+
+class _PlaceCardState extends State<PlaceCard> {
+  /// Removes the list item from provider
+  void _onRemoveFromFavorites() {
+    context.read<PlacesInteractor>().removeFromFavorites(widget.place);
+  }
+
+  void _onAddingToFavorites() {
+    context.read<PlacesInteractor>().addToFavorites(widget.place);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    /// Removes the list item from provider
-    void _onRemoveFromFavorites() {
-      context.read<PlacesInteractor>().removeFromFavorites(place);
-    }
-
-    void _onAddingToFavorites() {
-      context.read<PlacesInteractor>().addToFavorites(place);
-    }
-
     /// Open a window with details of the place,
     /// if there was a click on the card
     void _onPlaceClick() {
@@ -47,7 +54,7 @@ class PlaceCard extends StatelessWidget {
           return Container(
             margin: EdgeInsets.only(top: 84),
             child: PlaceDetails(
-              placeId: place.id,
+              placeId: widget.place.id,
               isBottomSheet: true,
             ),
           );
@@ -74,7 +81,7 @@ class PlaceCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: Dismissible(
-        key: ValueKey(place.name),
+        key: ValueKey(widget.place.name),
         direction: DismissDirection.endToStart,
         onDismissed: (direction) => _onRemoveFromFavorites(),
         background: _dismissibleBackground(context),
@@ -85,12 +92,12 @@ class PlaceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 PlaceCardHeader(
-                  place: place,
-                  cardType: cardType ?? CardTypes.general,
+                  place: widget.place,
+                  cardType: widget.cardType ?? CardTypes.general,
                 ),
                 PlaceCardBody(
-                  place: place,
-                  cardType: cardType ?? CardTypes.general,
+                  place: widget.place,
+                  cardType: widget.cardType ?? CardTypes.general,
                 ),
               ],
             ),
@@ -108,8 +115,8 @@ class PlaceCard extends StatelessWidget {
 
             /// Action buttons: delete place, calendar, share
             PlaceCardActionButtons(
-              place: place,
-              cardType: cardType ?? CardTypes.general,
+              place: widget.place,
+              cardType: widget.cardType ?? CardTypes.general,
               onAddingToFavorites: _onAddingToFavorites,
               onRemoveFromFavorites: _onRemoveFromFavorites,
             ),
@@ -299,6 +306,11 @@ class PlaceCardActionButtons extends StatefulWidget {
 }
 
 class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
+  // Controller for the "Add to favorites" button
+  final StreamController<bool> _favoriteButtonController =
+      StreamController<bool>();
+
+  /// Selected date and current date in the picker
   DateTime _scheduledDate;
   DateTime _currentDate = DateTime.now();
 
@@ -350,29 +362,48 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
     }
   }
 
+  void _onAddingToFavorites() {
+    widget.onAddingToFavorites();
+    _favoriteButtonController.sink.add(true);
+  }
+
+  void _onRemoveFromFavorites() {
+    widget.onRemoveFromFavorites();
+    _favoriteButtonController.sink.add(false);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _favoriteButtonController.close();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool _isPlaceInFavorites =
-        context.watch<PlacesInteractor>().isPlaceInFavorites(widget.place);
-
     return SizedBox(
       height: 96,
       width: double.infinity,
       child: Stack(
         children: [
+          // "Add to favorites" button
           if (widget.cardType == CardTypes.general)
-            Positioned(
-              top: 16,
-              right: 16,
-              child: _isPlaceInFavorites
-                  ? _iconButton(
-                      iconPath: AppIcons.heartFull,
-                      onPressed: () => widget.onRemoveFromFavorites(),
-                    )
-                  : _iconButton(
-                      iconPath: AppIcons.heart,
-                      onPressed: () => widget.onAddingToFavorites(),
-                    ),
+            StreamBuilder<bool>(
+              stream: _favoriteButtonController.stream,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Positioned(
+                  top: 16,
+                  right: 16,
+                  child: snapshot.data == true
+                      ? _iconButton(
+                          iconPath: AppIcons.heartFull,
+                          onPressed: () => _onRemoveFromFavorites(),
+                        )
+                      : _iconButton(
+                          iconPath: AppIcons.heart,
+                          onPressed: () => _onAddingToFavorites(),
+                        ),
+                );
+              },
             ),
 
           // "Remove from list" button
