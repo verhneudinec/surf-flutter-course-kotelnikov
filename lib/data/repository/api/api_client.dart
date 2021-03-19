@@ -7,7 +7,7 @@ class ApiClient {
 
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "https://test-backend-flutter.surfstudio.1ru",
+      baseUrl: "https://test-backend-flutter.surfstudio.ru",
       connectTimeout: 5000,
       sendTimeout: 5000,
       receiveTimeout: 5000,

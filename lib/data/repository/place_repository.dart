@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/api_client.dart';
 import 'package:places/data/repository/api/api_mapping.dart';
@@ -29,19 +30,24 @@ class PlaceRepository {
   }
 
   /// Function for getting place details from the API
-  Future<Place> getPlaceDetails({int id}) async {
-    _client.initInterceptors();
-    final Response response =
-        await _client.get(ApiUrls.place + "/" + id.toString());
+  Future<Place> getPlaceDetails({@required int id}) async {
+    try {
+      final Response response = await _client.get(
+        ApiUrls.place + "/" + id.toString(),
+      );
 
-    Object place = response.data;
+      Object place = response.data;
 
-    return ApiMapping().placeFromJson(place);
+      return ApiMapping().placeFromJson(place);
+    } catch (e) {
+      _client.exceptionHandler(e);
+      throw e;
+    }
   }
 
   /// Function for adding place to the server.
   /// Returns the object received from the server.
-  Future<Place> addNewPlace({Place place}) async {
+  Future<Place> addNewPlace({@required Place place}) async {
     _client.initInterceptors();
     final Response request = await _client.post(
       ApiUrls.place,

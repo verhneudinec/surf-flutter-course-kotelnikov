@@ -13,14 +13,10 @@ class PlacesInteractor with ChangeNotifier {
   List<Place> _places = [];
   List<Place> _favoritePlaces = [];
 
-  @override
-  void dispose() {
-    _placeListController.close();
-    super.dispose();
-  }
-
   final StreamController<List<Place>> _placeListController =
       StreamController<List<Place>>();
+  final StreamController<Place> _placeDetailsController =
+      StreamController<Place>();
 
   /// Places from [PlacesRepository]
   List<Place> get places => _places;
@@ -29,8 +25,9 @@ class PlacesInteractor with ChangeNotifier {
   List<Place> get getFavoritePlaces =>
       _favoritePlaces.where((place) => !place.isVisited).toList();
 
-  /// StreamController for place
+  /// StreamControllers
   StreamController<List<Place>> get placeListController => _placeListController;
+  StreamController<Place> get placeDetailsController => _placeDetailsController;
 
   /// Visited places from [PlacesRepository]
   List<Place> get getVisitedPlaces =>
@@ -50,9 +47,18 @@ class PlacesInteractor with ChangeNotifier {
   }
 
   /// Function for loading place details from API
-  Future<Place> loadPlaceDetails({int id}) async {
-    final Place place = await PlaceRepository().getPlaceDetails(id: id);
-    return place;
+  Future<void> loadPlaceDetails({int id}) async {
+    try {
+      final response = await PlaceRepository().getPlaceDetails(id: id);
+      if (!_placeDetailsController.isClosed)
+        _placeDetailsController.sink.add(response);
+    } on NetworkException catch (e) {
+      if (!_placeDetailsController.isClosed)
+        _placeDetailsController.addError(e);
+    } catch (e) {
+      if (!_placeDetailsController.isClosed)
+        _placeDetailsController.addError(e);
+    }
   }
 
   /// Function for sorting [_favoritePlaces] list
@@ -124,5 +130,12 @@ class PlacesInteractor with ChangeNotifier {
     Place place,
   }) {
     return _favoritePlaces.indexOf(place);
+  }
+
+  @override
+  void dispose() {
+    _placeListController.close();
+    _placeDetailsController.close();
+    super.dispose();
   }
 }

@@ -34,12 +34,6 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     _initPlaces();
   }
 
-  @override
-  void dispose() {
-    _placeListController.close();
-    super.dispose();
-  }
-
   List<Place> _places;
 
   StreamController<List<Place>> _placeListController =
@@ -61,6 +55,12 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
         builder: (context) => AddPlaceScreen(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _placeListController.close();
+    super.dispose();
   }
 
   @override
@@ -97,26 +97,18 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                 ) {
                   if (!snapshot.hasData && !snapshot.hasError)
                     return SliverToBoxAdapter(
-                      child: Center(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height /
-                                  4, // TODO Исправить размеры
-                            ),
-                            CircularProgressIndicator(),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height /
+                                4, // TODO Исправить размеры
+                          ),
+                          CircularProgressIndicator(),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                        ],
                       ),
-                    );
-
-                  if (snapshot.hasData && !snapshot.hasError)
-                    return PlaceList(
-                      places: snapshot.data,
-                      cardsType: CardTypes.general,
                     );
 
                   if (snapshot.hasError)
@@ -130,6 +122,11 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                         ),
                       ),
                     );
+
+                  return PlaceList(
+                    places: snapshot.data,
+                    cardsType: CardTypes.general,
+                  );
                 },
               ),
             ],
