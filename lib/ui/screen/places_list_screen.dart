@@ -41,12 +41,16 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   }
 
   List<Place> _places;
-  final StreamController<List<Place>> _placeListController =
+
+  StreamController<List<Place>> _placeListController =
       StreamController<List<Place>>();
 
   void _initPlaces() async {
-    _places = await context.read<PlacesInteractor>().loadPlaces();
-    _placeListController.sink.add(_places);
+    await context.read<PlacesInteractor>().loadPlaces();
+    setState(() {
+      _placeListController =
+          context.read<PlacesInteractor>().placeListController;
+    });
   }
 
   /// To go to the [AddPlaceScreen] screen
@@ -96,8 +100,9 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                       child: Center(
                         child: Column(
                           children: [
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height /
+                                  4, // TODO Исправить размеры
                             ),
                             CircularProgressIndicator(),
                             const SizedBox(
@@ -108,17 +113,22 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                       ),
                     );
 
-                  if (snapshot.hasData)
+                  if (snapshot.hasData && !snapshot.hasError)
                     return PlaceList(
                       places: snapshot.data,
                       cardsType: CardTypes.general,
                     );
 
                   if (snapshot.hasError)
-                    ErrorStub(
-                      icon: AppIcons.card,
-                      title: AppTextStrings.dataLoadingErrorTitle,
-                      subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+                    return SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height / 2,
+                        child: ErrorStub(
+                          icon: AppIcons.error,
+                          title: AppTextStrings.dataLoadingErrorTitle,
+                          subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+                        ),
+                      ),
                     );
                 },
               ),

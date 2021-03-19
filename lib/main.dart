@@ -45,7 +45,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      home: SplashScreen(),
+      home: PlaceListScreen(),
       routes: {
         AppRoutes.home: (BuildContext context) => PlaceListScreen(),
         AppRoutes.map: (BuildContext context) => MapScreen(),

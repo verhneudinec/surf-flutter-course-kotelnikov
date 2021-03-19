@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/data/repository/api/exceptions/network_exception.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/utils/check_distance.dart';
 
@@ -10,6 +13,15 @@ class PlacesInteractor with ChangeNotifier {
   List<Place> _places = [];
   List<Place> _favoritePlaces = [];
 
+  @override
+  void dispose() {
+    _placeListController.close();
+    super.dispose();
+  }
+
+  final StreamController<List<Place>> _placeListController =
+      StreamController<List<Place>>();
+
   /// Places from [PlacesRepository]
   List<Place> get places => _places;
 
@@ -17,15 +29,24 @@ class PlacesInteractor with ChangeNotifier {
   List<Place> get getFavoritePlaces =>
       _favoritePlaces.where((place) => !place.isVisited).toList();
 
+  /// StreamController for place
+  StreamController<List<Place>> get placeListController => _placeListController;
+
   /// Visited places from [PlacesRepository]
   List<Place> get getVisitedPlaces =>
       _favoritePlaces.where((place) => place.isVisited).toList();
 
   /// Function for loading places from [PlacesRepository]
-  Future<List<Place>> loadPlaces({int radius, String category}) async {
-    final response = await PlaceRepository().loadPlaces();
-    _places = response;
-    return _places;
+  Future<void> loadPlaces({int radius, String category}) async {
+    try {
+      final response = await PlaceRepository().loadPlaces();
+      _places = response;
+      _placeListController.sink.add(_places);
+    } on NetworkException catch (e) {
+      _placeListController.addError(e);
+    } catch (e) {
+      _placeListController.addError(e);
+    }
   }
 
   /// Function for loading place details from API

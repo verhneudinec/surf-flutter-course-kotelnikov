@@ -11,6 +11,7 @@ class AppIcons {
       heart = "assets/icons/Heart.svg",
       plus = "assets/icons/Plus.svg",
       delete = "assets/icons/Delete.svg",
+      error = "assets/icons/Error.svg",
       search = "assets/icons/Search.svg",
       list = "assets/icons/List.svg",
       map = "assets/icons/Map.svg",
