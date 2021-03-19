@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/data/repository/api/exceptions/network_exception.dart';
+import 'package:places/res/text_strings.dart';
 import 'package:provider/provider.dart';
 
 /// State for screen [AddPlaceScreen].
@@ -79,9 +81,21 @@ class AddPlace with ChangeNotifier {
   }
 
   /// Add a new place through the [PlacesInteractor]
-  void addNewPlace(BuildContext context) {
+  void addNewPlace(
+    BuildContext context,
+  ) {
     final Place place = prepareNewPlace();
-    context.read<PlacesInteractor>().addNewPlace(place);
+    try {
+      context.read<PlacesInteractor>().addNewPlace(place);
+    } on NetworkException catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: new Text(AppTextStrings.dataLoadingErrorSubtitle),
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   /// A function for preparing the data of the new [Place] object.

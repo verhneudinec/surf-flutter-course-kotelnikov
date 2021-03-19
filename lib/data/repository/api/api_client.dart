@@ -57,8 +57,12 @@ class ApiClient {
       if (response.statusCode != 200) throw NetworkException();
 
       return response.data;
-    } catch (e) {
-      exceptionHandler(e);
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestUrl: e.request.uri.path,
+        statusCode: 500,
+        statusMessage: "internal server error",
+      );
     }
   }
 

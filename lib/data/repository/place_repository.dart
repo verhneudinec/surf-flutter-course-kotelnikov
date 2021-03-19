@@ -4,6 +4,7 @@ import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/api_client.dart';
 import 'package:places/data/repository/api/api_mapping.dart';
 import 'package:places/data/repository/api/api_urls.dart';
+import 'package:places/data/repository/api/exceptions/network_exception.dart';
 
 /// Repository for getting places data from the server
 class PlaceRepository {
@@ -48,14 +49,18 @@ class PlaceRepository {
   /// Function for adding place to the server.
   /// Returns the object received from the server.
   Future<Place> addNewPlace({@required Place place}) async {
-    _client.initInterceptors();
-    final Response request = await _client.post(
-      ApiUrls.place,
-      data: ApiMapping().placeToJson(place),
-    );
+    try {
+      final Response request = await _client.post(
+        ApiUrls.place,
+        data: ApiMapping().placeToJson(place),
+      );
 
-    final Response response = request.data;
+      final Response response = request.data;
 
-    return ApiMapping().placeFromJson(response);
+      return ApiMapping().placeFromJson(response);
+    } catch (e) {
+      _client.exceptionHandler(e);
+      print(e);
+    }
   }
 }

@@ -97,13 +97,15 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                   );
 
                 if (snapshot.hasError)
-                  return SizedBox(
-                    width: 300,
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: ErrorStub(
-                      icon: AppIcons.error,
-                      title: AppTextStrings.dataLoadingErrorTitle,
-                      subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+                  return Center(
+                    child: SizedBox(
+                      width: 300,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: ErrorStub(
+                        icon: AppIcons.error,
+                        title: AppTextStrings.dataLoadingErrorTitle,
+                        subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+                      ),
                     ),
                   );
 

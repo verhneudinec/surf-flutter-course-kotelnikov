@@ -19,31 +19,36 @@ class FilteredPlaceRepository {
     List selectedTypes,
     int searchRadius,
   }) async {
-    _client.initInterceptors();
-    final response = await _client.dio.post(
-      ApiUrls.filteredPlaces,
-      data: {
-        // пока что реализован поиск только по имени (вроде по заданию так).
-        // хотя все данные из контроллеров и приходят,
-        // но запросы еще не тестировались + нет обработки ошибок.
-        "nameFilter": searchQuery,
-        // "lat": geoposition.lat,
-        // "lng": geoposition.lng,
-        // "radius": searchRadius,
-        // "typeFilter": selectedTypes,
-      },
-    );
-
-    List<Place> placeList = [];
-
-    // TODO Вынести в отдельную сущность
-    if (response.statusCode == 200)
-      placeList = List<Place>.from(
-        response.data.map(
-          (place) => ApiMapping().placeFromJson(place),
-        ),
+    try {
+      _client.initInterceptors();
+      final response = await _client.dio.post(
+        ApiUrls.filteredPlaces,
+        data: {
+          // пока что реализован поиск только по имени (вроде по заданию так).
+          // хотя все данные из контроллеров и приходят,
+          // но запросы еще не тестировались + нет обработки ошибок.
+          "nameFilter": searchQuery,
+          // "lat": geoposition.lat,
+          // "lng": geoposition.lng,
+          // "radius": searchRadius,
+          // "typeFilter": selectedTypes,
+        },
       );
 
-    return placeList;
+      List<Place> placeList = [];
+
+      // TODO Вынести в отдельную сущность
+      if (response.statusCode == 200)
+        placeList = List<Place>.from(
+          response.data.map(
+            (place) => ApiMapping().placeFromJson(place),
+          ),
+        );
+
+      return placeList;
+    } catch (e) {
+      _client.exceptionHandler(e);
+      return [];
+    }
   }
 }

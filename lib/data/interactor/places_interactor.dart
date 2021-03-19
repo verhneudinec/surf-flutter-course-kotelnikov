@@ -106,11 +106,17 @@ class PlacesInteractor with ChangeNotifier {
   }
 
   void addNewPlace(Place place) async {
-    final newPlace = await PlaceRepository().addNewPlace(place: place);
+    try {
+      final newPlace = await PlaceRepository().addNewPlace(place: place);
 
-    _places.add(newPlace);
+      _places.add(newPlace);
 
-    notifyListeners();
+      notifyListeners();
+    } on NetworkException catch (e) {
+      throw e;
+    } catch (e) {
+      print(e);
+    }
   }
 
   /// Function for swapping favorite items.
