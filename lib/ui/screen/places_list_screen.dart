@@ -28,9 +28,26 @@ class PlaceListScreen extends StatefulWidget {
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initPlaces();
+  }
+
+  @override
+  void dispose() {
+    _placeListController.close();
+    super.dispose();
+  }
+
   List<Place> _places;
   final StreamController<List<Place>> _placeListController =
       StreamController<List<Place>>();
+
+  void _initPlaces() async {
+    _places = await context.read<PlacesInteractor>().loadPlaces();
+    _placeListController.sink.add(_places);
+  }
 
   /// To go to the [AddPlaceScreen] screen
   void _onClickCreateButton() {
@@ -40,23 +57,6 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
         builder: (context) => AddPlaceScreen(),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _initPlaces();
-  }
-
-  void _initPlaces() async {
-    _places = await context.read<PlacesInteractor>().loadPlaces();
-    _placeListController.sink.add(_places);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _placeListController.close();
   }
 
   @override
@@ -117,7 +117,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                   if (snapshot.hasError)
                     ErrorStub(
                       icon: AppIcons.card,
-                      title: AppTextStrings.dataLoadingError,
+                      title: AppTextStrings.dataLoadingErrorTitle,
                       subtitle: AppTextStrings.dataLoadingErrorSubtitle,
                     );
                 },
