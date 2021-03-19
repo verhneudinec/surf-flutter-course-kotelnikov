@@ -19,6 +19,8 @@ class AppTextStrings {
       emptyPageSubtitleVisited = "Завершите маршрут,\nчтобы место попало сюда.",
       emptyPageSubtitleUnvisited =
           "Отмечайте понравившиеся места\nи они появиятся здесь.",
+      dataLoadingErrorTitle = "Ошибка",
+      dataLoadingErrorSubtitle = "Что то пошло не так.\nПопробуйте позже.",
       bottomNavigationBarLabelList = "Интересные места",
       bottomNavigationBarLabelMap = "Карта",
       bottomNavigationBarLabelFavorites = "Избранное",
