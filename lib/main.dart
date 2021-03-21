@@ -20,7 +20,7 @@ void main() {
     MultiProvider(
       providers: [
         /// ViewModels for UI logic
-        Provider(create: (_) => PlaceTypesModel()),
+        ChangeNotifierProvider(create: (_) => PlaceTypesModel()),
         ChangeNotifierProvider(create: (_) => AddPlaceModel()),
         ChangeNotifierProvider(create: (_) => PlacesSearchModel()),
 
