@@ -34,12 +34,13 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> {
-  /// Removes the list item from provider
-  void _onRemoveFromFavorites() {
+  /// Removes the list item from [PlacesInteractor] provider
+  void onRemoveFromFavorites() {
     context.read<PlacesInteractor>().removeFromFavorites(widget.place);
   }
 
-  void _onAddingToFavorites() {
+  /// Adding the list item to [PlacesInteractor] provider
+  void onAddingToFavorites() {
     context.read<PlacesInteractor>().addToFavorites(widget.place);
   }
 
@@ -83,7 +84,7 @@ class _PlaceCardState extends State<PlaceCard> {
       child: Dismissible(
         key: ValueKey(widget.place.name),
         direction: DismissDirection.endToStart,
-        onDismissed: (direction) => _onRemoveFromFavorites(),
+        onDismissed: (direction) => onRemoveFromFavorites(),
         background: _dismissibleBackground(context),
         child: Stack(
           children: [
@@ -117,8 +118,8 @@ class _PlaceCardState extends State<PlaceCard> {
             PlaceCardActionButtons(
               place: widget.place,
               cardType: widget.cardType ?? CardTypes.general,
-              onAddingToFavorites: _onAddingToFavorites,
-              onRemoveFromFavorites: _onRemoveFromFavorites,
+              onAddingToFavorites: onAddingToFavorites,
+              onRemoveFromFavorites: onRemoveFromFavorites,
             ),
           ],
         ),
