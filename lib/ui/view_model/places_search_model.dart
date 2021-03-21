@@ -16,7 +16,7 @@ class PlacesSearchModel with ChangeNotifier {
   int _searchRangeEnd = 10000;
 
   /// [_searchFieldIsNotEmpty] - true if the search controller is empty
-  bool _searchFieldIsNotEmpty = false;
+  bool _isSearchFieldNotEmpty = false;
 
   /// [_isPlacesNotFound] - if nothing was added to [_searchResults]
   bool _isPlacesNotFound = false;
@@ -28,7 +28,7 @@ class PlacesSearchModel with ChangeNotifier {
   /// getters for fields with the same name
   int get searchRangeStart => _searchRangeStart;
   int get searchRangeEnd => _searchRangeEnd;
-  bool get searchFieldIsNotEmpty => _searchFieldIsNotEmpty;
+  bool get isSearchFieldNotEmpty => _isSearchFieldNotEmpty;
   bool get isPlacesNotFound => _isPlacesNotFound;
   bool get isPlacesLoading => _isPlacesLoading;
   TextEditingController get searchFieldController => _searchFieldController;
@@ -38,7 +38,7 @@ class PlacesSearchModel with ChangeNotifier {
   void onSearchChanged(BuildContext context) {
     _isPlacesNotFound = false;
     context.read<PlacesSearchInteractor>().searchResults.clear();
-    _searchFieldIsNotEmpty = _searchFieldController.value.text.isNotEmpty;
+    _isSearchFieldNotEmpty = _searchFieldController.value.text.isNotEmpty;
     notifyListeners();
   }
 
@@ -70,13 +70,13 @@ class PlacesSearchModel with ChangeNotifier {
     _isPlacesLoading = true;
 
     if (searchQuery.isNotEmpty && !isSearchFromFilterScreen) {
-      _searchFieldIsNotEmpty = true;
+      _isSearchFieldNotEmpty = true;
 
       /// Eliminate duplicate additions to the request history
       /// when calling [onSearchSubmitted] from [FilterScreen]
       context.read<PlacesSearchInteractor>().addQuery(searchQuery);
     } else if (isSearchFromFilterScreen == true) {
-      _searchFieldIsNotEmpty = true;
+      _isSearchFieldNotEmpty = true;
     }
 
     if (isTapFromHistory == true) {
@@ -116,7 +116,7 @@ class PlacesSearchModel with ChangeNotifier {
 
   /// Очистка поисковой строки
   void onClearTextValue() {
-    _searchFieldIsNotEmpty = false;
+    _isSearchFieldNotEmpty = false;
     _searchFieldController.clear();
     notifyListeners();
   }

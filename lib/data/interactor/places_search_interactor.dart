@@ -63,8 +63,6 @@ class PlacesSearchInteractor with ChangeNotifier {
 
     _searchResults = searchResponse;
 
-    print(_searchResults[1].description);
-
     return _searchResults;
   }
 }
