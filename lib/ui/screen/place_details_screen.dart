@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +10,7 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
+import 'package:places/ui/widgets/error_stub.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 
@@ -29,8 +31,7 @@ class PlaceDetails extends StatefulWidget {
 }
 
 class _PlaceDetailsState extends State<PlaceDetails> {
-  Place _place;
-  bool _isLoading = true;
+  StreamController<Place> _placeDetailsController = StreamController<Place>();
 
   @override
   void initState() {
@@ -39,14 +40,19 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   }
 
   void _getPlaceDetails() async {
-    Place response =
-        await PlacesInteractor().loadPlaceDetails(id: widget.placeId);
-    setState(
-      () {
-        _place = response;
-        _isLoading = false;
-      },
-    );
+    await context.read<PlacesInteractor>().loadPlaceDetails(id: widget.placeId);
+    setState(() {
+      _placeDetailsController =
+          context.read<PlacesInteractor>().placeDetailsController;
+    });
+
+    _placeDetailsController.close();
+  }
+
+  @override
+  void dispose() {
+    _placeDetailsController.close();
+    super.dispose();
   }
 
   @override
@@ -58,11 +64,14 @@ class _PlaceDetailsState extends State<PlaceDetails> {
         return ClipRRect(
           borderRadius: AppDecorations.bottomSheetBorderRadius,
           child: Scaffold(
-            body: _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : CustomScrollView(
+            body: StreamBuilder<Place>(
+              stream: _placeDetailsController.stream,
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<Place> snapshot,
+              ) {
+                if (snapshot.hasData)
+                  return CustomScrollView(
                     controller: scrollController,
                     slivers: [
                       SliverAppBar(
@@ -71,7 +80,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         expandedHeight: 360,
                         flexibleSpace: FlexibleSpaceBar(
                           background: PlaceDetailsHeader(
-                            place: _place,
+                            place: snapshot.data,
                             isBottomSheet: widget.isBottomSheet,
                           ),
                         ),
@@ -80,12 +89,39 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         delegate: SliverChildListDelegate([
                           Padding(
                             padding: const EdgeInsets.only(bottom: 30),
-                            child: PlaceDetailsBody(place: _place),
+                            child: PlaceDetailsBody(place: snapshot.data),
                           ),
                         ]),
                       )
                     ],
-                  ),
+                  );
+
+                if (snapshot.hasError)
+                  return Center(
+                    child: SizedBox(
+                      width: 300,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: ErrorStub(
+                        icon: AppIcons.error,
+                        title: AppTextStrings.dataLoadingErrorTitle,
+                        subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+                      ),
+                    ),
+                  );
+
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 3,
+                    ),
+                    Center(child: CircularProgressIndicator()),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         );
       },

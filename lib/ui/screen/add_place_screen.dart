@@ -24,6 +24,8 @@ class AddPlaceScreen extends StatefulWidget {
 }
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   /// [_onPlaceCreate] takes the prepared data of the new
   /// place from [AddPlace] and writes them to
   /// array of mock data from [Places].

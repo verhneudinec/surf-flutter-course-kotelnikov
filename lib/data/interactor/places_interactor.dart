@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/data/repository/api/exceptions/network_exception.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/utils/check_distance.dart';
 
@@ -10,6 +13,11 @@ class PlacesInteractor with ChangeNotifier {
   List<Place> _places = [];
   List<Place> _favoritePlaces = [];
 
+  final StreamController<List<Place>> _placeListController =
+      StreamController<List<Place>>();
+  final StreamController<Place> _placeDetailsController =
+      StreamController<Place>();
+
   /// Places from [PlacesRepository]
   List<Place> get places => _places;
 
@@ -17,21 +25,40 @@ class PlacesInteractor with ChangeNotifier {
   List<Place> get getFavoritePlaces =>
       _favoritePlaces.where((place) => !place.isVisited).toList();
 
+  /// StreamControllers
+  StreamController<List<Place>> get placeListController => _placeListController;
+  StreamController<Place> get placeDetailsController => _placeDetailsController;
+
   /// Visited places from [PlacesRepository]
   List<Place> get getVisitedPlaces =>
       _favoritePlaces.where((place) => place.isVisited).toList();
 
   /// Function for loading places from [PlacesRepository]
-  Future<List<Place>> loadPlaces({int radius, String category}) async {
-    final response = await PlaceRepository().loadPlaces();
-    _places = response;
-    return _places;
+  Future<void> loadPlaces({int radius, String category}) async {
+    try {
+      final response = await PlaceRepository().loadPlaces();
+      _places = response;
+      _placeListController.sink.add(_places);
+    } on NetworkException catch (e) {
+      _placeListController.addError(e);
+    } catch (e) {
+      _placeListController.addError(e);
+    }
   }
 
   /// Function for loading place details from API
-  Future<Place> loadPlaceDetails({int id}) async {
-    final Place place = await PlaceRepository().getPlaceDetails(id: id);
-    return place;
+  Future<void> loadPlaceDetails({int id}) async {
+    try {
+      final response = await PlaceRepository().getPlaceDetails(id: id);
+      if (!_placeDetailsController.isClosed)
+        _placeDetailsController.sink.add(response);
+    } on NetworkException catch (e) {
+      if (!_placeDetailsController.isClosed)
+        _placeDetailsController.addError(e);
+    } catch (e) {
+      if (!_placeDetailsController.isClosed)
+        _placeDetailsController.addError(e);
+    }
   }
 
   /// Function for sorting [_favoritePlaces] list
@@ -79,11 +106,17 @@ class PlacesInteractor with ChangeNotifier {
   }
 
   void addNewPlace(Place place) async {
-    final newPlace = await PlaceRepository().addNewPlace(place: place);
+    try {
+      final newPlace = await PlaceRepository().addNewPlace(place: place);
 
-    _places.add(newPlace);
+      _places.add(newPlace);
 
-    notifyListeners();
+      notifyListeners();
+    } on NetworkException catch (e) {
+      throw e;
+    } catch (e) {
+      print(e);
+    }
   }
 
   /// Function for swapping favorite items.
@@ -103,5 +136,12 @@ class PlacesInteractor with ChangeNotifier {
     Place place,
   }) {
     return _favoritePlaces.indexOf(place);
+  }
+
+  @override
+  void dispose() {
+    _placeListController.close();
+    _placeDetailsController.close();
+    super.dispose();
   }
 }
