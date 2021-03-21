@@ -22,9 +22,8 @@ class AddPlaceScreen extends StatefulWidget {
 }
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
-  /// [_onPlaceCreate] takes the prepared data of the new
-  /// place from [AddPlace] and writes them to
-  /// array of mock data from [Places].
+  /// [_onPlaceCreate] calls the add place method from [AddPlaceModel],
+  /// which sends the prepared object to [PlacesRepository]
   void _onPlaceCreate() {
     context.read<AddPlaceModel>().addNewPlace(context);
     Navigator.of(context).pop();
@@ -43,10 +42,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /// [_isFieldsFilled] check for filling in all fields.
-    /// The "Save" button becomes active when this field is true.
-    bool _isFieldsFilled = context.watch<AddPlaceModel>().isFieldsFilled;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -57,7 +52,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
         ),
       ),
       bottomNavigationBar: _createPlaceButton(
-        _isFieldsFilled,
         _onPlaceCreate,
       ),
     );
@@ -72,19 +66,28 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
   Widget _body() {
     /// Controllers for text fields
-    final TextEditingController _placeTypeController =
+    final TextEditingController placeTypeController =
             context.watch<AddPlaceModel>().placeTypeController,
-        _placeNameController =
+        placeNameController =
             context.watch<AddPlaceModel>().placeNameController,
-        _placeLatitudeController =
+        placeLatitudeController =
             context.watch<AddPlaceModel>().placeLatitudeController,
-        _placeLongitudeController =
+        placeLongitudeController =
             context.watch<AddPlaceModel>().placeLongitudeController,
-        _placeDescriptionController =
+        placeDescriptionController =
             context.watch<AddPlaceModel>().placeDescriptionController;
 
+    /// FocusNodes of text fields
+    FocusNode nameFieldFocusNode =
+        context.read<AddPlaceModel>().nameFieldFocusNode;
+    FocusNode latitudeFieldFocusNode =
+        context.read<AddPlaceModel>().latitudeFieldFocusNode;
+    FocusNode detailsFieldFocusNode =
+        context.read<AddPlaceModel>().detailsFieldFocusNode;
+
     /// Photogallery of the place
-    List _placePhotogallery = context.watch<AddPlaceModel>().placePhotogallery;
+    List<String> placePhotogallery =
+        context.watch<AddPlaceModel>().placePhotogallery;
 
     return Container(
       width: double.infinity,
@@ -94,7 +97,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
           const SizedBox(
             height: 24,
           ),
-          _photogallery(_placePhotogallery),
+          _photogallery(placePhotogallery),
           const SizedBox(
             height: 24,
           ),
@@ -106,7 +109,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _placeType(_placeTypeController, _onSelectPlaceType),
+                _placeType(placeTypeController, _onSelectPlaceType),
 
                 const SizedBox(
                   height: 24,
@@ -126,10 +129,9 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
                 _outlinedTextField(
                   hintText: AppTextStrings.addPlaceScreenTextFormFieldEmpty,
-                  controller: _placeNameController,
-                  focusNode: context.watch<AddPlaceModel>().nameFieldFocusNode,
-                  nextFocusNode:
-                      context.watch<AddPlaceModel>().latitudeFieldFocusNode,
+                  controller: placeNameController,
+                  focusNode: nameFieldFocusNode,
+                  nextFocusNode: latitudeFieldFocusNode,
                 ),
 
                 const SizedBox(
@@ -137,8 +139,9 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 ),
 
                 _placeGeolocation(
-                  _placeLatitudeController,
-                  _placeLongitudeController,
+                  placeLatitudeController,
+                  placeLongitudeController,
+                  detailsFieldFocusNode,
                 ),
 
                 const SizedBox(
@@ -166,11 +169,8 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 _outlinedTextField(
                   hintText: AppTextStrings.addPlaceScreenTextFormFieldEmpty,
                   maxLines: 4,
-                  focusNode:
-                      context.watch<AddPlaceModel>().detailsFieldFocusNode,
-                  controller: _placeDescriptionController,
-                  nextFocusNode:
-                      context.watch<AddPlaceModel>().detailsFieldFocusNode,
+                  focusNode: detailsFieldFocusNode,
+                  controller: placeDescriptionController,
                   isLastField: true,
                 ),
               ],
@@ -182,7 +182,11 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   }
 
   /// "Add a new place" button
-  Widget _createPlaceButton(bool _isFieldsFilled, _onPlaceCreate) {
+  Widget _createPlaceButton(_onPlaceCreate) {
+    /// [_isFieldsFilled] check for filling in all fields.
+    /// The "Save" button becomes active when this field is true.
+    bool isFieldsFilled = context.watch<AddPlaceModel>().isFieldsFilled;
+
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 8.0,
@@ -190,7 +194,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       ),
       child: TextButton(
         onPressed: () {
-          if (_isFieldsFilled == true)
+          if (isFieldsFilled == true)
             _onPlaceCreate();
           else
             print("Не все поля заполнены"); // TODO Shake bar
@@ -199,7 +203,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
           AppTextStrings.addPlaceScreenPlaceCreateButton.toUpperCase(),
           style: AppTextStyles.addPlaceScreenPlaceCreateButton,
         ),
-        style: _isFieldsFilled == true
+        style: isFieldsFilled == true
             ? Theme.of(context).elevatedButtonTheme.style
             : Theme.of(context).elevatedButtonTheme.style.copyWith(
                   backgroundColor: MaterialStateProperty.all<Color>(
@@ -226,10 +230,15 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     FocusNode nextFocusNode,
     bool isLastField = false,
   }) {
-    /// [_clearTextValue] clears the text field
+    /// [clearTextValue] clears the text field
     /// by clicking on the cross.
-    void _clearTextValue() {
+    void clearTextValue() {
       context.read<AddPlaceModel>().clearTextValue(controller);
+    }
+
+    /// [changeTextValue] changes the value in the TextField controller
+    void changeTextValue(String value) {
+      context.read<AddPlaceModel>().changeTextValue(controller, value);
     }
 
     return TextFormField(
@@ -238,9 +247,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       keyboardType: numberKeyboardType == true
           ? TextInputType.number
           : TextInputType.text,
-      onChanged: (String value) {
-        context.read<AddPlaceModel>().changeTextValue(controller, value);
-      },
+      onChanged: (String value) => changeTextValue(value),
       textInputAction:
           isLastField == false ? TextInputAction.next : TextInputAction.done,
       focusNode: focusNode,
@@ -266,7 +273,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
           ),
           child: controller.value.text.isNotEmpty
               ? InkWell(
-                  onTap: () => _clearTextValue(),
+                  onTap: () => clearTextValue(),
                   child: SvgPicture.asset(
                     AppIcons.subtract,
                     color: Theme.of(context).iconTheme.color,
@@ -297,8 +304,8 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
   /// Type of place
   Widget _placeType(
-    TextEditingController _placeTypeController,
-    _onSelectPlaceType,
+    TextEditingController placeTypeController,
+    onSelectPlaceType,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +319,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
         InkWell(
           onTap: () => {},
           child: TextFormField(
-            controller: _placeTypeController,
+            controller: placeTypeController,
             readOnly: true,
             onTap: () => _onSelectPlaceType(),
             decoration: InputDecoration(
@@ -353,9 +360,15 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
   /// Geolocation of the place
   Widget _placeGeolocation(
-    TextEditingController _placeLatitudeController,
-    TextEditingController _placeLongitudeController,
+    TextEditingController placeLatitudeController,
+    TextEditingController placeLongitudeController,
+    FocusNode detailsFieldFocusNode,
   ) {
+    FocusNode latitudeFieldFocusNode =
+        context.read<AddPlaceModel>().latitudeFieldFocusNode;
+    FocusNode longitideFieldFocusNode =
+        context.read<AddPlaceModel>().longitideFieldFocusNode;
+
     return Container(
       width: double.infinity,
       child: Row(
@@ -383,12 +396,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 _outlinedTextField(
                   hintText:
                       AppTextStrings.addPlaceScreenTextFormFieldNotSpecified,
-                  controller: _placeLatitudeController,
+                  controller: placeLatitudeController,
                   numberKeyboardType: true,
-                  focusNode:
-                      context.watch<AddPlaceModel>().latitudeFieldFocusNode,
-                  nextFocusNode:
-                      context.watch<AddPlaceModel>().longitideFieldFocusNode,
+                  focusNode: latitudeFieldFocusNode,
+                  nextFocusNode: longitideFieldFocusNode,
                 ),
               ],
             ),
@@ -418,12 +429,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 _outlinedTextField(
                   hintText:
                       AppTextStrings.addPlaceScreenTextFormFieldNotSpecified,
-                  controller: _placeLongitudeController,
+                  controller: placeLongitudeController,
                   numberKeyboardType: true,
-                  focusNode:
-                      context.watch<AddPlaceModel>().longitideFieldFocusNode,
-                  nextFocusNode:
-                      context.watch<AddPlaceModel>().detailsFieldFocusNode,
+                  focusNode: longitideFieldFocusNode,
+                  nextFocusNode: detailsFieldFocusNode,
                 ),
               ],
             ),

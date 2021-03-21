@@ -34,12 +34,11 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     _initPlaces();
   }
 
-  Stream<List<Place>> _placeListController;
+  StreamController<List<Place>> _placeListController;
 
   void _initPlaces() async {
     await context.read<PlacesInteractor>().loadPlaces();
     setState(() {
-      // QUESTION // TODO
       _placeListController =
           context.read<PlacesInteractor>().placeListController;
     });
@@ -57,6 +56,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   @override
   void dispose() {
+    _placeListController.close();
     super.dispose();
   }
 
@@ -84,7 +84,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
               /// At boot time display the loader.
               /// If there is an error - display an error message.
               StreamBuilder<List<Place>>(
-                stream: _placeListController,
+                stream: _placeListController.stream,
                 builder: (
                   BuildContext context,
                   AsyncSnapshot<List<Place>> snapshot,
