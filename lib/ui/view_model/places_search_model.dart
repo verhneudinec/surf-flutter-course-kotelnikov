@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:provider/provider.dart';
 
 /// ViewModel for [PlacesSearchScreen].
@@ -86,9 +87,24 @@ class PlacesSearchModel with ChangeNotifier {
     /// result from the [PlacesSearchInteractor] repository
     List<Place> _searchResults;
 
-    _searchResults = await context
-        .read<PlacesSearchInteractor>()
-        .searchPlaces(searchQuery, _searchRangeEnd);
+    List<Map<String, Object>> placeTypes =
+        context.read<PlaceTypesModel>().placeTypesData;
+
+    /// An array of places types selected in the filter
+    final List<String> selectedPlaceTypes = [];
+
+    placeTypes.forEach(
+      (placeType) {
+        if (placeType["selected"] == true) {
+          selectedPlaceTypes.add(placeType["name"]);
+        }
+      },
+    );
+
+    _searchResults = await context.read<PlacesSearchInteractor>().searchPlaces(
+        searchQuery: searchQuery,
+        searchRadius: _searchRangeEnd,
+        placeTypes: selectedPlaceTypes);
 
     /// If no places were found for the request.
     if (_searchResults.isEmpty) _isPlacesNotFound = true;

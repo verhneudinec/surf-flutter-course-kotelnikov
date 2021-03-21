@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/filtered_places_repository.dart';
@@ -42,14 +41,12 @@ class PlacesSearchInteractor with ChangeNotifier {
 
   /// [searchPlaces] - is a search request handler.
   /// Found locations are added to [_searchResults].
-  Future<List<Place>> searchPlaces(String searchQuery, int searchRadius) async {
+  Future<List<Place>> searchPlaces({
+    String searchQuery,
+    int searchRadius,
+    List<String> placeTypes,
+  }) async {
     if (searchResults.isNotEmpty) searchResults.clear();
-
-    final List placeTypesData =
-        PlaceTypes().placeTypesData; // TODO брать типы из провайдера PlaceTypes
-
-    /// An array of places types selected in the filter
-    final List selectedTypes = [];
 
     /// Test user location
     final GeoPosition testGeoPosition = GeoPosition(59.884866, 29.904859);
@@ -57,26 +54,16 @@ class PlacesSearchInteractor with ChangeNotifier {
     /// In [searchResponse] will be the data from the server
     List<Place> searchResponse = [];
 
-    /// create a list [_selectedTypes] only with
-    /// selected categories
-    placeTypesData.forEach(
-      (
-        placeType,
-      ) {
-        if (placeType["selected"] == true) {
-          selectedTypes.add(placeType["name"]);
-        }
-      },
-    );
-
     searchResponse = await FilteredPlaceRepository().searchPlaces(
       searchQuery: searchQuery,
       geoposition: testGeoPosition,
-      selectedTypes: selectedTypes,
+      selectedTypes: placeTypes,
       searchRadius: searchRadius,
     );
 
     _searchResults = searchResponse;
+
+    print(_searchResults[1].description);
 
     return _searchResults;
   }

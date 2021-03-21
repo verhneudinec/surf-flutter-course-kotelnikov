@@ -26,7 +26,8 @@ class PlacesInteractor with ChangeNotifier {
       _favoritePlaces.where((place) => !place.isVisited).toList();
 
   /// StreamControllers
-  StreamController<List<Place>> get placeListController => _placeListController;
+  Stream<List<Place>> get placeListController => _placeListController.stream;
+
   StreamController<Place> get placeDetailsController => _placeDetailsController;
 
   /// Visited places from [PlacesRepository]

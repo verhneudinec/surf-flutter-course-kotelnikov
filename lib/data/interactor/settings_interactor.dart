@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Interactor for application settings.
 /// Provider is used to manage State.
-
 class SettingsInteractor with ChangeNotifier {
   bool _isDarkMode = false;
 

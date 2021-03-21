@@ -36,11 +36,11 @@ class _FilterScreenState extends State<FilterScreen> {
     final List<Place> _searchResults =
         context.watch<PlacesSearchInteractor>().searchResults;
     final List<Map<String, Object>> _placeTypes =
-        context.watch<PlaceTypes>().placeTypesData;
+        context.watch<PlaceTypesModel>().placeTypesData;
 
     void _onCleanAllSearchParameters() {
       context.read<PlacesSearchModel>().onCleanRange(context);
-      context.read<PlaceTypes>().onCleanAllSelectedTypes();
+      context.read<PlaceTypesModel>().onCleanAllSelectedTypes();
     }
 
     void _searchButtonHandler() {
@@ -61,7 +61,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
     /// The handler is triggered when clicking on a category of a place
     void _onTypeClickHandler(index) {
-      context.read<PlaceTypes>().onTypeClickHandler(index);
+      context.read<PlaceTypesModel>().onTypeClickHandler(index);
       _onSearchSubmited();
     }
 
