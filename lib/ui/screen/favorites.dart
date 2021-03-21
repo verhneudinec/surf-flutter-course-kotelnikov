@@ -29,9 +29,23 @@ class _VisitingScreenState extends State<VisitingScreen>
   @override
   void initState() {
     super.initState();
+
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       setState(() {});
+    });
+  }
+
+  /// Function for loading places from [PlacesInteractor]
+  void loadFavorites() {
+    context.read<PlacesInteractor>().sortFavoritePlaces();
+    List<Place> favoritePlaces =
+        context.watch<PlacesInteractor>().getFavoritePlaces;
+    List<Place> visitedPlaces =
+        context.watch<PlacesInteractor>().getVisitedPlaces;
+    setState(() {
+      _favoritePlaces = favoritePlaces;
+      _visitedPlaces = visitedPlaces;
     });
   }
 
@@ -43,20 +57,7 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    void loadFavorites(BuildContext context) async {
-      context.read<PlacesInteractor>().sortFavoritePlaces();
-      List<Place> favoritePlaces =
-          context.watch<PlacesInteractor>().getFavoritePlaces;
-      List<Place> visitedPlaces =
-          context.watch<PlacesInteractor>().getVisitedPlaces;
-      setState(() {
-        _favoritePlaces = favoritePlaces;
-        _visitedPlaces = visitedPlaces;
-      });
-    }
-
-    loadFavorites(context);
-
+    loadFavorites();
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
