@@ -11,7 +11,7 @@ import 'package:places/ui/screen/places_search_screen.dart';
 import 'package:places/ui/screen/filter_screen.dart';
 
 /// [SearchBar] displays the search bar for places.
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
   final bool readonly;
 
   const SearchBar({
@@ -20,49 +20,54 @@ class SearchBar extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController _searchFieldController =
-        context.watch<PlacesSearchModel>().searchFieldController;
+  _SearchBarState createState() => _SearchBarState();
+}
 
-    /// When clicking on an inactive [SeachBar].
-    void _onClickSearchBar() {
-      if (readonly == true)
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PlaceSearchScreen(),
-          ),
-        );
-    }
-
-    /// When clicking on the filter button.
-    void _onClickFilterButton() {
+class _SearchBarState extends State<SearchBar> {
+  /// When clicking on an inactive [SeachBar].
+  void _onClickSearchBar() {
+    if (widget.readonly == true)
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FilterScreen(),
+          builder: (context) => PlaceSearchScreen(),
         ),
       );
-    }
+  }
 
-    /// If the value in the request has changed
-    void _onSearchChanged(String searchQuery) {
-      context.read<PlacesSearchModel>().onSearchChanged(context);
-    }
+  /// When clicking on the filter button.
+  void _onClickFilterButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FilterScreen(),
+      ),
+    );
+  }
 
-    /// When submitting the search form
-    void _onSearchSubmitted(String searchQuery) {
-      if (searchQuery.isNotEmpty)
-        context.read<PlacesSearchModel>().onSearchSubmitted(
-              context: context,
-              searchQuery: searchQuery,
-            );
-    }
+  /// If the value in the request has changed
+  void _onSearchChanged(String searchQuery) {
+    context.read<PlacesSearchModel>().onSearchChanged(context);
+  }
 
-    /// When clicking on the "Clear" button in the form
-    void _onClearTextValue() {
-      context.read<PlacesSearchModel>().onClearTextValue();
-    }
+  /// When submitting the search form
+  void _onSearchSubmitted(String searchQuery) {
+    if (searchQuery.isNotEmpty)
+      context.read<PlacesSearchModel>().onSearchSubmitted(
+            context: context,
+            searchQuery: searchQuery,
+          );
+  }
+
+  /// When clicking on the "Clear" button in the form
+  void _onClearTextValue() {
+    context.read<PlacesSearchModel>().onClearTextValue();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController searchFieldController =
+        context.watch<PlacesSearchModel>().searchFieldController;
 
     return ClipRRect(
       borderRadius: AppDecorations.searchBar.borderRadius,
@@ -74,9 +79,9 @@ class SearchBar extends StatelessWidget {
               child: Ink(
                 color: Theme.of(context).backgroundColor,
                 child: TextFormField(
-                  controller: _searchFieldController,
-                  readOnly: readonly,
-                  autofocus: !readonly,
+                  controller: searchFieldController,
+                  readOnly: widget.readonly,
+                  autofocus: !widget.readonly,
                   textInputAction: TextInputAction.search,
                   onChanged: (value) => _onSearchChanged(value),
                   onFieldSubmitted: (value) => _onSearchSubmitted(value),
@@ -105,7 +110,7 @@ class SearchBar extends StatelessWidget {
                     prefixIconConstraints: BoxConstraints(
                       maxHeight: 24,
                     ),
-                    suffixIcon: readonly == true
+                    suffixIcon: widget.readonly == true
                         ? null
                         : ClipRRect(
                             borderRadius:
@@ -136,7 +141,7 @@ class SearchBar extends StatelessWidget {
               ),
             ),
           ),
-          if (readonly == true)
+          if (widget.readonly == true)
             Positioned(
               right: 12,
               top: 11,

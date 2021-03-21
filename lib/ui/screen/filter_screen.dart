@@ -27,12 +27,12 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   // To clear all fields
-  void onCleanAllSearchParameters() {
+  void _onCleanAllSearchParameters() {
     context.read<PlacesSearchModel>().onCleanRange(context);
     context.read<PlaceTypesModel>().onCleanAllSelectedTypes();
   }
 
-  void searchButtonHandler() {
+  void _searchButtonHandler() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -41,7 +41,7 @@ class _FilterScreenState extends State<FilterScreen> {
     );
   }
 
-  void onSearchSubmited() {
+  void _onSearchSubmited() {
     context.read<PlacesSearchModel>().onSearchSubmitted(
           context: context,
           isSearchFromFilterScreen: true,
@@ -49,28 +49,28 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   /// The handler is triggered when clicking on a category of a place
-  void onTypeClickHandler(index) {
+  void _onTypeClickHandler(index) {
     context.read<PlaceTypesModel>().onTypeClickHandler(index);
-    onSearchSubmited();
+    _onSearchSubmited();
   }
 
   /// The handler is triggered when the minimum distance change
   /// in slider.
-  void onMinSliderChangeHandler(searchRangeStart) {
+  void _onMinSliderChangeHandler(searchRangeStart) {
     context.read<PlacesSearchModel>().onSearchRangeStartChanged(
           searchRangeStart.toInt(),
         );
-    onSearchSubmited();
+    _onSearchSubmited();
     // TODO сделать задержку 1-2 секунды до вывода результатов
   }
 
   /// The handler is triggered when the maximum distance change
   /// in slider.
-  void onMaxSliderChangeHandler(searchRangeEnd) {
+  void _onMaxSliderChangeHandler(searchRangeEnd) {
     context.read<PlacesSearchModel>().onSearchRangeEndChanged(
           searchRangeEnd.toInt(),
         );
-    onSearchSubmited();
+    _onSearchSubmited();
     // TODO сделать задержку 1-2 секунды до вывода результатов
   }
 
@@ -128,7 +128,7 @@ class _FilterScreenState extends State<FilterScreen> {
           child: SizedBox(
             width: 90,
             child: TextButton(
-              onPressed: () => onCleanAllSearchParameters(),
+              onPressed: () => _onCleanAllSearchParameters(),
               child: Text(
                 AppTextStrings.filterScreenClearButton,
                 style: AppTextStyles.filterScreenClearButton.copyWith(
@@ -185,7 +185,7 @@ class _FilterScreenState extends State<FilterScreen> {
                         runSpacing: 40,
                         alignment: WrapAlignment.spaceEvenly,
                         children:
-                            _buildPlaceTypes(placeTypes, onTypeClickHandler),
+                            _buildPlaceTypes(placeTypes, _onTypeClickHandler),
                       )
                     : LimitedBox(
                         maxHeight: 92,
@@ -198,7 +198,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             children: [
                               if (placeTypeIndex == 0)
                                 const SizedBox(width: 25),
-                              _buildPlaceTypes(placeTypes, onTypeClickHandler)[
+                              _buildPlaceTypes(placeTypes, _onTypeClickHandler)[
                                   placeTypeIndex],
                               const SizedBox(width: 20),
                             ],
@@ -263,8 +263,8 @@ class _FilterScreenState extends State<FilterScreen> {
                   minValue: searchRangeStart.toDouble(),
                   maxValue: searchRangeEnd.toDouble(),
                   activeColor: Theme.of(context).accentColor,
-                  onMinChanged: (value) => onMinSliderChangeHandler(value),
-                  onMaxChanged: (value) => onMaxSliderChangeHandler(value),
+                  onMinChanged: (value) => _onMinSliderChangeHandler(value),
+                  onMaxChanged: (value) => _onMaxSliderChangeHandler(value),
                 ),
               ),
 
@@ -276,7 +276,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     ),
                     _buildShowButton(
                       searchResults: searchResults,
-                      searchButtonHandler: searchButtonHandler,
+                      searchButtonHandler: _searchButtonHandler,
                     ),
                   ],
                 )
@@ -288,7 +288,7 @@ class _FilterScreenState extends State<FilterScreen> {
               left: 0,
               child: _buildShowButton(
                 searchResults: searchResults,
-                searchButtonHandler: searchButtonHandler,
+                searchButtonHandler: _searchButtonHandler,
               ),
             ),
         ],

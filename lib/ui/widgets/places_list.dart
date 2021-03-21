@@ -100,17 +100,19 @@ class PlaceList extends StatelessWidget {
   /// Builder for "Favorites" page cards
   Widget _favoritePlaceCardBuilder(BuildContext context, Place place) {
     /// [_onDraggingPlace] called when dragging an item in the list
-    void _onDraggingPlace(int oldIndex, int newIndex) {
+    void onDraggingPlace(int oldIndex, int newIndex) {
       context.read<PlacesInteractor>().swapFavoriteItems(oldIndex, newIndex);
     }
 
-    int _placeId = context.watch<PlacesInteractor>().getPlaceId(place: place);
+    /// Find out the id of the place from [PlacesInteractor]
+    final int placeId =
+        context.read<PlacesInteractor>().getPlaceId(place: place);
 
     return Material(
       type: MaterialType.transparency,
       child: LongPressDraggable<String>(
         key: ValueKey(place.name),
-        data: _placeId.toString(), // TODO Place.id
+        data: placeId.toString(), // TODO Place.id
         axis: Axis.vertical,
         feedback: _draggablePlaceFeedback(context, place),
         childWhenDragging: SizedBox.shrink(),
@@ -123,7 +125,7 @@ class PlaceList extends StatelessWidget {
             return true;
           },
           onAccept: (oldIndex) {
-            _onDraggingPlace(int.tryParse(oldIndex), _placeId);
+            onDraggingPlace(int.tryParse(oldIndex), placeId);
           },
         ),
       ),

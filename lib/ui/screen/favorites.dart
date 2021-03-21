@@ -37,7 +37,7 @@ class _VisitingScreenState extends State<VisitingScreen>
   }
 
   /// Function for loading places from [PlacesInteractor]
-  void loadFavorites() {
+  void _loadFavorites() {
     context.read<PlacesInteractor>().sortFavoritePlaces();
     List<Place> favoritePlaces =
         context.watch<PlacesInteractor>().getFavoritePlaces;
@@ -57,7 +57,7 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    loadFavorites();
+    _loadFavorites();
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
