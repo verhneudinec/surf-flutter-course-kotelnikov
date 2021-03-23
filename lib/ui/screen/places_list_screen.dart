@@ -65,7 +65,6 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _initStore();
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
