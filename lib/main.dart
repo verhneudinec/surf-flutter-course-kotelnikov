@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/store/places_store/places_store.dart';
 import 'package:provider/provider.dart';
 
 import 'package:places/ui/view_model/add_place_model.dart';
@@ -28,6 +29,9 @@ void main() {
         ChangeNotifierProvider(create: (_) => SettingsInteractor()),
         ChangeNotifierProvider(create: (_) => PlacesInteractor()),
         ChangeNotifierProvider(create: (_) => PlacesSearchInteractor()),
+
+        /// For MobX demo
+        Provider(create: (_) => PlacesStore()),
       ],
       child: App(),
     ),

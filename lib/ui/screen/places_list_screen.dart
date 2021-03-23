@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/places_interactor.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/data/store/places_store/places_store.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
-import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/screen/add_place_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,7 +16,6 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:provider/provider.dart';
 
 /// [PlaceListScreen] - a screen with a list of interesting places.
@@ -28,20 +27,16 @@ class PlaceListScreen extends StatefulWidget {
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
+  PlacesStore _placesStore;
+
   @override
   void initState() {
     super.initState();
-    _initPlaces();
   }
 
-  StreamController<List<Place>> _placeListController;
-
-  void _initPlaces() async {
-    await context.read<PlacesInteractor>().loadPlaces();
-    setState(() {
-      _placeListController =
-          context.read<PlacesInteractor>().placeListController;
-    });
+  void _initStore() async {
+    _placesStore = context.watch<PlacesStore>();
+    await context.read<PlacesStore>().loadPlaces();
   }
 
   /// To go to the [AddPlaceScreen] screen
@@ -56,75 +51,61 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   @override
   void dispose() {
-    _placeListController.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _initStore();
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: _isPortraitOrientation
-              ? const EdgeInsets.all(0.0)
-              : const EdgeInsets.symmetric(horizontal: 16.0),
-          child: CustomScrollView(
-            slivers: [
-              /// Flexible header
-              SliverPersistentHeader(
-                delegate: FlexibleAppBarDelegate(
-                    isPortraitOrientation: _isPortraitOrientation),
-                pinned: _isPortraitOrientation ? true : false,
-              ),
-
-              /// Load places from the server using the [PlacesInteractor] interactor.
-              /// At boot time display the loader.
-              /// If there is an error - display an error message.
-              StreamBuilder<List<Place>>(
-                stream: _placeListController.stream,
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<List<Place>> snapshot,
-                ) {
-                  if (!snapshot.hasData && !snapshot.hasError)
-                    return SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height /
-                                4, // TODO Исправить размеры
-                          ),
-                          CircularProgressIndicator(),
-                          const SizedBox(
-                            height: 24,
-                          ),
-                        ],
-                      ),
-                    );
-
-                  if (snapshot.hasError)
-                    return SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: ErrorStub(
-                          icon: AppIcons.error,
-                          title: AppTextStrings.dataLoadingErrorTitle,
-                          subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+        child: Column(
+          children: [
+            Padding(
+              padding: _isPortraitOrientation
+                  ? const EdgeInsets.all(0.0)
+                  : const EdgeInsets.symmetric(horizontal: 16.0),
+              child: LimitedBox(
+                maxHeight: MediaQuery.of(context).size.height - 138,
+                maxWidth: double.infinity,
+                child: Observer(
+                  builder: (BuildContext context) {
+                    return CustomScrollView(
+                      slivers: [
+                        /// Flexible header
+                        SliverPersistentHeader(
+                          delegate: FlexibleAppBarDelegate(
+                              isPortraitOrientation: _isPortraitOrientation),
+                          pinned: _isPortraitOrientation ? true : false,
                         ),
-                      ),
-                    );
 
-                  return PlaceList(
-                    places: snapshot.data,
-                    cardsType: CardTypes.general,
-                  );
-                },
+                        _placesStore.places.value.isEmpty
+                            ? // Display loader
+                            SliverToBoxAdapter(
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 2,
+                                  width: double.infinity,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
+                            : // Display the places loaded from the API
+                            PlaceList(
+                                places: _placesStore.places.value,
+                                cardsType: CardTypes.general,
+                              ),
+                      ],
+                    );
+                  },
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

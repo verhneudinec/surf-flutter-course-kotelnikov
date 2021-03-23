@@ -14,12 +14,17 @@ dependencies:
   provider: ^4.3.3
   cupertino_icons: ^1.0.0
   cupertino_range_slider: ^1.0.1
-  flutter_svg: ^0.19.3
+  flutter_svg: ^0.21.0-nullsafety.0
   dio: ^3.0.10
+  mobx: 1.2.1
+  flutter_mobx: 1.1.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mobx_codegen: 1.1.2
+  build_runner: 1.10.10
 
 flutter:
   uses-material-design: true
