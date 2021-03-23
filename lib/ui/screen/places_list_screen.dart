@@ -34,8 +34,17 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    _initStore();
+    super.didChangeDependencies();
+  }
+
   void _initStore() async {
-    _placesStore = context.watch<PlacesStore>();
+    // Initialize PlacesStore
+    _placesStore = context.read<PlacesStore>();
+
+    // Load the list of places
     await context.read<PlacesStore>().loadPlaces();
   }
 
