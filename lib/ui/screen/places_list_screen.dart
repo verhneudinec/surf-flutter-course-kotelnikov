@@ -34,10 +34,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     _initPlaces();
   }
 
-  List<Place> _places;
-
-  StreamController<List<Place>> _placeListController =
-      StreamController<List<Place>>();
+  StreamController<List<Place>> _placeListController;
 
   void _initPlaces() async {
     await context.read<PlacesInteractor>().loadPlaces();
@@ -67,9 +64,6 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   Widget build(BuildContext context) {
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    bool _searchFieldIsNotEmpty =
-        context.watch<PlacesSearchModel>().searchFieldIsNotEmpty;
-    List _searchResults = context.watch<PlacesSearchInteractor>().searchResults;
 
     return Scaffold(
       body: SafeArea(

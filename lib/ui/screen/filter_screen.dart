@@ -26,79 +26,81 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
+  // To clear all fields
+  void _onCleanAllSearchParameters() {
+    context.read<PlacesSearchModel>().onCleanRange(context);
+    context.read<PlaceTypesModel>().onCleanAllSelectedTypes();
+  }
+
+  void _searchButtonHandler() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlaceListScreen(),
+      ),
+    );
+  }
+
+  void _onSearchSubmited() {
+    context.read<PlacesSearchModel>().onSearchSubmitted(
+          context: context,
+          isSearchFromFilterScreen: true,
+        );
+  }
+
+  /// The handler is triggered when clicking on a category of a place
+  void _onTypeClickHandler(index) {
+    context.read<PlaceTypesModel>().onTypeClickHandler(index);
+    _onSearchSubmited();
+  }
+
+  /// The handler is triggered when the minimum distance change
+  /// in slider.
+  void _onMinSliderChangeHandler(searchRangeStart) {
+    context.read<PlacesSearchModel>().onSearchRangeStartChanged(
+          searchRangeStart.toInt(),
+        );
+    _onSearchSubmited();
+    // TODO сделать задержку 1-2 секунды до вывода результатов
+  }
+
+  /// The handler is triggered when the maximum distance change
+  /// in slider.
+  void _onMaxSliderChangeHandler(searchRangeEnd) {
+    context.read<PlacesSearchModel>().onSearchRangeEndChanged(
+          searchRangeEnd.toInt(),
+        );
+    _onSearchSubmited();
+    // TODO сделать задержку 1-2 секунды до вывода результатов
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool _isLargeScreenResolution =
+    final bool isLargeScreenResolution =
         MediaQuery.of(context).size.height > 800;
 
-    int _searchRangeStart = context.watch<PlacesSearchModel>().searchRangeStart;
-    int _searchRangeEnd = context.watch<PlacesSearchModel>().searchRangeEnd;
-    final List<Place> _searchResults =
+    // Search ranges
+    int searchRangeStart = context.watch<PlacesSearchModel>().searchRangeStart;
+    int searchRangeEnd = context.watch<PlacesSearchModel>().searchRangeEnd;
+
+    /// Search results from  [PlacesSearchInteractor]
+    final List<Place> searchResults =
         context.watch<PlacesSearchInteractor>().searchResults;
-    final List<Map<String, Object>> _placeTypes =
-        context.watch<PlaceTypes>().placeTypesData;
 
-    void _onCleanAllSearchParameters() {
-      context.read<PlacesSearchModel>().onCleanRange(context);
-      context.read<PlaceTypes>().onCleanAllSelectedTypes();
-    }
-
-    void _searchButtonHandler() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PlaceListScreen(),
-        ),
-      );
-    }
-
-    void _onSearchSubmited() {
-      context.read<PlacesSearchModel>().onSearchSubmitted(
-            context: context,
-            isSearchFromFilterScreen: true,
-          );
-    }
-
-    /// The handler is triggered when clicking on a category of a place
-    void _onTypeClickHandler(index) {
-      context.read<PlaceTypes>().onTypeClickHandler(index);
-      _onSearchSubmited();
-    }
-
-    /// The handler is triggered when the minimum distance change
-    /// in slider.
-    void _onMinSliderChangeHandler(searchRangeStart) {
-      context.read<PlacesSearchModel>().onSearchRangeStartChanged(
-            searchRangeStart.toInt(),
-          );
-      _onSearchSubmited();
-      // TODO сделать задержку 1-2 секунды до вывода результатов
-    }
-
-    /// The handler is triggered when the maximum distance change
-    /// in slider.
-    void _onMaxSliderChangeHandler(searchRangeEnd) {
-      context.read<PlacesSearchModel>().onSearchRangeEndChanged(
-            searchRangeEnd.toInt(),
-          );
-      _onSearchSubmited();
-      // TODO сделать задержку 1-2 секунды до вывода результатов
-    }
+    // Types of places
+    final List<Map<String, Object>> placeTypes =
+        context.watch<PlaceTypesModel>().placeTypesData;
 
     return Scaffold(
       body: Column(
         children: [
-          _filterScreenHeader(_onCleanAllSearchParameters),
+          _filterScreenHeader(),
           _filterScreenBody(
-            isLargeScreenResolution: _isLargeScreenResolution,
-            searchRangeStart: _searchRangeStart,
-            searchRangeEnd: _searchRangeEnd,
-            searchResults: _searchResults,
-            placeTypes: _placeTypes,
-            searchButtonHandler: _searchButtonHandler,
-            onTypeClickHandler: _onTypeClickHandler,
-            onMinSliderChangeHandler: _onMinSliderChangeHandler,
-            onMaxSliderChangeHandler: _onMaxSliderChangeHandler,
+            isLargeScreenResolution: isLargeScreenResolution,
+            searchRangeStart: searchRangeStart,
+            searchRangeEnd: searchRangeEnd,
+            searchResults: searchResults,
+            placeTypes: placeTypes,
           ),
         ],
       ),
@@ -106,7 +108,7 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   /// AppBar for [FilterScreen] with [AppBackButton]
-  Widget _filterScreenHeader(_onCleanAllSearchParameters) {
+  Widget _filterScreenHeader() {
     return AppBar(
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
@@ -148,10 +150,6 @@ class _FilterScreenState extends State<FilterScreen> {
     int searchRangeEnd,
     List searchResults,
     List placeTypes,
-    searchButtonHandler,
-    onTypeClickHandler,
-    onMinSliderChangeHandler,
-    onMaxSliderChangeHandler,
   }) {
     return Container(
       padding: EdgeInsets.only(
@@ -187,7 +185,7 @@ class _FilterScreenState extends State<FilterScreen> {
                         runSpacing: 40,
                         alignment: WrapAlignment.spaceEvenly,
                         children:
-                            _buildPlaceTypes(placeTypes, onTypeClickHandler),
+                            _buildPlaceTypes(placeTypes, _onTypeClickHandler),
                       )
                     : LimitedBox(
                         maxHeight: 92,
@@ -200,7 +198,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             children: [
                               if (placeTypeIndex == 0)
                                 const SizedBox(width: 25),
-                              _buildPlaceTypes(placeTypes, onTypeClickHandler)[
+                              _buildPlaceTypes(placeTypes, _onTypeClickHandler)[
                                   placeTypeIndex],
                               const SizedBox(width: 20),
                             ],
@@ -265,8 +263,8 @@ class _FilterScreenState extends State<FilterScreen> {
                   minValue: searchRangeStart.toDouble(),
                   maxValue: searchRangeEnd.toDouble(),
                   activeColor: Theme.of(context).accentColor,
-                  onMinChanged: (value) => onMinSliderChangeHandler(value),
-                  onMaxChanged: (value) => onMaxSliderChangeHandler(value),
+                  onMinChanged: (value) => _onMinSliderChangeHandler(value),
+                  onMaxChanged: (value) => _onMaxSliderChangeHandler(value),
                 ),
               ),
 
@@ -278,7 +276,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     ),
                     _buildShowButton(
                       searchResults: searchResults,
-                      searchButtonHandler: searchButtonHandler,
+                      searchButtonHandler: _searchButtonHandler,
                     ),
                   ],
                 )
@@ -290,7 +288,7 @@ class _FilterScreenState extends State<FilterScreen> {
               left: 0,
               child: _buildShowButton(
                 searchResults: searchResults,
-                searchButtonHandler: searchButtonHandler,
+                searchButtonHandler: _searchButtonHandler,
               ),
             ),
         ],

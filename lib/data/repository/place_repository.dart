@@ -4,7 +4,6 @@ import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/api_client.dart';
 import 'package:places/data/repository/api/api_mapping.dart';
 import 'package:places/data/repository/api/api_urls.dart';
-import 'package:places/data/repository/api/exceptions/network_exception.dart';
 
 /// Repository for getting places data from the server
 class PlaceRepository {

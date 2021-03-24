@@ -6,7 +6,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:provider/provider.dart';
 
 /// State for screen [AddPlaceScreen].
-class AddPlace with ChangeNotifier {
+class AddPlaceModel with ChangeNotifier {
   /// Controllers for text fields.
   final TextEditingController _placeTypeController = TextEditingController(),
       _placeNameController = TextEditingController(),

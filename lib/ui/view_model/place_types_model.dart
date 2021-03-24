@@ -3,7 +3,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 
 /// Provider for place types.
-class PlaceTypes with ChangeNotifier {
+class PlaceTypesModel with ChangeNotifier {
   final List<Map<String, Object>> _placeTypesData = [
     {
       "name": "hotel",

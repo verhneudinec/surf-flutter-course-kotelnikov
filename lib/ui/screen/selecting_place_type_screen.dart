@@ -61,7 +61,7 @@ class _SelectingPlaceTypeScreenState extends State<SelectingPlaceTypeScreen> {
 
   Widget _body() {
     // [_placeTypesData] stores place types from provider [PlaceTypes].
-    final _placeTypesData = context.watch<PlaceTypes>().placeTypesData;
+    final _placeTypesData = context.watch<PlaceTypesModel>().placeTypesData;
 
     return Container(
       width: double.infinity,

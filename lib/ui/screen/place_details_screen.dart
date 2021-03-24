@@ -39,8 +39,10 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     _getPlaceDetails();
   }
 
+  /// Function for getting full information about a place from [PlacesInteractor]
   void _getPlaceDetails() async {
     await context.read<PlacesInteractor>().loadPlaceDetails(id: widget.placeId);
+
     setState(() {
       _placeDetailsController =
           context.read<PlacesInteractor>().placeDetailsController;

@@ -48,10 +48,11 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   }
 
   Widget _body() {
-    bool searchFieldIsNotEmpty =
-        context.watch<PlacesSearchModel>().searchFieldIsNotEmpty;
+    bool isSearchFieldNotEmpty =
+        context.watch<PlacesSearchModel>().isSearchFieldNotEmpty;
     bool isPlacesNotFound = context.watch<PlacesSearchModel>().isPlacesNotFound;
     bool isPlacesLoading = context.watch<PlacesSearchModel>().isPlacesLoading;
+
     List<String> searchHistory =
         context.watch<PlacesSearchInteractor>().searchHistory;
     List<Place> searchResults =
@@ -60,7 +61,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     final Map placeTypes = PlaceTypesStrings.map;
 
     /// When clicking on a query from the search history
-    void _onTapQueryFromHistory(searchQuery) {
+    void onTapQueryFromHistory(searchQuery) {
       context.read<PlacesSearchModel>().onSearchSubmitted(
             context: context,
             searchQuery: searchQuery,
@@ -69,7 +70,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     }
 
     /// When clicking on a search result
-    void _onPlaceClick(int placeIndex) {
+    void onPlaceClick(int placeIndex) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -81,12 +82,12 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     }
 
     /// When deleting a request from history
-    void _onQueryDelete(int index) {
+    void onQueryDelete(int index) {
       context.read<PlacesSearchModel>().onQueryDelete(context, index);
     }
 
     /// Deleting all requests from the search history
-    void _onCleanHistory() {
+    void onCleanHistory() {
       context.read<PlacesSearchModel>().onCleanHistory(context);
     }
 
@@ -110,7 +111,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
           ),
 
           /// Display search history
-          if (searchHistory.isNotEmpty && searchFieldIsNotEmpty == false)
+          if (searchHistory.isNotEmpty && !isSearchFieldNotEmpty)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -132,8 +133,8 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                           Expanded(
                             child: _searchHistoryButton(
                               text: searchHistory[i],
-                              onTapQueryFromHistory: _onTapQueryFromHistory,
-                              onQueryDelete: _onQueryDelete,
+                              onTapQueryFromHistory: onTapQueryFromHistory,
+                              onQueryDelete: onQueryDelete,
                               index: i,
                             ),
                           ),
@@ -150,7 +151,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
                 // Clean hostory
                 if (searchHistory.isNotEmpty)
                   InkWell(
-                    onTap: () => _onCleanHistory(),
+                    onTap: () => onCleanHistory(),
                     child: Padding(
                       padding: const EdgeInsets.only(
                         top: 3,
@@ -169,12 +170,12 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
             ),
 
           /// Display search results if the conditions are met
-          if (searchFieldIsNotEmpty && searchResults.isNotEmpty)
+          if (isSearchFieldNotEmpty && searchResults.isNotEmpty)
             Column(
               children: [
                 for (int i = 0; i < searchResults.length; i++)
                   InkWell(
-                    onTap: () => _onPlaceClick(i),
+                    onTap: () => onPlaceClick(i),
                     child: ListTile(
                       contentPadding: EdgeInsets.all(0),
                       leading: ClipRRect(
@@ -223,7 +224,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
             ),
 
           /// If nothing was found
-          if (searchFieldIsNotEmpty == true && isPlacesNotFound == true)
+          if (isSearchFieldNotEmpty && isPlacesNotFound)
             Center(
               child: SizedBox(
                 width: 255,

@@ -27,6 +27,7 @@ class PlacesInteractor with ChangeNotifier {
 
   /// StreamControllers
   StreamController<List<Place>> get placeListController => _placeListController;
+
   StreamController<Place> get placeDetailsController => _placeDetailsController;
 
   /// Visited places from [PlacesRepository]
