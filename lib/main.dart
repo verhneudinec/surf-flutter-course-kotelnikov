@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/repository/place_repository.dart';
+import 'package:places/data/store/places_store/places_store.dart';
+import 'package:places/ui/screen/favorites_bloc_demo_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:places/ui/view_model/add_place_model.dart';
@@ -7,7 +10,7 @@ import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/map_screen.dart';
 import 'package:places/ui/screen/places_list_screen.dart';
 import 'package:places/ui/screen/splash_screen.dart';
-import 'package:places/ui/screen/favorites.dart';
+import 'package:places/ui/screen/favorites_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
 import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/data/interactor/settings_interactor.dart';
@@ -28,6 +31,9 @@ void main() {
         ChangeNotifierProvider(create: (_) => SettingsInteractor()),
         ChangeNotifierProvider(create: (_) => PlacesInteractor()),
         ChangeNotifierProvider(create: (_) => PlacesSearchInteractor()),
+
+        /// For MobX demo
+        Provider(create: (_) => PlacesStore()),
       ],
       child: App(),
     ),
@@ -49,11 +55,11 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      home: PlaceListScreen(),
+      home: FavoritesBlockDemoScreen(),
       routes: {
         AppRoutes.home: (BuildContext context) => PlaceListScreen(),
         AppRoutes.map: (BuildContext context) => MapScreen(),
-        AppRoutes.favorites: (BuildContext context) => VisitingScreen(),
+        AppRoutes.favorites: (BuildContext context) => FavoritesScreen(),
         AppRoutes.settings: (BuildContext context) => SettingsScreen(),
       },
     );

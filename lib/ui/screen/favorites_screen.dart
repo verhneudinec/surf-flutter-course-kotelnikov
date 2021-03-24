@@ -13,14 +13,14 @@ import 'package:provider/provider.dart';
 ///Lists "Visited" or "Want to visit" via DefaultTabController.
 ///[TabIndicator] is used to indicate the current tab.
 ///The state is controlled by the [FavoritePlaces] provider
-class VisitingScreen extends StatefulWidget {
-  const VisitingScreen({Key key}) : super(key: key);
+class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({Key key}) : super(key: key);
 
   @override
-  _VisitingScreenState createState() => _VisitingScreenState();
+  _FavoritesScreenState createState() => _FavoritesScreenState();
 }
 
-class _VisitingScreenState extends State<VisitingScreen>
+class _FavoritesScreenState extends State<FavoritesScreen>
     with SingleTickerProviderStateMixin {
   TabController tabController;
   List<Place> _favoritePlaces = [];
