@@ -106,13 +106,15 @@ class PlacesInteractor with ChangeNotifier {
     notifyListeners();
   }
 
-  void addNewPlace(Place place) async {
+  Future<Place> addNewPlace(Place place) async {
     try {
       final newPlace = await PlaceRepository().addNewPlace(place: place);
 
       _places.add(newPlace);
 
       notifyListeners();
+
+      return newPlace;
     } on NetworkException catch (e) {
       throw e;
     } catch (e) {
