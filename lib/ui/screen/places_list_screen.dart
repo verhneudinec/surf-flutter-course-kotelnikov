@@ -10,7 +10,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/places_list.dart';
-import 'package:places/ui/screen/add_place_screen.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';

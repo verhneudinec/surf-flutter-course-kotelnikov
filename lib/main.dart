@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:mwwm/mwwm.dart';
+import 'package:places/common/error/error_handler.dart';
 import 'package:places/data/model/app_state.dart';
 import 'package:places/data/redux/middleware/places_search_middleware.dart';
 import 'package:places/data/repository/filtered_places_repository.dart';
 import 'package:places/data/store/places_store/places_store.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_wm.dart';
 import 'package:places/ui/screen/search_screen_redux_demo.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/view_model/add_place_model.dart';
@@ -47,6 +51,12 @@ void main() {
 
         /// For MobX demo
         Provider(create: (_) => PlacesStore()),
+
+        Provider<WidgetModelDependencies>(
+          create: (context) => WidgetModelDependencies(
+            errorHandler: StandardErrorHandler(),
+          ),
+        ),
       ],
       child: App(store: store),
     ),
@@ -73,7 +83,10 @@ class _AppState extends State<App> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: _isDarkMode ? darkTheme : lightTheme,
-        home: PlaceSearchScreenReduxDemo(),
+        home: AddPlaceScreen(
+          widgetModelBuilder: (context) =>
+              _searchPlacesWidgetModelBuilder(context),
+        ),
         routes: {
           AppRoutes.home: (BuildContext context) => PlaceListScreen(),
           AppRoutes.map: (BuildContext context) => MapScreen(),
@@ -83,4 +96,11 @@ class _AppState extends State<App> {
       ),
     );
   }
+
+  WidgetModel _searchPlacesWidgetModelBuilder(BuildContext context) =>
+      AddPlaceWidgetModel(
+        context.read<WidgetModelDependencies>(),
+        context.read<PlacesInteractor>(),
+        Navigator.of(context),
+      );
 }
