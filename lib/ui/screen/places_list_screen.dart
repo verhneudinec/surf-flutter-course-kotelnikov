@@ -7,6 +7,7 @@ import 'package:places/data/model/place.dart';
 import 'package:places/data/store/places_store/places_store.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_route.dart';
 import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/places_list.dart';
@@ -50,11 +51,8 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   /// To go to the [AddPlaceScreen] screen
   void _onClickCreateButton() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AddPlaceScreen(),
-      ),
+    Navigator.of(context).push(
+      AddPlaceScreenRoute(),
     );
   }
 
