@@ -29,7 +29,7 @@ class AddPlaceWidgetModel extends WidgetModel {
     subscribe(addPlaceAction.stream, (_) {
       addPlaceState.loading();
       doFuture<bool>(
-        addPlace(),
+        _addPlace(),
         (data) {
           navigator.pop();
         },
@@ -38,7 +38,15 @@ class AddPlaceWidgetModel extends WidgetModel {
     });
 
     subscribe(checkFieldsFilledAction.stream, (_) {
-      checkFieldsFilled();
+      _checkFieldsFilled();
+    });
+
+    subscribe(clearTextValueAction.stream, (textEditingContoller) {
+      _clearTextValue(textEditingContoller);
+    });
+
+    subscribe(deletePlacePhotoAction.stream, (placePhotoIndex) {
+      _deletePlacePhoto(placePhotoIndex);
     });
   }
 
@@ -79,12 +87,18 @@ class AddPlaceWidgetModel extends WidgetModel {
   /// Action to check if all fields are complete
   final checkFieldsFilledAction = Action<void>();
 
+  /// Action to clear the text field
+  final clearTextValueAction = Action<void>();
+
+  /// Action to remove photo from gallery
+  final deletePlacePhotoAction = Action<void>();
+
   /// --------------------------- ///
   /// ---- Functions for WM ----- ///
   /// --------------------------- ///
 
   /// Checks if all fields are filled and writes the value to [_isFieldsFilled].
-  void checkFieldsFilled() {
+  void _checkFieldsFilled() {
     if (placeNameController.text.isNotEmpty &&
         placeLongitudeController.text.isNotEmpty &&
         placeLatitudeController.text.isNotEmpty &&
@@ -94,10 +108,10 @@ class AddPlaceWidgetModel extends WidgetModel {
   }
 
   /// Function to add a new location
-  Future<bool> addPlace() async {
+  Future<bool> _addPlace() async {
     addPlaceState.loading();
 
-    final Place place = prepareNewPlace();
+    final Place place = _prepareNewPlace();
 
     subscribeHandleError(
       placesInteractor.addNewPlace(place).asStream(),
@@ -110,7 +124,7 @@ class AddPlaceWidgetModel extends WidgetModel {
   }
 
   /// A function for preparing the data of the new [Place] object.
-  Place prepareNewPlace() {
+  Place _prepareNewPlace() {
     final Place newPlace = Place(
       name: placeNameController.text,
       lat: double.tryParse(placeLatitudeController.text),
@@ -123,17 +137,17 @@ class AddPlaceWidgetModel extends WidgetModel {
   }
 
   /// Function to clear the text field.
-  void clearTextValue(TextEditingController controller) {
+  void _clearTextValue(TextEditingController controller) {
     controller.clear();
   }
 
   /// Add a photo to the gallery
-  void addPlacePhoto() {
+  void _addPlacePhoto() {
     // The function is empty for now
   }
 
   /// Delete a photo from the gallery
-  void deletePlacePhoto(int placePhotoIndex) {
+  void _deletePlacePhoto(int placePhotoIndex) {
     placePhotogallery.removeAt(placePhotoIndex);
   }
 }

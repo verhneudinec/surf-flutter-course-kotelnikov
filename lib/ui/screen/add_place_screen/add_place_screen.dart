@@ -234,7 +234,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
           ),
           child: controller.value.text.isNotEmpty
               ? InkWell(
-                  onTap: () => wm.clearTextValue(controller),
+                  onTap: () => wm.clearTextValueAction(controller),
                   child: SvgPicture.asset(
                     AppIcons.subtract,
                     color: Theme.of(context).iconTheme.color,
@@ -441,7 +441,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
 
     ///  Delete a photo from the gallery
     void _deletePlacePhoto(index) {
-      wm.deletePlacePhoto(index);
+      wm.deletePlacePhotoAction(index);
     }
 
     return CustomListViewBuilder(
