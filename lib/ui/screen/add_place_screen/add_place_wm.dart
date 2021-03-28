@@ -6,7 +6,6 @@ import 'package:relation/relation.dart';
 
 /// Add place screen's widget model
 class AddPlaceWidgetModel extends WidgetModel {
-  final addPlaceState = EntityStreamedState<Place>();
   final PlacesInteractor placesInteractor;
   final NavigatorState navigator;
 
@@ -16,53 +15,16 @@ class AddPlaceWidgetModel extends WidgetModel {
     this.navigator,
   ) : super(baseDependencies);
 
-  @override
-  void onLoad() {
-    addPlaceState.content(Place());
-    super.onLoad();
-  }
-
-  @override
-  void onBind() {
-    super.onBind();
-
-    subscribe(addPlaceAction.stream, (_) {
-      addPlaceState.loading();
-      doFuture<bool>(
-        _addPlace(),
-        (data) {
-          navigator.pop();
-        },
-        onError: handleError,
-      );
-    });
-
-    subscribe(checkFieldsFilledAction.stream, (_) {
-      _checkFieldsFilled();
-    });
-
-    subscribe(clearTextValueAction.stream, (textEditingContoller) {
-      _clearTextValue(textEditingContoller);
-    });
-
-    subscribe(deletePlacePhotoAction.stream, (placePhotoIndex) {
-      _deletePlacePhoto(placePhotoIndex);
-    });
-  }
-
   /// --------------------------- ///
   /// ------- Fields of WM ------ ///
   /// --------------------------- ///
 
   /// Controllers for text fields.
-  final TextEditingController placeTypeController = TextEditingController(),
-      placeNameController = TextEditingController(),
-      placeLatitudeController = TextEditingController(),
-      placeLongitudeController = TextEditingController(),
-      placeDescriptionController = TextEditingController();
-
-  /// Photogallery of the place
-  List<String> placePhotogallery = [];
+  final TextEditingAction placeTypeAction = TextEditingAction(),
+      placeNameAction = TextEditingAction(),
+      placeLatitudeAction = TextEditingAction(),
+      placeLongitudeAction = TextEditingAction(),
+      placeDescriptionAction = TextEditingAction();
 
   /// FocusNodes for the corresponding text fields.
   final FocusNode nameFieldFocusNode = FocusNode(),
@@ -77,6 +39,37 @@ class AddPlaceWidgetModel extends WidgetModel {
   /// Are all fields filled
   final StreamedState<bool> isFieldsFilled = StreamedState(false);
 
+  /// Photogallery of the place
+  final EntityStreamedState<List<String>> placePhotogallery =
+      EntityStreamedState();
+
+  /// ------------------------- ///
+  /// ----------- WM ---------- ///
+  /// ------------------------- ///
+
+  @override
+  void onLoad() {
+    placePhotogallery.content([]);
+    super.onLoad();
+  }
+
+  @override
+  void onBind() {
+    super.onBind();
+
+    subscribeHandleError(addPlaceAction.stream, (t) {
+      _addPlace();
+      navigator.pop();
+    }).onError(handleError);
+
+    subscribe(checkFieldsFilledAction.stream, (_) => _checkFieldsFilled());
+
+    subscribe(addPlacePhotoAction.stream, (_) => _addPlacePhoto());
+
+    subscribe(deletePlacePhotoAction.stream,
+        (placePhotoIndex) => _deletePlacePhoto(placePhotoIndex));
+  }
+
   /// --------------------------- ///
   /// --------- Actions --------- ///
   /// --------------------------- ///
@@ -87,8 +80,8 @@ class AddPlaceWidgetModel extends WidgetModel {
   /// Action to check if all fields are complete
   final checkFieldsFilledAction = Action<void>();
 
-  /// Action to clear the text field
-  final clearTextValueAction = Action<void>();
+  /// Action to adding photo to gallery
+  final addPlacePhotoAction = Action<void>();
 
   /// Action to remove photo from gallery
   final deletePlacePhotoAction = Action<void>();
@@ -99,55 +92,45 @@ class AddPlaceWidgetModel extends WidgetModel {
 
   /// Checks if all fields are filled and writes the value to [_isFieldsFilled].
   void _checkFieldsFilled() {
-    if (placeNameController.text.isNotEmpty &&
-        placeLongitudeController.text.isNotEmpty &&
-        placeLatitudeController.text.isNotEmpty &&
-        placeDescriptionController.value.text.isNotEmpty) {
-      isFieldsFilled.accept(true);
-    }
+    bool isAllFieldsIsNotEmpty = placeNameAction.controller.text.isNotEmpty &&
+        placeLongitudeAction.controller.text.isNotEmpty &&
+        placeLatitudeAction.controller.text.isNotEmpty &&
+        placeDescriptionAction.controller.value.text.isNotEmpty;
+
+    isFieldsFilled.accept(isAllFieldsIsNotEmpty);
   }
 
   /// Function to add a new location
-  Future<bool> _addPlace() async {
-    addPlaceState.loading();
-
-    final Place place = _prepareNewPlace();
-
-    subscribeHandleError(
-      placesInteractor.addNewPlace(place).asStream(),
-      (_) {
-        addPlaceState.content(place);
-      },
-    ).onData((data) {
-      return data;
-    });
+  Future<void> _addPlace() async {
+    final Place newPlace = _prepareNewPlace();
+    await placesInteractor.addNewPlace(newPlace);
   }
 
   /// A function for preparing the data of the new [Place] object.
   Place _prepareNewPlace() {
     final Place newPlace = Place(
-      name: placeNameController.text,
-      lat: double.tryParse(placeLatitudeController.text),
-      lng: double.tryParse(placeLongitudeController.text),
+      name: placeNameAction.controller.text,
+      lat: double.tryParse(placeLatitudeAction.controller.text),
+      lng: double.tryParse(placeLongitudeAction.controller.text),
       urls: ["https://i.ytimg.com/vi/OCQFglqRqJo/maxresdefault.jpg"],
-      description: placeDescriptionController.value.text,
-      placeType: placeTypeController.text,
+      description: placeDescriptionAction.controller.text,
+      placeType: placeTypeAction.controller.text,
     );
     return newPlace;
   }
 
-  /// Function to clear the text field.
-  void _clearTextValue(TextEditingController controller) {
-    controller.clear();
-  }
-
   /// Add a photo to the gallery
   void _addPlacePhoto() {
-    // The function is empty for now
+    placePhotogallery.content(
+      List<String>.from(placePhotogallery.stateSubject.value.data)..add(' '),
+    );
   }
 
   /// Delete a photo from the gallery
   void _deletePlacePhoto(int placePhotoIndex) {
-    placePhotogallery.removeAt(placePhotoIndex);
+    placePhotogallery.content(
+      List<String>.from(placePhotogallery.stateSubject.value.data)
+        ..removeAt(placePhotoIndex),
+    );
   }
 }

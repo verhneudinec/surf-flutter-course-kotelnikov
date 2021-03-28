@@ -29,19 +29,11 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: EntityStateBuilder<Place>(
-          streamedState: wm.addPlaceState,
-          loadingChild: Center(
-            child: CircularProgressIndicator(),
-          ),
-          child: (context, _) {
-            return Column(
-              children: [
-                _header(),
-                _body(),
-              ],
-            );
-          },
+        child: Column(
+          children: [
+            _header(),
+            _body(),
+          ],
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -78,7 +70,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _placeType(wm.placeTypeController, null),
+                _placeType(wm.placeTypeAction.controller, null),
 
                 const SizedBox(
                   height: 24,
@@ -98,7 +90,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
 
                 _outlinedTextField(
                   hintText: AppTextStrings.addPlaceScreenTextFormFieldEmpty,
-                  controller: wm.placeNameController,
+                  textEditingAction: wm.placeNameAction,
                   focusNode: wm.nameFieldFocusNode,
                   nextFocusNode: wm.latitudeFieldFocusNode,
                 ),
@@ -108,8 +100,8 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
                 ),
 
                 _placeGeolocation(
-                  wm.placeLatitudeController,
-                  wm.placeLongitudeController,
+                  wm.placeLatitudeAction.controller,
+                  wm.placeLongitudeAction.controller,
                   wm.detailsFieldFocusNode,
                 ),
 
@@ -139,7 +131,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
                   hintText: AppTextStrings.addPlaceScreenTextFormFieldEmpty,
                   maxLines: 4,
                   focusNode: wm.detailsFieldFocusNode,
-                  controller: wm.placeDescriptionController,
+                  textEditingAction: wm.placeDescriptionAction,
                   isLastField: true,
                 ),
               ],
@@ -152,39 +144,39 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
 
   /// "Add a new place" button
   Widget _createPlaceButton() {
-    /// [_isFieldsFilled] check for filling in all fields.
-    /// The "Save" button becomes active when this field is true.
-    bool isFieldsFilled = wm.isFieldsFilled.value;
-
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 8.0,
         horizontal: 16.0,
       ),
-      child: TextButton(
-        onPressed: () {
-          if (isFieldsFilled == true)
-            wm.addPlaceAction();
-          else
-            print("Не все поля заполнены"); // TODO Shake bar
+      child: StreamBuilder<bool>(
+        stream: wm.isFieldsFilled.stream,
+        initialData: false,
+        builder: (context, isFieldsFilledSnapshot) {
+          return TextButton(
+              onPressed: () {
+                if (isFieldsFilledSnapshot.data) wm.addPlaceAction();
+              },
+              child: Text(
+                AppTextStrings.addPlaceScreenPlaceCreateButton.toUpperCase(),
+                style: AppTextStyles.addPlaceScreenPlaceCreateButton,
+              ),
+              style:
+                  // The "Save" button becomes active when all fields is true.
+                  isFieldsFilledSnapshot.data
+                      ? Theme.of(context).elevatedButtonTheme.style
+                      : Theme.of(context).elevatedButtonTheme.style.copyWith(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).backgroundColor,
+                            ),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).disabledColor,
+                            ),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                              Size(double.infinity, 48),
+                            ),
+                          ));
         },
-        child: Text(
-          AppTextStrings.addPlaceScreenPlaceCreateButton.toUpperCase(),
-          style: AppTextStyles.addPlaceScreenPlaceCreateButton,
-        ),
-        style: isFieldsFilled
-            ? Theme.of(context).elevatedButtonTheme.style
-            : Theme.of(context).elevatedButtonTheme.style.copyWith(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).backgroundColor,
-                  ),
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).disabledColor,
-                  ),
-                  minimumSize: MaterialStateProperty.all<Size>(
-                    Size(double.infinity, 48),
-                  ),
-                ),
       ),
     );
   }
@@ -193,7 +185,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
   Widget _outlinedTextField({
     String hintText,
     int maxLines,
-    TextEditingController controller,
+    TextEditingAction textEditingAction,
     bool numberKeyboardType,
     FocusNode focusNode,
     FocusNode nextFocusNode,
@@ -201,12 +193,11 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
   }) {
     return TextFormField(
       maxLines: maxLines ?? 1,
-      controller: controller,
+      controller: textEditingAction.controller,
       keyboardType: numberKeyboardType == true
           ? TextInputType.number
           : TextInputType.text,
       onChanged: (String value) {
-        setState(() {});
         wm.checkFieldsFilledAction();
       },
       textInputAction:
@@ -214,8 +205,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
       focusNode: focusNode,
       onFieldSubmitted: (v) {
         focusNode.unfocus();
-        if (!isLastField == true)
-          FocusScope.of(context).requestFocus(nextFocusNode);
+        if (!isLastField) FocusScope.of(context).requestFocus(nextFocusNode);
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(
@@ -232,15 +222,21 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
           padding: EdgeInsets.only(
             right: 14,
           ),
-          child: controller.value.text.isNotEmpty
-              ? InkWell(
-                  onTap: () => wm.clearTextValueAction(controller),
-                  child: SvgPicture.asset(
-                    AppIcons.subtract,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                )
-              : const SizedBox.shrink(),
+          child: StreamBuilder<String>(
+            stream: textEditingAction.stream,
+            initialData: '',
+            builder: (context, snapshot) {
+              return snapshot.data.isNotEmpty
+                  ? InkWell(
+                      onTap: () => textEditingAction.controller.clear(),
+                      child: SvgPicture.asset(
+                        AppIcons.subtract,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            },
+          ),
         ),
         suffixIconConstraints: BoxConstraints(
           maxHeight: 20,
@@ -352,7 +348,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
                 _outlinedTextField(
                   hintText:
                       AppTextStrings.addPlaceScreenTextFormFieldNotSpecified,
-                  controller: placeLatitudeController,
+                  textEditingAction: wm.placeLatitudeAction,
                   numberKeyboardType: true,
                   focusNode: wm.latitudeFieldFocusNode,
                   nextFocusNode: wm.longitideFieldFocusNode,
@@ -385,7 +381,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
                 _outlinedTextField(
                   hintText:
                       AppTextStrings.addPlaceScreenTextFormFieldNotSpecified,
-                  controller: placeLongitudeController,
+                  textEditingAction: wm.placeLongitudeAction,
                   numberKeyboardType: true,
                   focusNode: wm.longitideFieldFocusNode,
                   nextFocusNode: detailsFieldFocusNode,
@@ -418,7 +414,9 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
     );
   }
 
-  Widget _photogallery(List _placePhotogallery) {
+  Widget _photogallery(
+    EntityStreamedState<List<String>> placePhotogallery,
+  ) {
     /// Dialog box with options for adding a photo
     void _addPlacePhoto() {
       showDialog(
@@ -439,94 +437,94 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
       );
     }
 
-    ///  Delete a photo from the gallery
-    void _deletePlacePhoto(index) {
-      wm.deletePlacePhotoAction(index);
-    }
-
-    return CustomListViewBuilder(
-      scrollDirection: Axis.horizontal,
-      additionalPadding: false,
-      children: [
-        Container(
-          width: 72,
-          height: 72,
-          margin: EdgeInsets.only(left: 16),
-          child: Ink(
-            decoration:
-                AppDecorations.addPlaceScreenGalleryPrimaryElement.copyWith(
-              border: Border.all(
-                color: Theme.of(context).accentColor.withOpacity(0.48),
-              ),
-            ),
-            child: GestureDetector(
-              onTap: () => _addPlacePhoto(),
-              child: SvgPicture.asset(
-                AppIcons.union,
-                color: Theme.of(context).accentColor,
-                fit: BoxFit.scaleDown,
-              ),
-            ),
-          ),
-        ),
-        for (int i = 0; i < _placePhotogallery.length; i++)
-          Row(
-            children: [
-              const SizedBox(width: 16),
-              Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.vertical,
-                onDismissed: (direction) => _deletePlacePhoto(i),
-                background: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RotatedBox(
-                    quarterTurns: 3,
-                    child: SvgPicture.asset(
-                      AppIcons.view,
-                      fit: BoxFit.scaleDown,
-                    ),
+    return EntityStateBuilder<List<String>>(
+      streamedState: placePhotogallery,
+      child: (BuildContext context, List<String> state) {
+        return CustomListViewBuilder(
+          scrollDirection: Axis.horizontal,
+          additionalPadding: false,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              margin: EdgeInsets.only(left: 16),
+              child: Ink(
+                decoration:
+                    AppDecorations.addPlaceScreenGalleryPrimaryElement.copyWith(
+                  border: Border.all(
+                    color: Theme.of(context).accentColor.withOpacity(0.48),
                   ),
                 ),
                 child: GestureDetector(
-                  onTap: () => print("Нажатие на карточку с индексом $i"),
-                  child: Container(
-                    width: 72,
-                    height: 72,
-                    decoration: AppDecorations
-                        .addPlaceScreenGallerySecondaryElement
-                        .copyWith(
-                      color: Theme.of(context).accentColor.withOpacity(.70),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 6,
-                          right: 6,
-                          child: InkWell(
-                            onTap: () => _deletePlacePhoto(i),
-                            child: SvgPicture.asset(
-                              AppIcons.subtract,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .addPlaceScreenPhotoDeleteButton,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  onTap: () => _addPlacePhoto(),
+                  child: SvgPicture.asset(
+                    AppIcons.union,
+                    color: Theme.of(context).accentColor,
+                    fit: BoxFit.scaleDown,
                   ),
                 ),
               ),
-            ],
-          )
-      ],
+            ),
+            for (int i = 0; i < state.length; i++)
+              Row(
+                children: [
+                  const SizedBox(width: 16),
+                  Dismissible(
+                    key: UniqueKey(),
+                    direction: DismissDirection.vertical,
+                    onDismissed: (_) => wm.deletePlacePhotoAction(i),
+                    background: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: RotatedBox(
+                        quarterTurns: 3,
+                        child: SvgPicture.asset(
+                          AppIcons.view,
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                    child: GestureDetector(
+                      onTap: () => print("Нажатие на карточку с индексом $i"),
+                      child: Container(
+                        width: 72,
+                        height: 72,
+                        decoration: AppDecorations
+                            .addPlaceScreenGallerySecondaryElement
+                            .copyWith(
+                          color: Theme.of(context).accentColor.withOpacity(.70),
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 6,
+                              right: 6,
+                              child: InkWell(
+                                onTap: () => wm.deletePlacePhotoAction(i),
+                                child: SvgPicture.asset(
+                                  AppIcons.subtract,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .addPlaceScreenPhotoDeleteButton,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+          ],
+        );
+      },
     );
   }
 
   /// Custom implementation of the [AlertDialog] widget
   Widget _addPlacePhotoDialog() {
     // Function for closing the window
-    void _closeDialog() {
+    void closeDialog() {
       Navigator.of(context).pop();
     }
 
@@ -563,7 +561,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
           height: 8,
         ),
         TextButton(
-          onPressed: () => _closeDialog(),
+          onPressed: () => closeDialog(),
           child: Text(
             AppTextStrings.addPlaceScreenAddPhotoDialogCancelButton
                 .toUpperCase(),
@@ -600,7 +598,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
     return Column(
       children: [
         TextButton(
-          onPressed: () => print(title),
+          onPressed: () => wm.addPlacePhotoAction(),
           child: Row(
             children: [
               SvgPicture.asset(
