@@ -1,60 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/ui/screen/add_place_screen/add_place_route.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_wm.dart';
 import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/places_list.dart';
-import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
+import 'package:relation/relation.dart';
 
 /// [PlaceListScreen] - a screen with a list of interesting places.
 /// Displays in the header [SliverPersistentHeader] with [FlexibleAppBarDelegate],
 /// in the footer [AppBottomNavigationBar] and list of places with [PlaceList].
-class PlaceListScreen extends StatefulWidget {
-  final List<Place> places;
-
-  const PlaceListScreen({Key key, this.places}) : super(key: key);
+class PlaceListScreen extends CoreMwwmWidget {
+  const PlaceListScreen({
+    @required WidgetModelBuilder widgetModelBuilder,
+  }) : super(widgetModelBuilder: widgetModelBuilder ?? PlaceListWidgetModel);
 
   @override
   _PlaceListScreenState createState() => _PlaceListScreenState();
 }
 
-class _PlaceListScreenState extends State<PlaceListScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _initStore();
-    super.didChangeDependencies();
-  }
-
-  void _initStore() async {
-    // Initialize PlacesStore
-
-    // Load the list of places
-  }
-
-  /// To go to the [AddPlaceScreen] screen
-  void _onClickCreateButton() {
-    Navigator.of(context).push(
-      AddPlaceScreenRoute(),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class _PlaceListScreenState extends WidgetState<PlaceListWidgetModel> {
   @override
   Widget build(BuildContext context) {
     final bool _isPortraitOrientation =
@@ -80,22 +52,17 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                       pinned: _isPortraitOrientation ? true : false,
                     ),
 
-                    widget.places.isEmpty
-                        ? // Display loader
-                        SliverToBoxAdapter(
-                            child: Container(
-                              height: MediaQuery.of(context).size.height / 2,
-                              width: double.infinity,
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
-                          )
-                        : // Display the places loaded from the API
-                        PlaceList(
-                            places: widget.places,
-                            cardsType: CardTypes.general,
-                          ),
+                    // Display the places loaded from the API
+                    EntityStateBuilder<List<Place>>(
+                      streamedState: wm.placesState,
+                      loadingBuilder: _buildLoadingState,
+                      child: (BuildContext context, List<Place> places) {
+                        return PlaceList(
+                          places: places,
+                          cardsType: CardTypes.general,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -111,6 +78,18 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     );
   }
 
+  /// Widget for display loader
+  Widget _buildLoadingState(BuildContext context, _) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: MediaQuery.of(context).size.height / 2,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
   /// [_createPlaceButton] - action button for adding a new location in PlaceListScreen
   Widget _createPlaceButton() {
     return ClipRRect(
@@ -122,7 +101,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
           gradient: Theme.of(context).colorScheme.createPlaceButtonGradient,
         ),
         child: TextButton.icon(
-          onPressed: () => _onClickCreateButton(),
+          onPressed: () => wm.onClickCreateButtonAction(),
           icon: SvgPicture.asset(
             AppIcons.plus,
             width: 24,

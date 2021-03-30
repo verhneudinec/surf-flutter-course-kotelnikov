@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/common/error/error_handler.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_wm.dart';
 import 'package:provider/provider.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/map_screen/map_screen.dart';
 import 'package:places/ui/screen/place_list_screen/places_list_screen.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/view_model/places_search_model.dart';
@@ -54,12 +56,9 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      home: PlaceListScreen(),
-      routes: {
-        AppRoutes.home: (BuildContext context) => PlaceListScreen(),
-        AppRoutes.map: (BuildContext context) => MapScreen(),
-        AppRoutes.favorites: (BuildContext context) => FavoritesScreen(),
-        AppRoutes.settings: (BuildContext context) => SettingsScreen(),
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: (routeSettings) {
+        return PlaceListScreenRoute();
       },
     );
   }

@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 import 'package:places/ui/screen/place_list_screen/places_list_screen.dart';
 
 /// The [OnboardingScreen] displays hints on how to use the app.
@@ -48,9 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _goToTheNextScreen() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => PlaceListScreen(),
-      ),
+      PlaceListScreenRoute(),
     );
   }
 

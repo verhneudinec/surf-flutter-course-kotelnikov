@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 
 /// Bottom navigation for the app
 /// [currentPageIndex] - the current page index for the navigator.
@@ -19,7 +20,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     if (currentPageIndex != index)
       switch (index) {
         case 0:
-          Navigator.pushNamed(context, AppRoutes.home);
+          Navigator.push(context, PlaceListScreenRoute());
           break;
         case 1:
           Navigator.pushNamed(context, AppRoutes.map);
