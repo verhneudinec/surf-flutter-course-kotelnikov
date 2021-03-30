@@ -70,6 +70,13 @@ class AddPlaceWidgetModel extends WidgetModel {
         (placePhotoIndex) => _deletePlacePhoto(placePhotoIndex));
   }
 
+  @override
+  void dispose() {
+    placeNameAction.dispose();
+
+    super.dispose();
+  }
+
   /// --------------------------- ///
   /// --------- Actions --------- ///
   /// --------------------------- ///

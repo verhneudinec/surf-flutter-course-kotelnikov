@@ -4,7 +4,7 @@ import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
-import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
+import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
 import 'package:provider/provider.dart';

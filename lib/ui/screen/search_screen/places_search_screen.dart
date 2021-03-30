@@ -8,13 +8,13 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
-import 'package:places/ui/screen/place_details_screen.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:places/ui/widgets/search_bar.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
-import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
+import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 
 /// Screen for searching places by request
 class PlaceSearchScreen extends StatefulWidget {

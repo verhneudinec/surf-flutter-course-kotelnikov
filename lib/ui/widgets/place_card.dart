@@ -14,7 +14,7 @@ import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
-import 'package:places/ui/screen/place_details_screen.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
 import 'package:provider/provider.dart';
 
 /// Place card widget, displays the [place] data passed to the constructor.

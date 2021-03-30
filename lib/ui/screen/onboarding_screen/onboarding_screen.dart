@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
-import 'package:places/ui/screen/places_list_screen.dart';
+import 'package:places/ui/screen/place_list_screen/places_list_screen.dart';
 
 /// The [OnboardingScreen] displays hints on how to use the app.
 /// The screen is displayed when you first launch the app or through the settings screen.
