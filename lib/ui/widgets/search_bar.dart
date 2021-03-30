@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/data/model/app_state.dart';
+import 'package:places/data/redux/action/places_search_action.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
@@ -53,10 +56,13 @@ class _SearchBarState extends State<SearchBar> {
   /// When submitting the search form
   void _onSearchSubmitted(String searchQuery) {
     if (searchQuery.isNotEmpty)
-      context.read<PlacesSearchModel>().onSearchSubmitted(
-            context: context,
-            searchQuery: searchQuery,
-          );
+      StoreProvider.of<AppState>(context).dispatch(
+        LoadSearchPlacesAction(searchQuery),
+      );
+    // context.read<PlacesSearchModel>().onSearchSubmitted(
+    //       context: context,
+    //       searchQuery: searchQuery,
+    //     );
   }
 
   /// When clicking on the "Clear" button in the form
