@@ -69,7 +69,10 @@ class ApiClient {
   void exceptionHandler(Object exception) {
     if (exception is NetworkException) {
       print(exception.toString());
-    } else
+      throw exception;
+    } else {
       print(exception.toString());
+      throw exception;
+    }
   }
 }
