@@ -1,14 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/data/store/places_store/places_store.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_route.dart';
-import 'package:places/ui/widgets/app_bottom_navigation_bar.dart';
+import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
@@ -17,19 +12,20 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
-import 'package:provider/provider.dart';
 
 /// [PlaceListScreen] - a screen with a list of interesting places.
 /// Displays in the header [SliverPersistentHeader] with [FlexibleAppBarDelegate],
 /// in the footer [AppBottomNavigationBar] and list of places with [PlaceList].
 class PlaceListScreen extends StatefulWidget {
+  final List<Place> places;
+
+  const PlaceListScreen({Key key, this.places}) : super(key: key);
+
   @override
   _PlaceListScreenState createState() => _PlaceListScreenState();
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
-  PlacesStore _placesStore;
-
   @override
   void initState() {
     super.initState();
@@ -43,10 +39,8 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   void _initStore() async {
     // Initialize PlacesStore
-    _placesStore = context.read<PlacesStore>();
 
     // Load the list of places
-    await context.read<PlacesStore>().loadPlaces();
   }
 
   /// To go to the [AddPlaceScreen] screen
@@ -77,37 +71,32 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
               child: LimitedBox(
                 maxHeight: MediaQuery.of(context).size.height - 138,
                 maxWidth: double.infinity,
-                child: Observer(
-                  builder: (BuildContext context) {
-                    return CustomScrollView(
-                      slivers: [
-                        /// Flexible header
-                        SliverPersistentHeader(
-                          delegate: FlexibleAppBarDelegate(
-                              isPortraitOrientation: _isPortraitOrientation),
-                          pinned: _isPortraitOrientation ? true : false,
-                        ),
+                child: CustomScrollView(
+                  slivers: [
+                    /// Flexible header
+                    SliverPersistentHeader(
+                      delegate: FlexibleAppBarDelegate(
+                          isPortraitOrientation: _isPortraitOrientation),
+                      pinned: _isPortraitOrientation ? true : false,
+                    ),
 
-                        _placesStore.places.value.isEmpty
-                            ? // Display loader
-                            SliverToBoxAdapter(
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                  width: double.infinity,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                              )
-                            : // Display the places loaded from the API
-                            PlaceList(
-                                places: _placesStore.places.value,
-                                cardsType: CardTypes.general,
+                    widget.places.isEmpty
+                        ? // Display loader
+                        SliverToBoxAdapter(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 2,
+                              width: double.infinity,
+                              child: Center(
+                                child: CircularProgressIndicator(),
                               ),
-                      ],
-                    );
-                  },
+                            ),
+                          )
+                        : // Display the places loaded from the API
+                        PlaceList(
+                            places: widget.places,
+                            cardsType: CardTypes.general,
+                          ),
+                  ],
                 ),
               ),
             ),

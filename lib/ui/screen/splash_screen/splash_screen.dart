@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/ui/screen/onboarding_screen.dart';
+import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 
 /// [SplashScreen] is shown whenever you enter the application.
 /// The application data is initialized and proceeds to the next screen.

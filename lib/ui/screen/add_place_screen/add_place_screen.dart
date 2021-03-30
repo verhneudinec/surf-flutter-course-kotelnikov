@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mwwm/mwwm.dart';
-import 'package:places/data/model/place.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_wm.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';

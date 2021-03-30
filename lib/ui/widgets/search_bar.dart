@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/data/model/app_state.dart';
-import 'package:places/data/redux/action/places_search_action.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:provider/provider.dart';
-import 'package:places/data/interactor/places_search_interactor.dart';
-import 'package:places/ui/screen/places_search_screen.dart';
-import 'package:places/ui/screen/filter_screen.dart';
+import 'package:places/ui/screen/search_screen/places_search_screen.dart';
+import 'package:places/ui/screen/filter_screen/filter_screen.dart';
 
 /// [SearchBar] displays the search bar for places.
 class SearchBar extends StatefulWidget {
@@ -56,13 +52,10 @@ class _SearchBarState extends State<SearchBar> {
   /// When submitting the search form
   void _onSearchSubmitted(String searchQuery) {
     if (searchQuery.isNotEmpty)
-      StoreProvider.of<AppState>(context).dispatch(
-        LoadSearchPlacesAction(searchQuery),
-      );
-    // context.read<PlacesSearchModel>().onSearchSubmitted(
-    //       context: context,
-    //       searchQuery: searchQuery,
-    //     );
+      context.read<PlacesSearchModel>().onSearchSubmitted(
+            context: context,
+            searchQuery: searchQuery,
+          );
   }
 
   /// When clicking on the "Clear" button in the form
