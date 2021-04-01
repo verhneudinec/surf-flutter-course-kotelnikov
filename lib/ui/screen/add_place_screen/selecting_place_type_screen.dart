@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/ui/view_model/place_types_model.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
@@ -61,7 +60,7 @@ class _SelectingPlaceTypeScreenState extends State<SelectingPlaceTypeScreen> {
 
   Widget _body() {
     // [_placeTypesData] stores place types from provider [PlaceTypes].
-    final _placeTypesData = context.watch<PlaceTypesModel>().placeTypesData;
+    final _placeTypesData = []; // TODO. Доделать экран выбора
 
     return Container(
       width: double.infinity,

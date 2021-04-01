@@ -1,106 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/data/model/place.dart';
+import 'package:mwwm/mwwm.dart';
+import 'package:places/data/model/filter.dart';
 import 'package:places/res/decorations.dart';
+import 'package:places/res/place_types.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/common/back_button.dart';
-import 'package:places/data/interactor/places_search_interactor.dart';
-import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
-import 'package:places/ui/view_model/place_types_model.dart';
-import 'package:places/ui/screen/place_list_screen/places_list_screen.dart';
+import 'package:places/ui/screen/filter_screen/filter_wm.dart';
 import 'package:cupertino_range_slider/cupertino_range_slider.dart';
-import 'package:places/ui/view_model/places_search_model.dart';
 import 'package:places/ui/widgets/custom_list_view_builder.dart';
 import 'package:places/res/icons.dart';
-import 'package:provider/provider.dart';
+import 'package:relation/relation.dart';
 
 /// Screen with filter of places by category and distance.
 /// [FilterScreen] contains a header [_FilterScreenHeader] with an AppBar
 /// and body [_FilterScreenBody]
-class FilterScreen extends StatefulWidget {
-  FilterScreen({Key key}) : super(key: key);
+class FilterScreen extends CoreMwwmWidget {
+  const FilterScreen({
+    @required WidgetModelBuilder widgetModelBuilder,
+  }) : super(widgetModelBuilder: widgetModelBuilder ?? FilterWidgetModel);
 
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
 
-class _FilterScreenState extends State<FilterScreen> {
-  // To clear all fields
-  void _onCleanAllSearchParameters() {
-    context.read<PlacesSearchModel>().onCleanRange(context);
-    context.read<PlaceTypesModel>().onCleanAllSelectedTypes();
-  }
-
-  void _searchButtonHandler() {
-    Navigator.push(
-      context,
-      PlaceListScreenRoute(),
-    );
-  }
-
-  void _onSearchSubmited() {
-    context.read<PlacesSearchModel>().onSearchSubmitted(
-          context: context,
-          isSearchFromFilterScreen: true,
-        );
-  }
-
-  /// The handler is triggered when clicking on a category of a place
-  void _onTypeClickHandler(index) {
-    context.read<PlaceTypesModel>().onTypeClickHandler(index);
-    _onSearchSubmited();
-  }
-
-  /// The handler is triggered when the minimum distance change
-  /// in slider.
-  void _onMinSliderChangeHandler(searchRangeStart) {
-    context.read<PlacesSearchModel>().onSearchRangeStartChanged(
-          searchRangeStart.toInt(),
-        );
-    _onSearchSubmited();
-    // TODO сделать задержку 1-2 секунды до вывода результатов
-  }
-
-  /// The handler is triggered when the maximum distance change
-  /// in slider.
-  void _onMaxSliderChangeHandler(searchRangeEnd) {
-    context.read<PlacesSearchModel>().onSearchRangeEndChanged(
-          searchRangeEnd.toInt(),
-        );
-    _onSearchSubmited();
-    // TODO сделать задержку 1-2 секунды до вывода результатов
-  }
-
+class _FilterScreenState extends WidgetState<FilterWidgetModel> {
   @override
   Widget build(BuildContext context) {
-    final bool isLargeScreenResolution =
-        MediaQuery.of(context).size.height > 800;
-
-    // Search ranges
-    int searchRangeStart = context.watch<PlacesSearchModel>().searchRangeStart;
-    int searchRangeEnd = context.watch<PlacesSearchModel>().searchRangeEnd;
-
-    /// Search results from  [PlacesSearchInteractor]
-    final List<Place> searchResults =
-        context.watch<PlacesSearchInteractor>().searchResults;
-
-    // Types of places
-    final List<Map<String, Object>> placeTypes =
-        context.watch<PlaceTypesModel>().placeTypesData;
-
     return Scaffold(
       body: Column(
         children: [
           _filterScreenHeader(),
-          _filterScreenBody(
-            isLargeScreenResolution: isLargeScreenResolution,
-            searchRangeStart: searchRangeStart,
-            searchRangeEnd: searchRangeEnd,
-            searchResults: searchResults,
-            placeTypes: placeTypes,
-          ),
+          _filterScreenBody(),
         ],
       ),
     );
@@ -125,9 +58,9 @@ class _FilterScreenState extends State<FilterScreen> {
             end: 16,
           ),
           child: SizedBox(
-            width: 90,
+            width: 100,
             child: TextButton(
-              onPressed: () => _onCleanAllSearchParameters(),
+              onPressed: () => wm.onCleanAllSelectedTypes(),
               child: Text(
                 AppTextStrings.filterScreenClearButton,
                 style: AppTextStyles.filterScreenClearButton.copyWith(
@@ -143,13 +76,10 @@ class _FilterScreenState extends State<FilterScreen> {
 
   /// The body of the screen displaying the categories of places,
   /// distance slider and search button.
-  Widget _filterScreenBody({
-    bool isLargeScreenResolution,
-    int searchRangeStart,
-    int searchRangeEnd,
-    List searchResults,
-    List placeTypes,
-  }) {
+  Widget _filterScreenBody() {
+    final bool isLargeScreenResolution =
+        MediaQuery.of(context).size.height > 800;
+
     return Container(
       padding: EdgeInsets.only(
         top: 24,
@@ -161,143 +91,155 @@ class _FilterScreenState extends State<FilterScreen> {
       constraints: BoxConstraints(
         minHeight: 350,
       ),
-      child: Stack(
-        children: [
-          CustomListViewBuilder(
-            children: [
-              Text(
-                AppTextStrings.fiterScreenTitleText.toUpperCase(),
-                style: AppTextStyles.fiterScreenTitle.copyWith(
-                  color: Theme.of(context).disabledColor,
-                ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
+      child: EntityStateBuilder<Filter>(
+          streamedState: wm.filter,
+          child: (context, filter) {
+            return Stack(
+              children: [
+                CustomListViewBuilder(
+                  children: [
+                    Text(
+                      AppTextStrings.fiterScreenTitleText.toUpperCase(),
+                      style: AppTextStyles.fiterScreenTitle.copyWith(
+                        color: Theme.of(context).disabledColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
 
-              /// Сategory Container
-              Container(
-                width: double.infinity,
-                child: isLargeScreenResolution
-                    ? Wrap(
-                        spacing: 44,
-                        runSpacing: 40,
-                        alignment: WrapAlignment.spaceEvenly,
-                        children:
-                            _buildPlaceTypes(placeTypes, _onTypeClickHandler),
-                      )
-                    : LimitedBox(
-                        maxHeight: 92,
-                        maxWidth: 312,
-                        child: ListView.builder(
-                          itemCount: 6,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder:
-                              (BuildContext context, int placeTypeIndex) => Row(
+                    /// Сategory Container
+                    Container(
+                      width: double.infinity,
+                      child: isLargeScreenResolution
+                          ? Wrap(
+                              // TODO Max elements in row. 45 spacing
+                              spacing: 48,
+                              runSpacing: 40,
+                              alignment: WrapAlignment.spaceEvenly,
+                              children: _buildPlaceTypes(
+                                filter.searchTypes,
+                              ),
+                            )
+                          : LimitedBox(
+                              maxHeight: 92,
+                              maxWidth: 312,
+                              child: ListView.builder(
+                                itemCount: 6,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (BuildContext context,
+                                        int placeTypeIndex) =>
+                                    Row(
+                                  children: [
+                                    if (placeTypeIndex == 0)
+                                      const SizedBox(width: 25),
+                                    _buildPlaceTypes(
+                                      filter.searchTypes,
+                                    )[placeTypeIndex],
+                                    const SizedBox(width: 20),
+                                  ],
+                                ),
+                              ),
+                            ),
+                    ),
+
+                    const SizedBox(
+                      height: 24,
+                    ),
+
+                    if (isLargeScreenResolution)
+                      const SizedBox(
+                        height: 56,
+                      ),
+
+                    /// Slider title and
+                    /// output the selected search distance
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          AppTextStrings.filterScreenSliderTitle,
+                          style: AppTextStyles.filterScreenSliderTitle.copyWith(
+                            color: Theme.of(context).textTheme.headline3.color,
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            style:
+                                AppTextStyles.filterScreenSliderHint.copyWith(
+                              color:
+                                  Theme.of(context).textTheme.subtitle1.color,
+                            ),
                             children: [
-                              if (placeTypeIndex == 0)
-                                const SizedBox(width: 25),
-                              _buildPlaceTypes(placeTypes, _onTypeClickHandler)[
-                                  placeTypeIndex],
-                              const SizedBox(width: 20),
+                              TextSpan(
+                                text:
+                                    AppTextStrings.filterScreenSliderRangeFrom,
+                              ),
+                              TextSpan(
+                                text: filter.searchRange.start.toString(),
+                              ),
+                              TextSpan(
+                                text:
+                                    AppTextStrings.filterScreenSliderRangeUntil,
+                              ),
+                              TextSpan(
+                                text: filter.searchRange.end.toString(),
+                              ),
+                              TextSpan(
+                                text:
+                                    AppTextStrings.filterScreenSliderRangeUnit,
+                              ),
                             ],
                           ),
                         ),
-                      ),
-              ),
-
-              const SizedBox(
-                height: 24,
-              ),
-
-              if (isLargeScreenResolution)
-                const SizedBox(
-                  height: 56,
-                ),
-
-              /// Slider title and
-              /// output the selected search distance
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppTextStrings.filterScreenSliderTitle,
-                    style: AppTextStyles.filterScreenSliderTitle.copyWith(
-                      color: Theme.of(context).textTheme.headline3.color,
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      style: AppTextStyles.filterScreenSliderHint.copyWith(
-                        color: Theme.of(context).textTheme.subtitle1.color,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: AppTextStrings.filterScreenSliderRangeFrom,
-                        ),
-                        TextSpan(
-                          text: searchRangeStart.toInt().toString(),
-                        ),
-                        TextSpan(
-                          text: AppTextStrings.filterScreenSliderRangeUntil,
-                        ),
-                        TextSpan(
-                          text: searchRangeEnd.toInt().toString(),
-                        ),
-                        TextSpan(
-                          text: AppTextStrings.filterScreenSliderRangeUnit,
-                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
 
-              /// Сustom distance selection slider in Cupertino style
-              SizedBox(
-                width: double.infinity,
-                child: CupertinoRangeSlider(
-                  min: 100,
-                  max: 10000,
-                  minValue: searchRangeStart.toDouble(),
-                  maxValue: searchRangeEnd.toDouble(),
-                  activeColor: Theme.of(context).accentColor,
-                  onMinChanged: (value) => _onMinSliderChangeHandler(value),
-                  onMaxChanged: (value) => _onMaxSliderChangeHandler(value),
-                ),
-              ),
+                    /// Сustom distance selection slider in Cupertino style
+                    SizedBox(
+                      width: double.infinity,
+                      child: CupertinoRangeSlider(
+                        min: 100,
+                        max: 10000,
+                        minValue: filter.searchRange.start.toDouble().abs(),
+                        maxValue: filter.searchRange.end.toDouble().abs(),
+                        activeColor: Theme.of(context).accentColor,
+                        onMinChanged: (value) =>
+                            wm.onSearchRangeStartChanged(value.toInt()),
+                        onMaxChanged: (value) =>
+                            wm.onSearchRangeEndChanged(value.toInt()),
+                      ),
+                    ),
 
-              if (!isLargeScreenResolution)
-                Column(
-                  children: [
-                    const SizedBox(
-                      height: 41,
-                    ),
-                    _buildShowButton(
-                      searchResults: searchResults,
-                      searchButtonHandler: _searchButtonHandler,
-                    ),
+                    if (!isLargeScreenResolution)
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 41,
+                          ),
+                          _buildShowButton(
+                            searchButtonHandler: wm.onFilterSubmittedAction,
+                          ),
+                        ],
+                      )
                   ],
-                )
-            ],
-          ),
-          if (isLargeScreenResolution)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: _buildShowButton(
-                searchResults: searchResults,
-                searchButtonHandler: _searchButtonHandler,
-              ),
-            ),
-        ],
-      ),
+                ),
+                if (isLargeScreenResolution)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: _buildShowButton(
+                      searchButtonHandler: wm.onFilterSubmittedAction,
+                    ),
+                  ),
+              ],
+            );
+          }),
     );
   }
 
   List<Widget> _buildPlaceTypes(
-    List placeTypes,
-    onTypeClickHandler,
+    Map<String, bool> placeTypes,
   ) =>
       [
         for (int i = 0; i < placeTypes.length; i++)
@@ -314,14 +256,16 @@ class _FilterScreenState extends State<FilterScreen> {
                   children: [
                     Center(
                       child: IconButton(
-                        onPressed: () => onTypeClickHandler(i),
+                        onPressed: () => wm.onTypeClickHandler(i),
                         icon: SvgPicture.asset(
-                          placeTypes.elementAt(i)["icon"],
+                          PlaceTypes.iconFromPlaceType(
+                            placeTypes.keys.elementAt(i),
+                          ),
                           color: Theme.of(context).accentColor,
                         ),
                       ),
                     ),
-                    if (placeTypes.elementAt(i)["selected"] == true)
+                    if (placeTypes.values.elementAt(i))
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -335,7 +279,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           child: InkWell(
                             borderRadius: AppDecorations
                                 .filterScreenCategoryButton.borderRadius,
-                            onTap: () => onTypeClickHandler(i),
+                            onTap: () => wm.onTypeClickHandler(i),
                             child: SvgPicture.asset(
                               AppIcons.tick,
                               color: Theme.of(context)
@@ -352,7 +296,9 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 12,
               ),
               Text(
-                placeTypes.elementAt(i)["text"],
+                PlaceTypes.stringFromPlaceType(
+                  placeTypes.keys.elementAt(i),
+                ),
                 style: AppTextStyles.fiterScreenCategoryTitle.copyWith(
                   color: Theme.of(context).textTheme.bodyText1.color,
                 ),
@@ -362,7 +308,6 @@ class _FilterScreenState extends State<FilterScreen> {
       ];
 
   Widget _buildShowButton({
-    List searchResults,
     searchButtonHandler,
   }) {
     return ConstrainedBox(
@@ -378,11 +323,8 @@ class _FilterScreenState extends State<FilterScreen> {
             style: AppTextStyles.fiterScreenShowButton,
             children: [
               TextSpan(
-                  text: AppTextStrings.filterScreenShowButton.toUpperCase() +
-                      " "),
-              TextSpan(
-                text: "(" + searchResults.length.toString() + ")",
-              ),
+                text: AppTextStrings.filterScreenShowButton,
+              )
             ],
           ),
         ),

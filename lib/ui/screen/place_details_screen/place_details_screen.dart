@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/data/interactor/places_interactor.dart';
-import 'package:places/res/place_types_strings.dart';
+import 'package:places/res/place_types.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_styles.dart';
@@ -287,9 +287,6 @@ class _PlaceDetailsBodyState extends State<PlaceDetailsBody> {
     final bool isPlaceInFavorites =
         context.watch<PlacesInteractor>().isPlaceInFavorites(widget.place);
 
-    Map _placeTypes = PlaceTypesStrings
-        .map; // TODO Убрать подчеркивания у всех локальных переменных
-
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 24,
@@ -315,7 +312,7 @@ class _PlaceDetailsBodyState extends State<PlaceDetailsBody> {
               Container(
                 margin: EdgeInsets.only(right: 16),
                 child: Text(
-                  _placeTypes[widget.place.placeType],
+                  PlaceTypes.stringFromPlaceType(widget.place.placeType),
                   style: AppTextStyles.placeDetailsType.copyWith(
                     color: Theme.of(context).textTheme.bodyText2.color,
                   ),

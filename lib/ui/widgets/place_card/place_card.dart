@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
-import 'package:places/res/place_types_strings.dart';
+import 'package:places/res/place_types.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
@@ -131,7 +131,6 @@ class PlaceCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map _placeTypes = PlaceTypesStrings.map;
     return Stack(
       children: [
         // Main photo of the place
@@ -158,7 +157,7 @@ class PlaceCardHeader extends StatelessWidget {
           top: 16,
           left: 16,
           child: Text(
-            _placeTypes[place.placeType] ?? place.placeType,
+            PlaceTypes.stringFromPlaceType(place.placeType),
             style: AppTextStyles.placeCardType.copyWith(
               color: Theme.of(context).colorScheme.placeCardTypeColor,
             ),
