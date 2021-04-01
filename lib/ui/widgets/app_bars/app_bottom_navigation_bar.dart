@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
+import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 
 /// Bottom navigation for the app
@@ -26,7 +27,7 @@ class AppBottomNavigationBar extends StatelessWidget {
           Navigator.pushNamed(context, AppRoutes.map);
           break;
         case 2:
-          Navigator.pushNamed(context, AppRoutes.favorites);
+          Navigator.push(context, FavoritesScreenRoute());
           break;
         case 3:
           Navigator.pushNamed(context, AppRoutes.settings);

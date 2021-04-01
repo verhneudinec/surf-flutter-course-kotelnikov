@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' hide Action;
+import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/data/interactor/places_interactor.dart';
+import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/place_types_strings.dart';
@@ -13,68 +10,25 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:places/ui/widgets/image_loader_builder.dart';
+import 'package:places/ui/widgets/place_card/place_card_wm.dart';
+import 'package:relation/relation.dart';
 
 /// Place card widget, displays the [place] data passed to the constructor.
 /// The view changes depending on [cardType].
-class PlaceCard extends StatefulWidget {
-  final Place place;
-  final String cardType;
-
+class PlaceCard extends CoreMwwmWidget {
   const PlaceCard({
-    Key key,
-    this.place,
-    this.cardType,
-  }) : super(key: key);
+    @required WidgetModelBuilder widgetModelBuilder,
+  }) : super(widgetModelBuilder: widgetModelBuilder ?? PlaceCardWidgetModel);
 
   @override
   _PlaceCardState createState() => _PlaceCardState();
 }
 
-class _PlaceCardState extends State<PlaceCard> {
-  /// Removes the list item from [PlacesInteractor] provider
-  void onRemoveFromFavorites() {
-    context.read<PlacesInteractor>().removeFromFavorites(widget.place);
-  }
-
-  /// Adding the list item to [PlacesInteractor] provider
-  void onAddingToFavorites() {
-    context.read<PlacesInteractor>().addToFavorites(widget.place);
-  }
-
+class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
   @override
   Widget build(BuildContext context) {
-    /// Open a window with details of the place,
-    /// if there was a click on the card
-    void _onPlaceClick() {
-      showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return Container(
-            margin: EdgeInsets.only(top: 84),
-            child: PlaceDetails(
-              placeId: widget.place.id,
-              isBottomSheet: true,
-            ),
-          );
-        },
-        isScrollControlled: true,
-      );
-
-      /// TODO Go to the screen with place details
-      /// when clicking on the card
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => PlaceDetails(
-      //       place: place,
-      //     ),
-      //   ),
-      // );
-    }
-
     return Container(
       width: double.infinity,
       decoration: AppDecorations.placeCardContainer.copyWith(
@@ -82,9 +36,9 @@ class _PlaceCardState extends State<PlaceCard> {
       ),
       clipBehavior: Clip.antiAlias,
       child: Dismissible(
-        key: ValueKey(widget.place.name),
+        key: ValueKey(wm.place.name),
         direction: DismissDirection.endToStart,
-        onDismissed: (direction) => onRemoveFromFavorites(),
+        onDismissed: (direction) => wm.onRemoveFromFavoritesAction(),
         background: _dismissibleBackground(context),
         child: Stack(
           children: [
@@ -93,12 +47,12 @@ class _PlaceCardState extends State<PlaceCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 PlaceCardHeader(
-                  place: widget.place,
-                  cardType: widget.cardType ?? CardTypes.general,
+                  place: wm.place,
+                  cardType: wm.cardType ?? CardTypes.general,
                 ),
                 PlaceCardBody(
-                  place: widget.place,
-                  cardType: widget.cardType ?? CardTypes.general,
+                  place: wm.place,
+                  cardType: wm.cardType ?? CardTypes.general,
                 ),
               ],
             ),
@@ -109,17 +63,30 @@ class _PlaceCardState extends State<PlaceCard> {
                 type: MaterialType.transparency,
                 child: InkWell(
                   splashColor: Theme.of(context).splashColor,
-                  onTap: () => _onPlaceClick(),
+                  onTap: () {
+                    Widget placeDetailsContainer = Container(
+                      margin: EdgeInsets.only(top: 84),
+                      child: PlaceDetails(
+                        placeId: wm.place.id,
+                        isBottomSheet: true,
+                      ),
+                    );
+
+                    wm.onPlaceClickAction(placeDetailsContainer);
+                  },
                 ),
               ),
             ),
 
             /// Action buttons: delete place, calendar, share
             PlaceCardActionButtons(
-              place: widget.place,
-              cardType: widget.cardType ?? CardTypes.general,
-              onAddingToFavorites: onAddingToFavorites,
-              onRemoveFromFavorites: onRemoveFromFavorites,
+              place: wm.place,
+              cardType: wm.cardType ?? CardTypes.general,
+              isPlaceinFavoritesState: wm.isPlaceinFavoritesState,
+              onAddingToFavorites: wm.onAddingToFavoritesAction,
+              onDeleteFromFavoritesAction: wm.onDeleteFromFavoritesAction ??
+                  wm.onRemoveFromFavoritesAction,
+              onChangeVisitTime: wm.onChangeVisitTimeAction,
             ),
           ],
         ),
@@ -292,14 +259,19 @@ class PlaceCardBody extends StatelessWidget {
 class PlaceCardActionButtons extends StatefulWidget {
   final Place place;
   final String cardType;
+  final StreamedState<bool> isPlaceinFavoritesState;
   final onAddingToFavorites;
-  final onRemoveFromFavorites;
+  final onDeleteFromFavoritesAction;
+  final Action<void> onChangeVisitTime;
+
   const PlaceCardActionButtons({
     Key key,
     this.place,
     this.cardType,
-    this.onRemoveFromFavorites,
+    this.isPlaceinFavoritesState,
     this.onAddingToFavorites,
+    this.onDeleteFromFavoritesAction,
+    this.onChangeVisitTime,
   }) : super(key: key);
 
   @override
@@ -307,78 +279,6 @@ class PlaceCardActionButtons extends StatefulWidget {
 }
 
 class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
-  // Controller for the "Add to favorites" button
-  final StreamController<bool> _favoriteButtonController =
-      StreamController<bool>();
-
-  /// Selected date and current date in the picker
-  DateTime _scheduledDate;
-  DateTime _currentDate = DateTime.now();
-
-  /// Modal window for changing the date of visit
-  void _onChangeVisitTime() async {
-    DateTime _res;
-
-    if (!Platform.isIOS) {
-      _res = await showDialog(
-          context: context,
-          builder: (context) {
-            return Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: _cupertinoDatePicker(),
-              ),
-            );
-          });
-    } else {
-      _res = await showDatePicker(
-        context: context,
-        initialDate: _currentDate,
-        firstDate: _currentDate,
-        lastDate: _currentDate.add(
-          Duration(days: 365 * 10),
-        ),
-        helpText: AppTextStrings.datePickerHelpText,
-        confirmText: AppTextStrings.datePickerConfrimText,
-        cancelText: AppTextStrings.datePickerCancelText,
-        builder: (_, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              dialogBackgroundColor: Theme.of(context).backgroundColor,
-            ),
-            child: child,
-          );
-        },
-      );
-    }
-
-    if (_res != null) {
-      setState(() {
-        _scheduledDate = _res;
-      });
-    }
-  }
-
-  void _onAddingToFavorites() {
-    widget.onAddingToFavorites();
-    _favoriteButtonController.sink.add(true);
-  }
-
-  void _onRemoveFromFavorites() {
-    widget.onRemoveFromFavorites();
-    _favoriteButtonController.sink.add(false);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _favoriteButtonController.close();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -388,20 +288,20 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
         children: [
           // "Add to favorites" button
           if (widget.cardType == CardTypes.general)
-            StreamBuilder<bool>(
-              stream: _favoriteButtonController.stream,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamedStateBuilder<bool>(
+              streamedState: widget.isPlaceinFavoritesState,
+              builder: (context, isPlaceinFavorites) {
                 return Positioned(
                   top: 16,
                   right: 16,
-                  child: snapshot.data == true
+                  child: isPlaceinFavorites
                       ? _iconButton(
                           iconPath: AppIcons.heartFull,
-                          onPressed: () => _onRemoveFromFavorites(),
+                          onPressed: () => widget.onDeleteFromFavoritesAction(),
                         )
                       : _iconButton(
                           iconPath: AppIcons.heart,
-                          onPressed: () => _onAddingToFavorites(),
+                          onPressed: () => widget.onAddingToFavorites(),
                         ),
                 );
               },
@@ -414,7 +314,8 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
               right: 16,
               child: _iconButton(
                 iconPath: AppIcons.delete,
-                onPressed: () => widget.onRemoveFromFavorites(),
+                onPressed: () =>
+                    widget.onDeleteFromFavoritesAction(widget.place),
               ),
             ),
 
@@ -425,7 +326,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
               right: 56,
               child: _iconButton(
                 iconPath: AppIcons.calendar,
-                onPressed: () => _onChangeVisitTime(),
+                onPressed: () => widget.onChangeVisitTime(),
               ),
             ),
 
@@ -461,75 +362,6 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
           color: Theme.of(context).colorScheme.placeCardHeartButtonColor,
         ),
       ),
-    );
-  }
-
-  /// Modal window for date picker in Cupertino style
-  Widget _cupertinoDatePicker() {
-    // The current date
-    DateTime _currentDate = DateTime.now();
-    // The selected date in the DatePicker
-    DateTime _scheduledDate;
-
-    // Function for closing the window
-    void _onDateTimeSubmitted() {
-      Navigator.of(context).pop(_scheduledDate);
-    }
-
-    // When changing the date in the picker
-    void _onDateTimeChanged(DateTime scheduledDate) {
-      _scheduledDate = scheduledDate;
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        LimitedBox(
-          maxHeight: 300,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            decoration: AppDecorations.addPhotoDialog.copyWith(
-              color: Theme.of(context).backgroundColor,
-            ),
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              initialDateTime: _currentDate,
-              maximumDate: _currentDate.add(Duration(days: 365 * 10)),
-              minimumDate: _currentDate,
-              onDateTimeChanged: (scheduledDate) =>
-                  _onDateTimeChanged(scheduledDate),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextButton(
-          onPressed: () => _onDateTimeSubmitted(),
-          child: Text(
-            AppTextStrings.datePickerConfrimText.toUpperCase(),
-            style:
-                AppTextStyles.favoritesScreenDatePickerConfrimButton.copyWith(
-              color: Theme.of(context).accentColor,
-            ),
-          ),
-          style: Theme.of(context).textButtonTheme.style.copyWith(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  Theme.of(context).backgroundColor,
-                ),
-                foregroundColor: MaterialStateProperty.all<Color>(
-                  Theme.of(context).accentColor,
-                ),
-                elevation: MaterialStateProperty.all<double>(0),
-                minimumSize: MaterialStateProperty.all<Size>(
-                  Size(double.infinity, 48),
-                ),
-              ),
-        ),
-      ],
     );
   }
 }

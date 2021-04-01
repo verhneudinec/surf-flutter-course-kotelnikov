@@ -1,122 +1,96 @@
 import 'package:flutter/material.dart';
-import 'package:places/data/interactor/places_interactor.dart';
+import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/text_strings.dart';
+import 'package:places/ui/screen/favorites_screen/favorites_wm.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:places/ui/widgets/tab_indicator.dart';
-import 'package:provider/provider.dart';
+import 'package:relation/relation.dart';
 
-///The [VisitingScreen] displays the Favorites section.
-///Lists "Visited" or "Want to visit" via DefaultTabController.
-///[TabIndicator] is used to indicate the current tab.
-///The state is controlled by the [FavoritePlaces] provider
-class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({Key key}) : super(key: key);
+/// The [FavoritesScreen] displays the Favorites section.
+/// Lists "Visited" or "Want to visit" via DefaultTabController.
+/// [TabIndicator] is used to indicate the current tab.
+class FavoritesScreen extends CoreMwwmWidget {
+  const FavoritesScreen({
+    @required WidgetModelBuilder widgetModelBuilder,
+  }) : super(widgetModelBuilder: widgetModelBuilder ?? FavoritesWidgetModel);
 
   @override
   _FavoritesScreenState createState() => _FavoritesScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen>
+class _FavoritesScreenState extends WidgetState<FavoritesWidgetModel>
     with SingleTickerProviderStateMixin {
-  TabController tabController;
-  List<Place> _favoritePlaces = [];
-  List<Place> _visitedPlaces = [];
-
   @override
   void initState() {
     super.initState();
-
-    tabController = TabController(length: 2, vsync: this);
-    tabController.addListener(() {
-      setState(() {});
-    });
-  }
-
-  /// Function for loading places from [PlacesInteractor]
-  void _loadFavorites() {
-    context.read<PlacesInteractor>().sortFavoritePlaces();
-    List<Place> favoritePlaces =
-        context.watch<PlacesInteractor>().getFavoritePlaces;
-    List<Place> visitedPlaces =
-        context.watch<PlacesInteractor>().getVisitedPlaces;
-    setState(() {
-      _favoritePlaces = favoritePlaces;
-      _visitedPlaces = visitedPlaces;
-    });
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
+    wm.tabController.content(
+      TabController(length: 2, vsync: this),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    _loadFavorites();
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-        body: Column(
-          children: [
-            AppBarMini(
-              title: AppTextStrings.visitingScreenTitle,
-              tabBarIndicator: TabIndicator(
-                tabController: tabController,
-              ),
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-
-            LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height - 290,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                child: IndexedStack(
-                  key: ValueKey(tabController.index),
-                  index: tabController.index,
-                  children: [
-                    CustomScrollView(
-                      slivers: [
-                        PlaceList(
-                          places: _favoritePlaces,
-                          cardsType: CardTypes.unvisited,
-                        ),
-                      ],
-                    ),
-                    CustomScrollView(
-                      slivers: [
-                        PlaceList(
-                          places: _visitedPlaces,
-                          cardsType: CardTypes.visited,
-                        ),
-                      ],
-                    ),
-                  ],
+        body: EntityStateBuilder<TabController>(
+          streamedState: wm.tabController,
+          child: (context, tabController) {
+            return Column(
+              children: [
+                AppBarMini(
+                  title: AppTextStrings.visitingScreenTitle,
+                  tabBarIndicator: TabIndicator(
+                    tabController: tabController,
+                    clickOnTabAction: wm.clickOnTabAction,
+                  ),
                 ),
-              ),
-            ),
-            // ConstrainedBox(
-            //   constraints: BoxConstraints(
-            //     maxHeight: MediaQuery.of(context).size.height,
-            //     maxWidth: MediaQuery.of(context).size.width,
-            //     // TODO Резиновый размер для TabBarView
-            //   ),
-            //   child: TabBarView(
-            //     controller: tabController,
-            //     children: [
-            //       PlaceList(cardType: CardTypes.unvisited),
-            //       PlaceList(cardType: "visited"),
-            //     ],
-            //   ),
-            // ),
-          ],
+                const SizedBox(
+                  height: 24,
+                ),
+                LimitedBox(
+                  maxHeight: MediaQuery.of(context).size.height - 290,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    child: IndexedStack(
+                      key: ValueKey(tabController.index),
+                      index: tabController.index,
+                      children: [
+                        EntityStateBuilder<List<Place>>(
+                          streamedState: wm.favoritePlaces,
+                          child: (context, favoritePlaces) {
+                            return CustomScrollView(
+                              slivers: [
+                                PlaceList(
+                                  places: favoritePlaces,
+                                  cardsType: CardTypes.unvisited,
+                                  onDeletePlace: wm.onDeleteFromFavoritesAction,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        CustomScrollView(
+                          slivers: [
+                            PlaceList(
+                              places: wm.visitedPlaces.stateSubject.value.data,
+                              cardsType: CardTypes.visited,
+                              onDeletePlace: wm.onDeleteFromFavoritesAction,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
         bottomNavigationBar: AppBottomNavigationBar(currentPageIndex: 2),
       ),

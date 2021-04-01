@@ -1,12 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
+import 'package:mwwm/mwwm.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
-import 'package:places/ui/widgets/place_card.dart';
+import 'package:places/ui/widgets/place_card/place_card.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/ui/widgets/place_card/place_card_builder.dart';
+import 'package:places/ui/widgets/place_card/place_card_wm.dart';
 import 'package:provider/provider.dart';
+import 'package:relation/relation.dart';
 
 /// The [PlaceList] widget displays a list of places
 /// if list length > 0 or [ErrorStub] - if the array is empty.
@@ -15,7 +19,7 @@ import 'package:provider/provider.dart';
 class PlaceList extends StatelessWidget {
   final String cardsType;
   final List places;
-  final void onDeletePlace;
+  final Action<void> onDeletePlace;
   const PlaceList({
     Key key,
     @required this.cardsType,
@@ -89,10 +93,10 @@ class PlaceList extends StatelessWidget {
         right: 16,
         bottom: 16,
       ),
-      child: PlaceCard(
-        key: ValueKey(place.name),
+      child: PlaceCardWidgetBuilder(
         place: place,
         cardType: cardsType,
+        onDeleteFromFavoritesAction: onDeletePlace,
       ),
     );
   }
