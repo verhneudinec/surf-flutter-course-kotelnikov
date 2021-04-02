@@ -60,7 +60,7 @@ class _FilterScreenState extends WidgetState<FilterWidgetModel> {
           child: SizedBox(
             width: 100,
             child: TextButton(
-              onPressed: () => wm.onCleanAllSelectedTypes(),
+              onPressed: () => wm.onCleanAllSelectedTypesAction(),
               child: Text(
                 AppTextStrings.filterScreenClearButton,
                 style: AppTextStyles.filterScreenClearButton.copyWith(
@@ -205,9 +205,9 @@ class _FilterScreenState extends WidgetState<FilterWidgetModel> {
                         maxValue: filter.searchRange.end.toDouble().abs(),
                         activeColor: Theme.of(context).accentColor,
                         onMinChanged: (value) =>
-                            wm.onSearchRangeStartChanged(value.toInt()),
+                            wm.onSearchRangeStartChangedAction(value.toInt()),
                         onMaxChanged: (value) =>
-                            wm.onSearchRangeEndChanged(value.toInt()),
+                            wm.onSearchRangeEndChangedAction(value.toInt()),
                       ),
                     ),
 
@@ -256,7 +256,7 @@ class _FilterScreenState extends WidgetState<FilterWidgetModel> {
                   children: [
                     Center(
                       child: IconButton(
-                        onPressed: () => wm.onTypeClickHandler(i),
+                        onPressed: () => wm.onTypeClickAction(i),
                         icon: SvgPicture.asset(
                           PlaceTypes.iconFromPlaceType(
                             placeTypes.keys.elementAt(i),
@@ -279,7 +279,7 @@ class _FilterScreenState extends WidgetState<FilterWidgetModel> {
                           child: InkWell(
                             borderRadius: AppDecorations
                                 .filterScreenCategoryButton.borderRadius,
-                            onTap: () => wm.onTypeClickHandler(i),
+                            onTap: () => wm.onTypeClickAction(i),
                             child: SvgPicture.asset(
                               AppIcons.tick,
                               color: Theme.of(context)

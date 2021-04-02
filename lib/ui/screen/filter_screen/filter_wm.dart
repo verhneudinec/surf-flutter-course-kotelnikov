@@ -32,6 +32,18 @@ class FilterWidgetModel extends WidgetModel {
       searchInteractor.filterSubmit(filter.value.data);
       navigator.pop();
     });
+
+    subscribe(onSearchRangeStartChangedAction.stream,
+        (newRangeStartValue) => _onSearchRangeStartChanged(newRangeStartValue));
+
+    subscribe(onSearchRangeEndChangedAction.stream,
+        (newRangeStartValue) => _onSearchRangeEndChanged(newRangeStartValue));
+
+    subscribe(onCleanAllSelectedTypesAction.stream,
+        (_) => _onCleanAllSelectedTypes());
+
+    subscribe(onTypeClickAction.stream,
+        (typeIndex) => _onTypeClickHandler(typeIndex));
   }
 
   ///         ///
@@ -40,26 +52,34 @@ class FilterWidgetModel extends WidgetModel {
 
   Action<void> onFilterSubmittedAction = Action();
 
+  Action<void> onSearchRangeStartChangedAction = Action();
+
+  Action<void> onSearchRangeEndChangedAction = Action();
+
+  Action<void> onCleanAllSelectedTypesAction = Action();
+
+  Action<void> onTypeClickAction = Action();
+
   ///           ///
   /// Functions ///
   ///           ///
 
   /// [onSearchRangeStartChanged] called when
   /// a change has been made to the initial range
-  void onSearchRangeStartChanged(int newValue) {
+  void _onSearchRangeStartChanged(int newValue) {
     filter.value.data.searchRange.start = newValue;
     filter.content(filter.value.data);
   }
 
   /// [onSearchRangeStartChanged] called when
   /// a change has been made to the maximum range
-  void onSearchRangeEndChanged(int newValue) {
+  void _onSearchRangeEndChanged(int newValue) {
     filter.value.data.searchRange.end = newValue;
     filter.content(filter.value.data);
   }
 
   /// Function to clear all active (selected) types
-  void onCleanAllSelectedTypes() {
+  void _onCleanAllSelectedTypes() {
     filter.value.data.searchTypes.entries.forEach(
       (value) => filter.value.data.searchTypes[value.key] = false,
     );
@@ -69,7 +89,7 @@ class FilterWidgetModel extends WidgetModel {
 
   /// The function is called when clicking on a place type.
   /// Inverts the value of the selected type (by index)
-  void onTypeClickHandler(int index) {
+  void _onTypeClickHandler(int index) {
     final MapEntry<String, bool> currentType =
         filter.value.data.searchTypes.entries.elementAt(index);
 
