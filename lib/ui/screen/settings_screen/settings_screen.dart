@@ -1,41 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/data/interactor/settings_interactor.dart';
+import 'package:mwwm/mwwm.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
-import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
+import 'package:places/ui/screen/settings_screen/settings_wm.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_mini.dart';
 import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:relation/relation.dart';
 
-/// Screen with application settings. Contains
-/// switch theme using [themeChanger] from [AppSettings] state using provider.
-class SettingsScreen extends StatefulWidget {
+/// Screen with application settings.
+class SettingsScreen extends CoreMwwmWidget {
+  const SettingsScreen({
+    @required WidgetModelBuilder widgetModelBuilder,
+  }) : super(widgetModelBuilder: widgetModelBuilder ?? SettingsWidgetModel);
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  void changeTheme() {
-    context.read<SettingsInteractor>().changeTheme();
-  }
-
-  /// View the app tutorial
-  void onClickOnboardingButton() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OnboardingScreen(),
-      ),
-    );
-  }
-
+class _SettingsScreenState extends WidgetState<SettingsWidgetModel> {
   @override
   Widget build(BuildContext context) {
     /// Follow the current theme
-    bool _isDarkMode = context.watch<SettingsInteractor>().isDarkMode;
 
     return Container(
       child: Scaffold(
@@ -55,28 +43,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // App theme switcher
-                  ListTile(
-                    contentPadding: EdgeInsets.all(0),
-                    title: Text(
-                      AppTextStrings.settingsScreenEnableDarkTheme,
-                      style:
-                          AppTextStyles.settingsScreenEnableDarkTheme.copyWith(
-                        color: Theme.of(context).textTheme.headline5.color,
-                      ),
-                    ),
-                    trailing: CupertinoSwitch(
-                      value: _isDarkMode,
-                      onChanged: (_) => changeTheme(),
-                      activeColor: Theme.of(context).accentColor,
-                      trackColor: Theme.of(context).disabledColor,
-                    ),
+                  EntityStateBuilder<bool>(
+                    streamedState: wm.isDarkMode,
+                    child: (context, isDarkMode) {
+                      return ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                        title: Text(
+                          AppTextStrings.settingsScreenEnableDarkTheme,
+                          style: AppTextStyles.settingsScreenEnableDarkTheme
+                              .copyWith(
+                            color: Theme.of(context).textTheme.headline5.color,
+                          ),
+                        ),
+                        trailing: CupertinoSwitch(
+                          value: isDarkMode,
+                          onChanged: (_) => wm.onUpdateThemeAction(),
+                          activeColor: Theme.of(context).accentColor,
+                          trackColor: Theme.of(context).disabledColor,
+                        ),
+                      );
+                    },
                   ),
 
                   _divider(context),
 
                   // "Watch tutorial" button
                   ListTile(
-                    onTap: () => onClickOnboardingButton(),
+                    onTap: () => wm.onClickOnboardingButtonAction(),
                     contentPadding: EdgeInsets.all(0),
                     title: Text(
                       AppTextStrings.settingsScreenWatchTutorial,

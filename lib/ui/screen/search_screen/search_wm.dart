@@ -3,7 +3,6 @@ import 'package:mwwm/mwwm.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_route.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
 import 'package:relation/relation.dart';
 
 /// Widget model of search screen
@@ -55,9 +54,7 @@ class SearchWidgetModel extends WidgetModel {
     subscribe(
       onPlaceClickAction.stream,
       (index) => navigator.push(
-        PlaceDetailsRoute(
-          placeId: searchResults.value.data[index].id,
-        ),
+        PlaceDetailsRoute(searchResults.value.data[index].id),
       ),
     );
 

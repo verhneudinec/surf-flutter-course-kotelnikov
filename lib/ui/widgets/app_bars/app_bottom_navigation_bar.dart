@@ -5,6 +5,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
+import 'package:places/ui/screen/settings_screen/settings_route.dart';
 
 /// Bottom navigation for the app
 /// [currentPageIndex] - the current page index for the navigator.
@@ -30,7 +31,7 @@ class AppBottomNavigationBar extends StatelessWidget {
           Navigator.push(context, FavoritesScreenRoute());
           break;
         case 3:
-          Navigator.pushNamed(context, AppRoutes.settings);
+          Navigator.push(context, SettingsRoute());
           break;
       }
   }

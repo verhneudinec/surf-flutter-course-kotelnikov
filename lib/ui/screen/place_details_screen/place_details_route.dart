@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 
 /// Place details screen route
 class PlaceDetailsRoute extends MaterialPageRoute {
-  PlaceDetailsRoute({
-    @required int placeId,
+  PlaceDetailsRoute(
+    int placeId, {
     bool isBottomSheet,
   }) : super(
           builder: (context) => PlaceDetailsScreen(
