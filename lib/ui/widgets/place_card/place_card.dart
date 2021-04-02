@@ -11,6 +11,7 @@ import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/widgets/place_card/place_card_wm.dart';
 import 'package:relation/relation.dart';
@@ -66,9 +67,8 @@ class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
                   onTap: () {
                     Widget placeDetailsContainer = Container(
                       margin: EdgeInsets.only(top: 84),
-                      child: PlaceDetails(
-                        placeId: wm.place.id,
-                        isBottomSheet: true,
+                      child: PlaceDetailsWidget(
+                        wm.place.id,
                       ),
                     );
 
