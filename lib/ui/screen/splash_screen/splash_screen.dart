@@ -58,6 +58,8 @@ class _SplashScreenState extends State<SplashScreen>
 // /During chunking, displays the animation of the logo rotation by [_animationController].
   Future<void> initPlaces() async {
     try {
+      /// We are waiting for the initialization of the application
+      /// or 4 seconds if initialization was earlier.
       await Future.wait(
         [
           context.read<PlacesInteractor>().loadPlaces(),
