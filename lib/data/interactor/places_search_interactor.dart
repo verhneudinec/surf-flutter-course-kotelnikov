@@ -1,64 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/model/filter.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/filtered_places_repository.dart';
 
 /// Provider for PlacesSearchScreen.
 class PlacesSearchInteractor with ChangeNotifier {
-  /// [_searchHistory] - the history of search queries.
-  final List<String> _searchHistory = [];
-
   /// [_searchResults] - search results by type, range and search query.
   List<Place> _searchResults = [];
 
-  /// getters for fields with the same name
-  List<String> get searchHistory => _searchHistory;
+  /// The last query entered by the user
+  String _lastSearchQuery = '';
+
+  /// Filter by type of location and radius
+  Filter _filter = Filter.empty();
+
+  ///         ///
+  /// Getters ///
+  ///         ///
+
   List<Place> get searchResults => _searchResults;
+  String get lastSearchQuery => _lastSearchQuery;
+  Filter get filter => _filter;
 
-  /// Adding a query to the search history
-  void addQuery(String query) {
-    _searchHistory.add(query);
-    notifyListeners();
-  }
+  ///           ///
+  /// Functions ///
+  ///           ///
 
-  /// Deleting all requests from the search history
-  void cleanHistory() {
-    _searchHistory.clear();
-    notifyListeners();
-  }
-
-  /// Deleting all search results
-  void cleanResults() {
-    _searchResults.clear();
-    notifyListeners();
-  }
-
-  /// Deleting a query from the search history
-  void deleteQuery(int index) {
-    _searchHistory.removeAt(index);
-    notifyListeners();
-  }
+  /// Function for setting the filter
+  void filterSubmit(Filter filter) => _filter = filter;
 
   /// [searchPlaces] - is a search request handler.
   /// Found locations are added to [_searchResults].
   Future<List<Place>> searchPlaces({
     String searchQuery,
-    int searchRadius,
-    List<String> placeTypes,
   }) async {
-    if (searchResults.isNotEmpty) searchResults.clear();
+    _lastSearchQuery = searchQuery ?? _lastSearchQuery;
+
+    searchResults.clear();
 
     /// Test user location
     final GeoPosition testGeoPosition = GeoPosition(59.884866, 29.904859);
 
-    /// In [searchResponse] will be the data from the server
-    List<Place> searchResponse = [];
+    final List<String> selectedPlaceTypes = filter.searchTypes.keys
+        .where((element) => filter.searchTypes[element])
+        .toList();
 
-    searchResponse = await FilteredPlaceRepository().searchPlaces(
-      searchQuery: searchQuery,
+    /// In [searchResponse] will be the data from the server
+    List<Place> searchResponse = await FilteredPlaceRepository().searchPlaces(
+      searchQuery: searchQuery ?? lastSearchQuery,
       geoposition: testGeoPosition,
-      selectedTypes: placeTypes,
-      searchRadius: searchRadius,
+      selectedTypes: selectedPlaceTypes,
+      searchRadius: filter.searchRange.end,
     );
 
     _searchResults = searchResponse;

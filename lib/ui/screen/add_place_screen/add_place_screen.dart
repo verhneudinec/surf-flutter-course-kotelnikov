@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mwwm/mwwm.dart';
-import 'package:places/data/model/place.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_wm.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
@@ -149,13 +148,12 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
         vertical: 8.0,
         horizontal: 16.0,
       ),
-      child: StreamBuilder<bool>(
-        stream: wm.isFieldsFilled.stream,
-        initialData: false,
-        builder: (context, isFieldsFilledSnapshot) {
+      child: StreamedStateBuilder<bool>(
+        streamedState: wm.isFieldsFilled,
+        builder: (BuildContext context, bool isFieldsFilledSnapshot) {
           return TextButton(
               onPressed: () {
-                if (isFieldsFilledSnapshot.data) wm.addPlaceAction();
+                if (isFieldsFilledSnapshot) wm.addPlaceAction();
               },
               child: Text(
                 AppTextStrings.addPlaceScreenPlaceCreateButton.toUpperCase(),
@@ -163,7 +161,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
               ),
               style:
                   // The "Save" button becomes active when all fields is true.
-                  isFieldsFilledSnapshot.data
+                  isFieldsFilledSnapshot
                       ? Theme.of(context).elevatedButtonTheme.style
                       : Theme.of(context).elevatedButtonTheme.style.copyWith(
                             backgroundColor: MaterialStateProperty.all<Color>(

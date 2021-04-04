@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/data/model/app_state.dart';
-import 'package:places/data/redux/action/places_search_action.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/ui/view_model/places_search_model.dart';
-import 'package:provider/provider.dart';
-import 'package:places/data/interactor/places_search_interactor.dart';
-import 'package:places/ui/screen/places_search_screen.dart';
-import 'package:places/ui/screen/filter_screen.dart';
+import 'package:places/ui/screen/filter_screen/filter_route.dart';
+import 'package:places/ui/screen/search_screen/search_route.dart';
 
 /// [SearchBar] displays the search bar for places.
 class SearchBar extends StatefulWidget {
   final bool readonly;
 
-  const SearchBar({
-    Key key,
-    this.readonly = true,
-  }) : super(key: key);
+  final TextEditingController searchFieldController;
+
+  final onSearchChanged;
+  final onClearTextValue;
+  final onSearchSubmitted;
+
+  const SearchBar(
+      {Key key,
+      this.readonly = true,
+      this.searchFieldController,
+      this.onSearchChanged,
+      this.onClearTextValue,
+      this.onSearchSubmitted})
+      : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -32,9 +36,7 @@ class _SearchBarState extends State<SearchBar> {
     if (widget.readonly == true)
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => PlaceSearchScreen(),
-        ),
+        SearchScreenRoute(),
       );
   }
 
@@ -42,39 +44,12 @@ class _SearchBarState extends State<SearchBar> {
   void _onClickFilterButton() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => FilterScreen(),
-      ),
+      FilterScreenRoute(),
     );
-  }
-
-  /// If the value in the request has changed
-  void _onSearchChanged(String searchQuery) {
-    context.read<PlacesSearchModel>().onSearchChanged(context);
-  }
-
-  /// When submitting the search form
-  void _onSearchSubmitted(String searchQuery) {
-    if (searchQuery.isNotEmpty)
-      StoreProvider.of<AppState>(context).dispatch(
-        LoadSearchPlacesAction(searchQuery),
-      );
-    // context.read<PlacesSearchModel>().onSearchSubmitted(
-    //       context: context,
-    //       searchQuery: searchQuery,
-    //     );
-  }
-
-  /// When clicking on the "Clear" button in the form
-  void _onClearTextValue() {
-    context.read<PlacesSearchModel>().onClearTextValue();
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController searchFieldController =
-        context.watch<PlacesSearchModel>().searchFieldController;
-
     return ClipRRect(
       borderRadius: AppDecorations.searchBar.borderRadius,
       child: Stack(
@@ -85,12 +60,13 @@ class _SearchBarState extends State<SearchBar> {
               child: Ink(
                 color: Theme.of(context).backgroundColor,
                 child: TextFormField(
-                  controller: searchFieldController,
+                  controller: widget.searchFieldController,
                   readOnly: widget.readonly,
                   autofocus: !widget.readonly,
                   textInputAction: TextInputAction.search,
-                  onChanged: (value) => _onSearchChanged(value),
-                  onFieldSubmitted: (value) => _onSearchSubmitted(value),
+                  onChanged: (value) => widget.onSearchChanged(value),
+                  onFieldSubmitted: (value) =>
+                      widget.onSearchSubmitted(searchQuery: value),
                   onTap: () => _onClickSearchBar(),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
@@ -123,7 +99,7 @@ class _SearchBarState extends State<SearchBar> {
                                 AppDecorations.searchBarSuffix.borderRadius,
                             child: Material(
                               child: InkWell(
-                                onTap: () => _onClearTextValue(),
+                                onTap: () => widget.onClearTextValue(),
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
                                     horizontal: 8,

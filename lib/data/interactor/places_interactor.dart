@@ -48,11 +48,12 @@ class PlacesInteractor with ChangeNotifier {
   }
 
   /// Function for loading place details from API
-  Future<void> loadPlaceDetails({int id}) async {
+  Future<Place> loadPlaceDetails({int id}) async {
     try {
       final response = await PlaceRepository().getPlaceDetails(id: id);
       if (!_placeDetailsController.isClosed)
         _placeDetailsController.sink.add(response);
+      return response;
     } on NetworkException catch (e) {
       if (!_placeDetailsController.isClosed)
         _placeDetailsController.addError(e);

@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
+import 'package:relation/relation.dart';
 
 /// [TabIndicator] displays the indication of tabs for the "Favorites" page.
 /// Accepts a [tabController] tab controller as parameters.
 class TabIndicator extends StatelessWidget {
   final TabController tabController;
-  const TabIndicator({Key key, this.tabController}) : super(key: key);
+  final Action<void> clickOnTabAction;
+  const TabIndicator({Key key, this.tabController, this.clickOnTabAction})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class TabIndicator extends StatelessWidget {
                   ),
                   child: FlatButton(
                     onPressed: () {
-                      tabController.index = i;
+                      clickOnTabAction(i);
                     },
                     highlightColor: Theme.of(context)
                         .tabBarTheme

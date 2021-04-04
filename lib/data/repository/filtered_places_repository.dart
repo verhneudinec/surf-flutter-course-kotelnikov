@@ -16,7 +16,7 @@ class FilteredPlaceRepository {
   Future<List> searchPlaces({
     String searchQuery,
     GeoPosition geoposition,
-    List selectedTypes,
+    List<String> selectedTypes,
     int searchRadius,
   }) async {
     try {
