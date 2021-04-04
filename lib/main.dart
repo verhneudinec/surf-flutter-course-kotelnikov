@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/common/error/error_handler.dart';
+import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:places/res/app_routes.dart';

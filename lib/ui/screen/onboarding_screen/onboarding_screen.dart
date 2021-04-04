@@ -18,23 +18,51 @@ class OnboardingScreen extends StatefulWidget {
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with SingleTickerProviderStateMixin {
   /// Controller for pages [PageView].
   PageController _onboardingPageController;
 
   /// Current controller index.
   int _currentOnboardingPageIndex;
 
+  /// Animation controller
+  AnimationController _animationController;
+
+  /// Zoom animation
+  Animation<double> _zoomAnimation;
+
   @override
   void initState() {
     super.initState();
     _onboardingPageController = new PageController();
     _currentOnboardingPageIndex = 0;
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 250),
+    );
+
+    // Animate the appearance from small size (15x15 dp) to large  (104x104 dp)
+    _zoomAnimation = Tween<double>(begin: 15, end: 104).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    // Start animation for the first icon
+    _animationController.forward();
   }
 
   /// Called when the current page changes.
   /// The timer is implemented for the beauty of the [_pageIndicator] switching.
   void _updateCurrentOnboardingPageIndex(int currentIndex) {
+    // Reset the animation
+    _animationController.reset();
+    // And show it again when turning the page
+    _animationController.forward();
+
     new Timer(
       const Duration(milliseconds: 300),
       () {
@@ -51,6 +79,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       context,
       PlaceListScreenRoute(),
     );
+  }
+
+  @override
+  void dispose() {
+    _onboardingPageController.dispose();
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -142,12 +177,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset(
-                  icon,
-                  width: 104.0,
-                  height: 104.0,
-                  color: Theme.of(context).iconTheme.color,
-                  fit: BoxFit.scaleDown,
+                Container(
+                  height: 104,
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return SvgPicture.asset(
+                        icon,
+                        width: _zoomAnimation.value,
+                        height: _zoomAnimation.value,
+                        color: Theme.of(context).iconTheme.color,
+                        fit: BoxFit.scaleDown,
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 40,
