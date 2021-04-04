@@ -9,12 +9,14 @@ import 'package:relation/relation.dart';
 class PlaceListWidgetModel extends WidgetModel {
   final PlacesInteractor placesInteractor;
   final NavigatorState navigator;
+  final List<Place> places;
 
   PlaceListWidgetModel(
     WidgetModelDependencies baseDependencies,
     this.placesInteractor,
-    this.navigator,
-  ) : super(baseDependencies);
+    this.navigator, {
+    this.places,
+  }) : super(baseDependencies);
 
   final placesState = EntityStreamedState<List<Place>>(
     EntityState.loading(),
@@ -40,7 +42,7 @@ class PlaceListWidgetModel extends WidgetModel {
   /// Function for initializing the state [placesState].
   void _initStore() async {
     try {
-      await placesInteractor.loadPlaces();
+      if (placesInteractor.places.isEmpty) await placesInteractor.loadPlaces();
 
       final List<Place> loadedPlace = placesInteractor.places;
 
