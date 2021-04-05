@@ -11,7 +11,7 @@ import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_wm.dart';
 import 'package:places/ui/widgets/error_stub.dart';
-import 'package:places/ui/widgets/image_loader_builder.dart';
+import 'package:places/ui/widgets/image_network.dart';
 import 'package:relation/relation.dart';
 
 /// Screen with detailed information about the place
@@ -196,11 +196,8 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
             width: double.infinity,
             height: 360,
             decoration: AppDecorations.placeCardImageGradient,
-            child: Image.network(
+            child: ImageNetwork(
               widget.place.urls.elementAt(index),
-              fit: BoxFit.cover,
-              loadingBuilder: imageLoaderBuilder,
-              errorBuilder: imageErrorBuilder,
             ),
           );
         },

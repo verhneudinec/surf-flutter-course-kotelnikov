@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/res/durations.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/place_types.dart';
 import 'package:places/res/text_strings.dart';
@@ -11,7 +12,7 @@ import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
-import 'package:places/ui/widgets/image_loader_builder.dart';
+import 'package:places/ui/widgets/image_network.dart';
 import 'package:places/ui/widgets/place_card/place_card_wm.dart';
 import 'package:relation/relation.dart';
 
@@ -136,11 +137,8 @@ class PlaceCardHeader extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 96,
-          child: Image.network(
+          child: ImageNetwork(
             place.urls.elementAt(0),
-            fit: BoxFit.cover,
-            loadingBuilder: imageLoaderBuilder,
-            errorBuilder: imageErrorBuilder,
           ),
         ),
 
@@ -296,7 +294,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
                   /// Animate clicking on the "Add to favorites" button on card.
                   /// Display different widgets depending on the value of the [isPlaceinFavorites].
                   child: AnimatedCrossFade(
-                    duration: Duration(milliseconds: 250),
+                    duration: AppDurations.commonDuration,
                     firstCurve: Curves.easeIn,
                     secondCurve: Curves.easeOut,
                     crossFadeState: isPlaceinFavorites
