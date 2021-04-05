@@ -48,8 +48,9 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
+      // home: SplashScreen(),
       onGenerateRoute: (routeSettings) {
-        return FavoritesScreenRoute();
+        return PlaceListScreenRoute();
       },
     );
   }

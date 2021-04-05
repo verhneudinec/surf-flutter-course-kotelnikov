@@ -10,7 +10,6 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
 import 'package:places/ui/widgets/image_loader_builder.dart';
 import 'package:places/ui/widgets/place_card/place_card_wm.dart';
@@ -293,15 +292,25 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
                 return Positioned(
                   top: 16,
                   right: 16,
-                  child: isPlaceinFavorites
-                      ? _iconButton(
-                          iconPath: AppIcons.heartFull,
-                          onPressed: () => widget.onDeleteFromFavoritesAction(),
-                        )
-                      : _iconButton(
-                          iconPath: AppIcons.heart,
-                          onPressed: () => widget.onAddingToFavorites(),
-                        ),
+
+                  /// Animate clicking on the "Add to favorites" button on card.
+                  /// Display different widgets depending on the value of the [isPlaceinFavorites].
+                  child: AnimatedCrossFade(
+                    duration: Duration(milliseconds: 250),
+                    firstCurve: Curves.easeIn,
+                    secondCurve: Curves.easeOut,
+                    crossFadeState: isPlaceinFavorites
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    firstChild: _iconButton(
+                      iconPath: AppIcons.heartFull,
+                      onPressed: () => widget.onDeleteFromFavoritesAction(),
+                    ),
+                    secondChild: _iconButton(
+                      iconPath: AppIcons.heart,
+                      onPressed: () => widget.onAddingToFavorites(),
+                    ),
+                  ),
                 );
               },
             ),
