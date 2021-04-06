@@ -4,6 +4,8 @@ import 'package:places/common/error/error_handler.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
+import 'package:places/ui/widgets/loader/loader_builder.dart';
+import 'package:places/ui/widgets/loader/loader_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
@@ -48,7 +50,6 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      // home: SplashScreen(),
       onGenerateRoute: (routeSettings) {
         return PlaceListScreenRoute();
       },

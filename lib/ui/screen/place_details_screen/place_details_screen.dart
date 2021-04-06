@@ -12,6 +12,7 @@ import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_wm.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/ui/widgets/image_network.dart';
+import 'package:places/ui/widgets/loader/loader_builder.dart';
 import 'package:relation/relation.dart';
 
 /// Screen with detailed information about the place
@@ -38,28 +39,8 @@ class _PlaceDetailsScreenState extends WidgetState<PlaceDetailsWidgetModel> {
           child: Scaffold(
             body: EntityStateBuilder<Place>(
               streamedState: wm.placeState,
-              loadingChild: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 3,
-                  ),
-                  Center(child: CircularProgressIndicator()),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                ],
-              ),
-              errorChild: Center(
-                child: SizedBox(
-                  width: 300,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: ErrorStub(
-                    icon: AppIcons.error,
-                    title: AppTextStrings.dataLoadingErrorTitle,
-                    subtitle: AppTextStrings.dataLoadingErrorSubtitle,
-                  ),
-                ),
-              ),
+              loadingChild: _loadingChild(),
+              errorChild: _errorChild(),
               child: (context, placeState) {
                 return CustomScrollView(
                   controller: scrollController,
@@ -100,6 +81,29 @@ class _PlaceDetailsScreenState extends WidgetState<PlaceDetailsWidgetModel> {
           ),
         );
       },
+    );
+  }
+
+  Widget _loadingChild() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 150,
+      child: Center(
+        child: CircularLoader(),
+      ),
+    );
+  }
+
+  Widget _errorChild() {
+    return Center(
+      child: SizedBox(
+        width: 300,
+        height: MediaQuery.of(context).size.height / 2,
+        child: ErrorStub(
+          icon: AppIcons.error,
+          title: AppTextStrings.dataLoadingErrorTitle,
+          subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+        ),
+      ),
     );
   }
 }

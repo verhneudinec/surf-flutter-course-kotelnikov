@@ -189,7 +189,7 @@ class PlaceCardBody extends StatelessWidget {
             ),
             child: Text(
               place.name,
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.placeCardTitle.copyWith(
                 color: Theme.of(context).textTheme.headline4.color,
