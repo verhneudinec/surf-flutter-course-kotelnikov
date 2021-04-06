@@ -137,8 +137,11 @@ class PlaceCardHeader extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 96,
-          child: ImageNetwork(
-            place.urls.elementAt(0),
+          child: Hero(
+            tag: place.id,
+            child: ImageNetwork(
+              place.urls.elementAt(0),
+            ),
           ),
         ),
 

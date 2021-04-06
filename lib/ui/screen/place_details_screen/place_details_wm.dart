@@ -10,6 +10,7 @@ class PlaceDetailsWidgetModel extends WidgetModel {
   final NavigatorState navigator;
 
   final int placeId;
+  final List<String> placeImages;
   final bool isBottomSheet;
 
   PageController photogalleryController = PageController();
@@ -32,6 +33,7 @@ class PlaceDetailsWidgetModel extends WidgetModel {
     this.placesInteractor,
     this.navigator, {
     this.placeId,
+    this.placeImages,
     this.isBottomSheet,
   }) : super(baseDependencies);
 

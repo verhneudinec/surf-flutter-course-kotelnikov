@@ -8,9 +8,11 @@ import 'package:provider/provider.dart';
 /// Widget for displaying place details with built-in builder.
 class PlaceDetailsWidget extends StatelessWidget {
   final int placeId;
+  final List<String> placeImages;
 
   const PlaceDetailsWidget(
     this.placeId, {
+    @required this.placeImages,
     Key key,
   }) : super(key: key);
 
@@ -22,7 +24,8 @@ class PlaceDetailsWidget extends StatelessWidget {
         context.read<PlacesInteractor>(),
         Navigator.of(context),
         placeId: placeId,
-        isBottomSheet: true,
+        placeImages: placeImages,
+        isBottomSheet: false,
       ),
     );
   }
