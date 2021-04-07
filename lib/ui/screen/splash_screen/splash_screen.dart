@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:places/data/interactor/init_app_interactor.dart';
 import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/data/repository/storage/app_preferences.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
@@ -87,13 +88,16 @@ class _SplashScreenState extends State<SplashScreen>
 
   /// Function to navigate to next screen,
   /// for now defaults to [OnboardingScreen]
-  void _navigateToNext() {
+  Future<void> _navigateToNext() async {
+    bool isFirstRun = await AppPreferences.isFirstRun;
+
     Navigator.pushReplacement(
       context,
-      PlaceListScreenRoute(),
-      // CupertinoPageRoute(
-      //   builder: (BuildContext context) => OnboardingScreen(),
-      // ),
+      isFirstRun
+          ? CupertinoPageRoute(
+              builder: (BuildContext context) => OnboardingScreen(),
+            )
+          : PlaceListScreenRoute(),
     );
   }
 

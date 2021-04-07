@@ -23,7 +23,17 @@ class AppPreferences {
   static Future<bool> get isDarkTheme =>
       PreferencesHelper.getBool(PreferencesKeys.isDarkTheme);
 
-  /// Setter for [searchTypes]
+  /// Setter for [isDarkTheme]
   static Future setIsDarkTheme(bool value) =>
       PreferencesHelper.setBool(PreferencesKeys.isDarkTheme, value);
+
+  /// `true` if the app hasn't started yet
+  static Future<bool> get isFirstRun {
+    return PreferencesHelper.preferencesInstance
+        .then((prefs) => !prefs.containsKey(PreferencesKeys.isFirstRun));
+  }
+
+  /// Setter for [isFirstRun]
+  static Future setIsFirstRun(bool value) =>
+      PreferencesHelper.setBool(PreferencesKeys.isFirstRun, value);
 }

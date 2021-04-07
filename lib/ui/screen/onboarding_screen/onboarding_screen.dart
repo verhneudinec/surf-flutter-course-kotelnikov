@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:places/data/repository/storage/app_preferences.dart';
 import 'package:places/res/icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
@@ -75,6 +76,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   /// Function to go to the next screen
   void _goToTheNextScreen() {
+    // So that [OnboardingScreen] is no longer shown
+    AppPreferences.setIsFirstRun(false);
+
     Navigator.pushReplacement(
       context,
       PlaceListScreenRoute(),

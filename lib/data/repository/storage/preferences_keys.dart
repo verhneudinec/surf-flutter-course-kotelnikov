@@ -2,5 +2,6 @@
 class PreferencesKeys {
   static const String searchRadius = 'searchRadius',
       searchTypes = 'searchTypes',
-      isDarkTheme = 'isDarkTheme';
+      isDarkTheme = 'isDarkTheme',
+      isFirstRun = 'isFirstRun';
 }

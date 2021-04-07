@@ -10,7 +10,7 @@ class InitAppInteractor {
   }
 
   /// Initialize the shared preferences storage
-  void _initSharedPreferences(BuildContext context) {
+  Future<void> _initSharedPreferences(BuildContext context) async {
     context.read<SettingsInteractor>().settingsInit();
   }
 }
