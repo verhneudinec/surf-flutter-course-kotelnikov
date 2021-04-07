@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/common/error/error_handler.dart';
+import 'package:places/data/interactor/init_app_interactor.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
@@ -50,9 +51,10 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      onGenerateRoute: (routeSettings) {
-        return PlaceListScreenRoute();
-      },
+      home: SplashScreen(),
+      // onGenerateRoute: (routeSettings) {
+      //   return PlaceListScreenRoute();
+      // },
     );
   }
 }

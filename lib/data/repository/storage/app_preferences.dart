@@ -18,4 +18,12 @@ class AppPreferences {
   /// Setter for [searchTypes]
   static Future setSearchTypes(List<String> value) =>
       PreferencesHelper.setStringList(PreferencesKeys.searchTypes, value);
+
+  /// `true` if dark theme
+  static Future<bool> get isDarkTheme =>
+      PreferencesHelper.getBool(PreferencesKeys.isDarkTheme);
+
+  /// Setter for [searchTypes]
+  static Future setIsDarkTheme(bool value) =>
+      PreferencesHelper.setBool(PreferencesKeys.isDarkTheme, value);
 }
