@@ -3,6 +3,7 @@ import 'package:places/data/model/filter.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/filtered_places_repository.dart';
+import 'package:places/data/repository/storage/app_preferences.dart';
 
 /// Provider for PlacesSearchScreen.
 class PlacesSearchInteractor with ChangeNotifier {
@@ -22,13 +23,41 @@ class PlacesSearchInteractor with ChangeNotifier {
   List<Place> get searchResults => _searchResults;
   String get lastSearchQuery => _lastSearchQuery;
   Filter get filter => _filter;
+  List<String> get selectedPlaceTypes => filter.searchTypes.keys
+      .where((element) => filter.searchTypes[element])
+      .toList();
 
   ///           ///
   /// Functions ///
   ///           ///
 
+  /// Function for initializing the filter from storage
+  Future<void> initFilter() async {
+    // Get the ending search radius from storage
+    final int filterSearchRangeEnd = await AppPreferences.searchRadius;
+
+    _filter.searchRange.end =
+        filterSearchRangeEnd == 0 ? 10000 : filterSearchRangeEnd;
+
+    // Get the selected filter types from storage
+    final List<String> filterTypes = await AppPreferences.searchTypes;
+
+    filterTypes.forEach(
+      (type) {
+        if (_filter.searchTypes.keys.contains(type))
+          _filter.searchTypes[type] = true;
+      },
+    );
+  }
+
   /// Function for setting the filter
-  void filterSubmit(Filter filter) => _filter = filter;
+  void filterSubmit(Filter filter) async {
+    _filter = filter;
+
+    // Save the obtained values ​​to the storage
+    AppPreferences.setSearchRadius(filter.searchRange.end);
+    AppPreferences.setSearchTypes(selectedPlaceTypes);
+  }
 
   /// [searchPlaces] - is a search request handler.
   /// Found locations are added to [_searchResults].
@@ -41,10 +70,6 @@ class PlacesSearchInteractor with ChangeNotifier {
 
     /// Test user location
     final GeoPosition testGeoPosition = GeoPosition(59.884866, 29.904859);
-
-    final List<String> selectedPlaceTypes = filter.searchTypes.keys
-        .where((element) => filter.searchTypes[element])
-        .toList();
 
     /// In [searchResponse] will be the data from the server
     List<Place> searchResponse = await FilteredPlaceRepository().searchPlaces(

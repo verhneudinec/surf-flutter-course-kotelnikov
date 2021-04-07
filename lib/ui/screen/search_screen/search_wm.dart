@@ -30,8 +30,14 @@ class SearchWidgetModel extends WidgetModel {
   ) : super(baseDependencies);
 
   ///         ///
-  /// Binding ///
+  ///    WM   ///
   ///         ///
+
+  @override
+  void onLoad() {
+    searchInteractor.initFilter();
+    super.onLoad();
+  }
 
   @override
   void onBind() {

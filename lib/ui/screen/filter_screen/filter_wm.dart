@@ -20,6 +20,16 @@ class FilterWidgetModel extends WidgetModel {
     this.navigator,
   ) : super(baseDependencies);
 
+  @override
+  void onLoad() {
+    // Load filter values ​​from interactor
+    searchInteractor
+        .initFilter()
+        .then((_) => filter.content(searchInteractor.filter));
+
+    super.onLoad();
+  }
+
   ///         ///
   /// Binding ///
   ///         ///

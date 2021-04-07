@@ -199,7 +199,7 @@ class _FilterScreenState extends WidgetState<FilterWidgetModel> {
                     SizedBox(
                       width: double.infinity,
                       child: CupertinoRangeSlider(
-                        min: 100,
+                        min: 0,
                         max: 10000,
                         minValue: filter.searchRange.start.toDouble().abs(),
                         maxValue: filter.searchRange.end.toDouble().abs(),
