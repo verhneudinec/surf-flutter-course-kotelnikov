@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/common/error/error_handler.dart';
+import 'package:places/data/database/database.dart';
 import 'package:places/data/interactor/init_app_interactor.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
@@ -29,6 +30,9 @@ void main() {
             errorHandler: StandardErrorHandler(),
           ),
         ),
+
+        /// Moor database
+        Provider<AppDB>(create: (_) => AppDB()),
       ],
       child: App(),
     ),
