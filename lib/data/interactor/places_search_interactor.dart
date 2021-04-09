@@ -68,13 +68,16 @@ class PlacesSearchInteractor with ChangeNotifier {
   }
 
   void addQueryToHistory(String searchQuery) {
-    _db.searchHistorysDao.saveSearchQuery(
-      searchQuery,
-    );
+    // Double check. If the request is in the database, then do nothing.
+    if (!_searchHistory.value.data.contains(searchQuery)) {
+      _db.searchHistorysDao.saveSearchQuery(
+        searchQuery,
+      );
 
-    _searchHistory.content(
-      _searchHistory.value.data..add(searchQuery),
-    );
+      _searchHistory.content(
+        _searchHistory.value.data..add(searchQuery),
+      );
+    }
   }
 
   void deleteQueryFromHistory(String query) async {
