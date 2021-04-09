@@ -29,9 +29,13 @@ class _SplashScreenState extends State<SplashScreen>
   /// Animation of rotation
   Animation<double> _rotateAnimation;
 
+  AppPreferences _appPreferences;
+
   @override
   void initState() {
     super.initState();
+
+    _appPreferences = context.read<AppPreferences>();
 
     _animationController = AnimationController(
       vsync: this,
@@ -89,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen>
   /// Function to navigate to next screen,
   /// for now defaults to [OnboardingScreen]
   Future<void> _navigateToNext() async {
-    bool isFirstRun = await AppPreferences.isFirstRun;
+    bool isFirstRun = await _appPreferences.isFirstRun;
 
     Navigator.pushReplacement(
       context,

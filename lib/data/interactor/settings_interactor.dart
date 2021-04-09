@@ -9,8 +9,21 @@ class SettingsInteractor with ChangeNotifier {
   /// [isDarkMode] - getter of current theme.
   bool get isDarkMode => _isDarkMode;
 
+  AppPreferences _appPreferences;
+
+  ///         ///
+  /// Setters ///
+  ///         ///
+
+  /// TODO Переделать в сеттер
+  void setAppPreferences(AppPreferences appPrefs) => _appPreferences = appPrefs;
+
+  ///           ///
+  /// Functions ///
+  ///           ///
+
   Future<void> settingsInit() async {
-    _isDarkMode = await AppPreferences.isDarkTheme;
+    _isDarkMode = await _appPreferences.isDarkTheme;
     notifyListeners();
   }
 
@@ -18,7 +31,7 @@ class SettingsInteractor with ChangeNotifier {
   void changeTheme() {
     _isDarkMode = !_isDarkMode;
 
-    AppPreferences.setIsDarkTheme(_isDarkMode);
+    _appPreferences.setIsDarkTheme(_isDarkMode);
 
     notifyListeners();
   }
