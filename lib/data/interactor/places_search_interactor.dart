@@ -15,8 +15,7 @@ class PlacesSearchInteractor with ChangeNotifier {
 
   AppDB _db;
 
-  EntityStreamedState<List<String>> _searchHistory =
-      EntityStreamedState<List<String>>(
+  final _searchHistory = EntityStreamedState<List<String>>(
     EntityState.content([]),
   );
 

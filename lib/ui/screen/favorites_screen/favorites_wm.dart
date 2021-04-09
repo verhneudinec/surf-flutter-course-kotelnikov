@@ -13,13 +13,12 @@ class FavoritesWidgetModel extends WidgetModel {
   final tabController = EntityStreamedState<TabController>();
 
   /// List of favorite places from [PlacesInteractor]
-  final favoritePlaces =
-      EntityStreamedState<List<Place>>(EntityState.content([]));
+  EntityStreamedState<List<Place>> get favoritePlaces =>
+      placesInteractor.favoritePlaces;
 
   /// List of places from favorites with parameter [isVisited] = true.
-  final visitedPlaces = EntityStreamedState<List<Place>>(
-    EntityState.content([]),
-  );
+  EntityStreamedState<List<Place>> get visitedPlaces =>
+      placesInteractor.visitedPlaces;
 
   FavoritesWidgetModel(
     WidgetModelDependencies baseDependencies,
@@ -34,9 +33,16 @@ class FavoritesWidgetModel extends WidgetModel {
   @override
   void onLoad() {
     super.onLoad();
-    placesInteractor.sortFavoritePlaces();
-    favoritePlaces.content(placesInteractor.getFavoritePlaces);
-    visitedPlaces.content(placesInteractor.getVisitedPlaces);
+
+    _initFavorites();
+
+    visitedPlaces.content(placesInteractor.visitedPlaces.value.data);
+  }
+
+  Future<void> _initFavorites() async {
+    // final List<Place> favoritesPlaces =
+    //     await placesInteractor.getFavoritePlaces;
+    // favoritePlaces.content(favoritesPlaces);
   }
 
   @override

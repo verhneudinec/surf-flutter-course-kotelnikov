@@ -4,9 +4,8 @@ import 'package:places/data/database/search_history/search_history_table.dart';
 
 part 'search_history_dao.g.dart';
 
-@UseDao(tables: [SearchHistorys])
-
 /// Data access object for [SearchHostorys] table
+@UseDao(tables: [SearchHistorys])
 class SearchHistorysDao extends DatabaseAccessor<AppDB>
     with _$SearchHistorysDaoMixin {
   SearchHistorysDao(AppDB attachedDatabase) : super(attachedDatabase);

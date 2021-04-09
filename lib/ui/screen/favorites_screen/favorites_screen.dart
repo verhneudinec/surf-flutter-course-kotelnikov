@@ -75,15 +75,18 @@ class _FavoritesScreenState extends WidgetState<FavoritesWidgetModel>
                             );
                           },
                         ),
-                        CustomScrollView(
-                          slivers: [
-                            PlaceList(
-                              places: wm.visitedPlaces.stateSubject.value.data,
-                              cardsType: CardTypes.visited,
-                              onDeletePlace: wm.onDeleteFromFavoritesAction,
-                            ),
-                          ],
-                        ),
+                        EntityStateBuilder<List<Place>>(
+                            streamedState: wm.visitedPlaces,
+                            child: (context, visitedPlaces) {
+                              return CustomScrollView(
+                                slivers: [
+                                  PlaceList(
+                                    places: visitedPlaces,
+                                    cardsType: CardTypes.visited,
+                                  ),
+                                ],
+                              );
+                            }),
                       ],
                     ),
                   ),
