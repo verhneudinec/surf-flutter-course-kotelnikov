@@ -11,8 +11,9 @@ import 'package:places/data/database/search_history/search_history_table.dart';
 part 'database.g.dart';
 
 @UseMoor(
-    tables: [SearchHistorys, Favorites],
-    daos: [SearchHistorysDao, FavoritesDao])
+  tables: [SearchHistorys, Favorites],
+  daos: [SearchHistorysDao, FavoritesDao],
+)
 class AppDB extends _$AppDB {
   AppDB() : super(_openConnection());
 
@@ -21,9 +22,11 @@ class AppDB extends _$AppDB {
 }
 
 LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbPath = await getApplicationDocumentsDirectory();
-    final file = File(join(dbPath.path, "places2.sql"));
-    return VmDatabase(file);
-  });
+  return LazyDatabase(
+    () async {
+      final dbPath = await getApplicationDocumentsDirectory();
+      final file = File(join(dbPath.path, "places.sql"));
+      return VmDatabase(file);
+    },
+  );
 }

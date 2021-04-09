@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/interactor/settings_interactor.dart';
 import 'package:provider/provider.dart';
 
