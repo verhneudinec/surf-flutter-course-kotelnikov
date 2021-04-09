@@ -9,6 +9,7 @@ class SettingsInteractor with ChangeNotifier {
   /// [isDarkMode] - getter of current theme.
   bool get isDarkMode => _isDarkMode;
 
+  /// App shared preferences. Initialized in [InitAppInteractor]
   AppPreferences _appPreferences;
 
   ///         ///

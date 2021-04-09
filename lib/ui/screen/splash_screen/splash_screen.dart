@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
   /// Animation of rotation
   Animation<double> _rotateAnimation;
 
+  /// App shared preferences
   AppPreferences _appPreferences;
 
   @override

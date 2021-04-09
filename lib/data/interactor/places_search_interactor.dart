@@ -16,6 +16,7 @@ class PlacesSearchInteractor with ChangeNotifier {
   /// Filter by type of location and radius
   Filter _filter = Filter.empty();
 
+  /// App shared preferences. Initialized in [InitAppInteractor]
   AppPreferences _appPreferences;
 
   ///         ///

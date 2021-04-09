@@ -33,6 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   /// Zoom animation
   Animation<double> _zoomAnimation;
 
+  /// App shared preferences
   AppPreferences _appPreferences;
 
   @override
