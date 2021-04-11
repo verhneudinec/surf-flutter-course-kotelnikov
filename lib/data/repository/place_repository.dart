@@ -17,12 +17,14 @@ class PlaceRepository {
   Future<List<Place>> loadPlaces() async {
     try {
       final Response response = await _client.get(ApiUrls.place);
-      List<Place> placeList = List<Place>.from(
+
+      _places = List<Place>.from(
         response.data.map(
           (place) => ApiMapping().placeFromJson(place),
         ),
       );
-      return placeList;
+
+      return _places;
     } catch (e) {
       _client.exceptionHandler(e);
       throw e;

@@ -16,6 +16,7 @@ class Place {
 
   double distance;
   bool isVisited;
+  DateTime visitDate;
 
   Place({
     this.id,
@@ -25,6 +26,7 @@ class Place {
     this.urls,
     this.placeType,
     this.description,
+    this.visitDate,
     this.isVisited,
     this.distance,
   });

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/common/error/error_handler.dart';
+import 'package:places/data/database/database.dart';
+import 'package:places/data/interactor/init_app_interactor.dart';
+import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
+import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
+import 'package:places/data/repository/storage/app_preferences.dart';
+import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:places/res/app_routes.dart';
 import 'package:places/res/themes.dart';
-import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 import 'package:places/data/interactor/settings_interactor.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
@@ -22,6 +26,13 @@ void main() {
           create: (context) => WidgetModelDependencies(
             errorHandler: StandardErrorHandler(),
           ),
+        ),
+
+        /// Moor database
+        Provider<AppDB>(create: (_) => AppDB()),
+        /// App shared preferences
+        Provider<AppPreferences>(
+          create: (context) => AppPreferences(),
         ),
       ],
       child: App(),
@@ -45,10 +56,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? darkTheme : lightTheme,
-      initialRoute: AppRoutes.home,
-      onGenerateRoute: (routeSettings) {
-        return PlaceListScreenRoute();
-      },
+      home: SplashScreen(),
     );
   }
 }
