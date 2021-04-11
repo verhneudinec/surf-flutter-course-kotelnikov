@@ -1,4 +1,5 @@
 import 'package:places/data/model/search_range.dart';
+import 'package:places/res/place_types.dart';
 
 /// The class of the search filter.
 /// [searchRange] -search range.
@@ -14,14 +15,14 @@ class Filter {
 
   /// Filter with default values
   Filter.empty() {
-    searchRange = SearchRange(100, 10000);
+    searchRange = SearchRange(0, 10000);
     searchTypes = {
-      "hotel": true,
-      "restaurant": true,
-      "particular_place": true,
-      "park": true,
-      "museum": true,
-      "cafe": true,
+      PlaceTypes.hotel: false,
+      PlaceTypes.restaurant: false,
+      PlaceTypes.particular_place: false,
+      PlaceTypes.park: false,
+      PlaceTypes.museum: false,
+      PlaceTypes.cafe: false,
     };
   }
 }

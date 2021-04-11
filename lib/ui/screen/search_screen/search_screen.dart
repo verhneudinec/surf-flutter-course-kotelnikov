@@ -245,7 +245,7 @@ class _SearchScreenState extends WidgetState<SearchWidgetModel> {
               ),
             ),
             InkWell(
-              onTap: () => wm.onQueryDeleteAction(index),
+              onTap: () => wm.onQueryDeleteAction(text),
               child: Container(
                 margin: EdgeInsets.only(
                   right: 8,
