@@ -1,110 +1,133 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:places/data/database/database.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/exceptions/network_exception.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/utils/check_distance.dart';
+import 'package:provider/provider.dart';
+import 'package:relation/relation.dart';
 
 /// Provider for an array of application locations.
 /// Initialized with data from API.
 class PlacesInteractor with ChangeNotifier {
+  /// Application database.
+  /// Initialized in [initFavoritesTable].
+  AppDB _db;
+
+  /// Loaded places from [PlacesRepository]
   List<Place> _places = [];
-  List<Place> _favoritePlaces = [];
 
-  final StreamController<List<Place>> _placeListController =
-      StreamController<List<Place>>();
-  final StreamController<Place> _placeDetailsController =
-      StreamController<Place>();
+  /// Favorite places. Loaded from database.
+  final _favoritePlaces = EntityStreamedState<List<Place>>(
+    EntityState.content([]),
+  );
 
-  /// Places from [PlacesRepository]
+  /// Favorite places with value `isVisited = true`.
+  final _visitedPlaces = EntityStreamedState<List<Place>>(
+    EntityState.content([]),
+  );
+
+  ///           ///
+  ///  Getters  ///
+  ///           ///
+
   List<Place> get places => _places;
 
-  /// Places from [_favoritePlaces]
-  List<Place> get getFavoritePlaces =>
-      _favoritePlaces.where((place) => !place.isVisited).toList();
+  EntityStreamedState<List<Place>> get favoritePlaces => _favoritePlaces;
 
-  /// StreamControllers
-  StreamController<List<Place>> get placeListController => _placeListController;
+  EntityStreamedState<List<Place>> get visitedPlaces => _visitedPlaces;
 
-  StreamController<Place> get placeDetailsController => _placeDetailsController;
-
-  /// Visited places from [PlacesRepository]
-  List<Place> get getVisitedPlaces =>
-      _favoritePlaces.where((place) => place.isVisited).toList();
+  ///             ///
+  ///  Functions  ///
+  ///             ///
 
   /// Function for loading places from [PlacesRepository]
   Future<void> loadPlaces({int radius, String category}) async {
     try {
       final response = await PlaceRepository().loadPlaces();
       _places = response;
-      _placeListController.sink.add(_places);
-    } on NetworkException catch (e) {
-      _placeListController.addError(e);
     } catch (e) {
-      _placeListController.addError(e);
+      rethrow;
     }
   }
 
   /// Function for loading place details from API
-  Future<Place> loadPlaceDetails({int id}) async {
+  Future<Place> loadPlaceDetails({@required int id}) async {
     try {
       final response = await PlaceRepository().getPlaceDetails(id: id);
-      if (!_placeDetailsController.isClosed)
-        _placeDetailsController.sink.add(response);
       return response;
-    } on NetworkException catch (e) {
-      if (!_placeDetailsController.isClosed)
-        _placeDetailsController.addError(e);
     } catch (e) {
-      if (!_placeDetailsController.isClosed)
-        _placeDetailsController.addError(e);
+      rethrow;
     }
   }
 
+  /// Function for initializing the database [_db].
+  /// This also loads the locations from db using [refreshFavoritePlaces].
+  void initFavoritesTable(BuildContext context) {
+    _db = context.read<AppDB>();
+
+    refreshFavoritePlaces();
+  }
+
+  /// A function to update the state of [_favoritePlaces] and [_visitedPlaces]
+  /// with data from the database.
+  Future<void> refreshFavoritePlaces() async {
+    final List<Place> favoritePlacesFromDB =
+        await _db.favoritesDao.getFavoritePlaces;
+
+    final List<Place> visitedPlacesFromDB =
+        await _db.favoritesDao.getVisitedPlaces;
+
+    _favoritePlaces.content(sortFavoritePlaces(favoritePlacesFromDB));
+
+    _visitedPlaces.content(sortFavoritePlaces(visitedPlacesFromDB));
+  }
+
   /// Function for sorting [_favoritePlaces] list
-  void sortFavoritePlaces() {
+  List<Place> sortFavoritePlaces(List<Place> places) {
     final GeoPosition userGeoposition = GeoPosition(59.914455, 29.770945);
 
-    _favoritePlaces.forEach((element) {
+    places.forEach((element) {
       element.distance = DistanceToPlace().check(
         userPoint: userGeoposition,
         checkPoint: GeoPosition(element.lat, element.lng),
       );
     });
 
-    if (_favoritePlaces.isNotEmpty)
-      _favoritePlaces.sort(
+    if (places.isNotEmpty)
+      places.sort(
         (prev, next) {
           return prev.distance.compareTo(next.distance);
         },
       );
+
+    return places;
   }
 
   /// Function for checking the place in favorites
   bool isPlaceInFavorites(Place place) {
-    return _favoritePlaces.contains(place);
+    return _favoritePlaces.value.data.contains(place);
   }
 
   /// Function for adding the place in favorites
   void addToFavorites(Place place) {
-    _favoritePlaces.add(place);
-    notifyListeners();
+    _db.favoritesDao.savePlace(place);
+    refreshFavoritePlaces();
   }
 
   /// Function for removing the place from favorites
   void removeFromFavorites(Place place) {
-    _favoritePlaces.removeWhere((item) => item.id == place.id);
-    print("Удалено из избранного");
-    notifyListeners();
+    _db.favoritesDao.deletePlace(place.id);
+    refreshFavoritePlaces();
   }
 
   /// Function for adding place to visited
-  void addToVisitingPlaces(Place place) {
-    _favoritePlaces.firstWhere((item) => item.id == place.id).isVisited = true;
-    print("Добавлено в избранное");
-    notifyListeners();
+  void markPlaceAsVisited(Place place) {
+    _db.favoritesDao.markPlaceAsVisited(place);
+    refreshFavoritePlaces();
   }
 
   Future<Place> addNewPlace(Place place) async {
@@ -130,22 +153,23 @@ class PlacesInteractor with ChangeNotifier {
     int oldIndex,
     int newIndex,
   ) {
-    Place temp = _favoritePlaces[oldIndex];
-    _favoritePlaces.removeAt(oldIndex);
-    _favoritePlaces.insert(newIndex, temp);
+    // TODO Переписать функцию swapFavoriteItems
+    // Временно закомментировал
+    //Place temp = _favoritePlaces[oldIndex];
+    // _favoritePlaces.removeAt(oldIndex);
+    // _favoritePlaces.insert(newIndex, temp);
     notifyListeners();
   }
 
+  // TODO Переписать функцию getPlaceId для swapFavoriteItems
   int getPlaceId({
     Place place,
   }) {
-    return _favoritePlaces.indexOf(place);
+    return _favoritePlaces.value.data.indexOf(place);
   }
 
   @override
   void dispose() {
-    _placeListController.close();
-    _placeDetailsController.close();
     super.dispose();
   }
 }

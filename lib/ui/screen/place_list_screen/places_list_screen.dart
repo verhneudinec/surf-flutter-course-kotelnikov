@@ -6,6 +6,7 @@ import 'package:places/res/icons.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_wm.dart';
 import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 import 'package:places/ui/widgets/app_bars/flexible_app_bar_delegate.dart';
+import 'package:places/ui/widgets/loader/loader_builder.dart';
 import 'package:places/ui/widgets/places_list.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/res/text_strings.dart';
@@ -84,7 +85,7 @@ class _PlaceListScreenState extends WidgetState<PlaceListWidgetModel> {
       child: Container(
         height: MediaQuery.of(context).size.height / 2,
         child: Center(
-          child: CircularProgressIndicator(),
+          child: CircularLoader(),
         ),
       ),
     );

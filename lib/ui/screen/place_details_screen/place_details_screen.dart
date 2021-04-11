@@ -11,7 +11,8 @@ import 'package:places/res/decorations.dart';
 import 'package:places/ui/common/back_button.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_wm.dart';
 import 'package:places/ui/widgets/error_stub.dart';
-import 'package:places/ui/widgets/image_loader_builder.dart';
+import 'package:places/ui/widgets/image_network.dart';
+import 'package:places/ui/widgets/loader/loader_builder.dart';
 import 'package:relation/relation.dart';
 
 /// Screen with detailed information about the place
@@ -36,84 +37,94 @@ class _PlaceDetailsScreenState extends WidgetState<PlaceDetailsWidgetModel> {
         return ClipRRect(
           borderRadius: AppDecorations.bottomSheetBorderRadius,
           child: Scaffold(
-            body: EntityStateBuilder<Place>(
-              streamedState: wm.placeState,
-              loadingChild: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 3,
-                  ),
-                  Center(child: CircularProgressIndicator()),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                ],
-              ),
-              errorChild: Center(
-                child: SizedBox(
-                  width: 300,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: ErrorStub(
-                    icon: AppIcons.error,
-                    title: AppTextStrings.dataLoadingErrorTitle,
-                    subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+            body: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  automaticallyImplyLeading: false,
+                  expandedHeight: 360,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: PlaceDetailsHeader(
+                      placeId: wm.placeId,
+                      placesPhotogallery: wm.placeImages,
+                      photogalleryController: wm.photogalleryController,
+                      photogalleryPageIndex: wm.photogalleryPageIndex,
+                      onPhotogalleryPageChanged:
+                          wm.onPhotogalleryPageUpdateAction,
+                      isBottomSheet: wm.isBottomSheet,
+                    ),
                   ),
                 ),
-              ),
-              child: (context, placeState) {
-                return CustomScrollView(
-                  controller: scrollController,
-                  slivers: [
-                    SliverAppBar(
-                      backgroundColor: Colors.transparent,
-                      automaticallyImplyLeading: false,
-                      expandedHeight: 360,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: PlaceDetailsHeader(
-                          place: placeState,
-                          photogalleryController: wm.photogalleryController,
-                          photogalleryPageIndex: wm.photogalleryPageIndex,
-                          onPhotogalleryPageChanged:
-                              wm.onPhotogalleryPageUpdateAction,
-                          isBottomSheet: wm.isBottomSheet,
-                        ),
-                      ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
-                          child: PlaceDetailsBody(
-                            place: placeState,
-                            isPlaceInFavorites: wm.isPlaceInFavorites,
-                            onAddingToFavorites: wm.onAddingToFavoritesAction,
-                            onRemoveFromFavorites:
-                                wm.onRemoveFromFavoritesAction,
+                EntityStateBuilder<Place>(
+                    streamedState: wm.placeState,
+                    loadingChild: SliverToBoxAdapter(child: _loadingChild()),
+                    errorChild: SliverToBoxAdapter(child: _errorChild()),
+                    child: (context, placeState) {
+                      return SliverList(
+                        delegate: SliverChildListDelegate([
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: PlaceDetailsBody(
+                              place: placeState,
+                              isPlaceInFavorites: wm.isPlaceInFavorites,
+                              onAddingToFavorites: wm.onAddingToFavoritesAction,
+                              onRemoveFromFavorites:
+                                  wm.onRemoveFromFavoritesAction,
+                            ),
                           ),
-                        ),
-                      ]),
-                    )
-                  ],
-                );
-              },
+                        ]),
+                      );
+                    })
+              ],
             ),
           ),
         );
       },
     );
   }
+
+  Widget _loadingChild() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2,
+      child: Center(
+        child: CircularLoader(),
+      ),
+    );
+  }
+
+  Widget _errorChild() {
+    return Center(
+      child: SizedBox(
+        width: 300,
+        height: MediaQuery.of(context).size.height / 2,
+        child: ErrorStub(
+          icon: AppIcons.error,
+          title: AppTextStrings.dataLoadingErrorTitle,
+          subtitle: AppTextStrings.dataLoadingErrorSubtitle,
+        ),
+      ),
+    );
+  }
 }
 
 class PlaceDetailsHeader extends StatefulWidget {
-  final Place place;
   final bool isBottomSheet;
-  final PageController photogalleryController;
+
+  final int placeId;
+
+  final List<String> placesPhotogallery;
+
   final EntityStreamedState<int> photogalleryPageIndex;
+
+  final PageController photogalleryController;
+
   final onPhotogalleryPageChanged;
 
   const PlaceDetailsHeader({
     Key key,
-    @required this.place,
+    @required this.placeId,
+    @required this.placesPhotogallery,
     @required this.photogalleryController,
     @required this.photogalleryPageIndex,
     @required this.onPhotogalleryPageChanged,
@@ -187,7 +198,7 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
       maxHeight: 360,
       child: PageView.builder(
         controller: widget.photogalleryController,
-        itemCount: widget.place.urls.length,
+        itemCount: widget.placesPhotogallery.length,
         physics: Platform.isAndroid
             ? ClampingScrollPhysics()
             : BouncingScrollPhysics(),
@@ -196,11 +207,11 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
             width: double.infinity,
             height: 360,
             decoration: AppDecorations.placeCardImageGradient,
-            child: Image.network(
-              widget.place.urls.elementAt(index),
-              fit: BoxFit.cover,
-              loadingBuilder: imageLoaderBuilder,
-              errorBuilder: imageErrorBuilder,
+            child: Hero(
+              tag: index == 0 ? widget.placeId : index,
+              child: ImageNetwork(
+                widget.placesPhotogallery.elementAt(index),
+              ),
             ),
           );
         },
@@ -221,12 +232,12 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
         child: (context, page) {
           return Row(
             children: [
-              if (widget.place.urls.length > 1)
-                for (int i = 0; i < widget.place.urls.length; i++)
+              if (widget.placesPhotogallery.length > 1)
+                for (int i = 0; i < widget.placesPhotogallery.length; i++)
                   i == page
                       ? Container(
                           width: MediaQuery.of(context).size.width /
-                              widget.place.urls.length,
+                              widget.placesPhotogallery.length,
                           height: 7.5,
                           decoration: AppDecorations.galleryIndicator.copyWith(
                             color: Theme.of(context).iconTheme.color,
@@ -234,7 +245,7 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
                         )
                       : SizedBox(
                           width: MediaQuery.of(context).size.width /
-                              widget.place.urls.length,
+                              widget.placesPhotogallery.length,
                         ),
             ],
           );

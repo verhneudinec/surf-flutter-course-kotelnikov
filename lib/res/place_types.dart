@@ -6,22 +6,29 @@ import 'package:places/res/text_strings.dart';
 class PlaceTypes {
   PlaceTypes({Key key});
 
+  static const String hotel = "hotel",
+      restaurant = "restaurant",
+      park = "park",
+      museum = "museum",
+      cafe = "cafe",
+      particular_place = "particular_place";
+
   /// Converts place type to text from [AppTextStrings]
   static String stringFromPlaceType(String placeType) {
     switch (placeType) {
-      case "hotel":
+      case hotel:
         return AppTextStrings.hotel;
         break;
-      case "restaurant":
+      case restaurant:
         return AppTextStrings.restourant;
         break;
-      case "park":
+      case park:
         return AppTextStrings.park;
         break;
-      case "museum":
+      case museum:
         return AppTextStrings.museum;
         break;
-      case "cafe":
+      case cafe:
         return AppTextStrings.cafe;
         break;
       default:
@@ -33,19 +40,19 @@ class PlaceTypes {
   /// Convert place type to svg icon path
   static String iconFromPlaceType(String placeType) {
     switch (placeType) {
-      case "hotel":
+      case hotel:
         return AppIcons.hotel;
         break;
-      case "restaurant":
+      case restaurant:
         return AppIcons.restourant;
         break;
-      case "park":
+      case park:
         return AppIcons.park;
         break;
-      case "museum":
+      case museum:
         return AppIcons.museum;
         break;
-      case "cafe":
+      case cafe:
         return AppIcons.cafe;
         break;
       default:

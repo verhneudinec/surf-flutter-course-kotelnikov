@@ -4,6 +4,8 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_route.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
 import 'package:places/ui/widgets/date_pickers.dart';
 import 'package:relation/relation.dart';
 
@@ -96,12 +98,44 @@ class PlaceCardWidgetModel extends WidgetModel {
   /// Open a window with details of the place,
   /// if there was a click on the card
   void _showPlaceDetails(Widget placeDetailsContainer) {
-    showModalBottomSheet(
-      context: navigator.context,
-      builder: (_) {
-        return placeDetailsContainer;
-      },
-      isScrollControlled: true,
+    /// Ранее мы делали BottomSheet...
+    /// для анимации переделываю на обычный роутинг
+    // showModalBottomSheet(
+    //   context: navigator.context,
+    //   builder: (_) {
+    //     return placeDetailsContainer;
+    //   },
+    //   isScrollControlled: true,
+    // );
+    //
+
+    navigator.push(
+      PageRouteBuilder(
+        pageBuilder: (
+          BuildContext context,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return PlaceDetailsWidget(
+            place.id,
+            placeImages: place.urls,
+          );
+        },
+        transitionsBuilder: (
+          BuildContext context,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+          Widget child,
+        ) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: Offset(0, 1),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
     );
   }
 

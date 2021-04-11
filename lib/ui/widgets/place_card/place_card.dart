@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/res/durations.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/place_types.dart';
 import 'package:places/res/text_strings.dart';
@@ -10,9 +11,8 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
-import 'package:places/ui/widgets/image_loader_builder.dart';
+import 'package:places/ui/widgets/image_network.dart';
 import 'package:places/ui/widgets/place_card/place_card_wm.dart';
 import 'package:relation/relation.dart';
 
@@ -137,11 +137,11 @@ class PlaceCardHeader extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 96,
-          child: Image.network(
-            place.urls.elementAt(0),
-            fit: BoxFit.cover,
-            loadingBuilder: imageLoaderBuilder,
-            errorBuilder: imageErrorBuilder,
+          child: Hero(
+            tag: place.id,
+            child: ImageNetwork(
+              place.urls.elementAt(0),
+            ),
           ),
         ),
 
@@ -192,7 +192,7 @@ class PlaceCardBody extends StatelessWidget {
             ),
             child: Text(
               place.name,
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.placeCardTitle.copyWith(
                 color: Theme.of(context).textTheme.headline4.color,
@@ -235,7 +235,7 @@ class PlaceCardBody extends StatelessWidget {
             height: 2,
           ),
 
-          // Brief description of the place
+          // Distance to place
           Container(
             child: Text(
               cardType == CardTypes.general
@@ -293,21 +293,31 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
                 return Positioned(
                   top: 16,
                   right: 16,
-                  child: isPlaceinFavorites
-                      ? _iconButton(
-                          iconPath: AppIcons.heartFull,
-                          onPressed: () => widget.onDeleteFromFavoritesAction(),
-                        )
-                      : _iconButton(
-                          iconPath: AppIcons.heart,
-                          onPressed: () => widget.onAddingToFavorites(),
-                        ),
+
+                  /// Animate clicking on the "Add to favorites" button on card.
+                  /// Display different widgets depending on the value of the [isPlaceinFavorites].
+                  child: AnimatedCrossFade(
+                    duration: AppDurations.commonDuration,
+                    firstCurve: Curves.easeIn,
+                    secondCurve: Curves.easeOut,
+                    crossFadeState: isPlaceinFavorites
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    firstChild: _iconButton(
+                      iconPath: AppIcons.heartFull,
+                      onPressed: () => widget.onDeleteFromFavoritesAction(),
+                    ),
+                    secondChild: _iconButton(
+                      iconPath: AppIcons.heart,
+                      onPressed: () => widget.onAddingToFavorites(),
+                    ),
+                  ),
                 );
               },
             ),
 
           // "Remove from list" button
-          if (widget.cardType != CardTypes.general)
+          if (widget.cardType == CardTypes.unvisited)
             Positioned(
               top: 16,
               right: 16,
@@ -333,7 +343,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
           if (widget.cardType == CardTypes.visited)
             Positioned(
               top: 16,
-              right: 56,
+              right: 16,
               child: _iconButton(
                 iconPath: AppIcons.share,
               ),

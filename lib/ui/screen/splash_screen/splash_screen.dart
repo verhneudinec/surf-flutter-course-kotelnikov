@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:places/data/interactor/init_app_interactor.dart';
 import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/data/repository/storage/app_preferences.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 import 'package:provider/provider.dart';
 
 /// [SplashScreen] is shown whenever you enter the application.
@@ -26,9 +29,14 @@ class _SplashScreenState extends State<SplashScreen>
   /// Animation of rotation
   Animation<double> _rotateAnimation;
 
+  /// App shared preferences
+  AppPreferences _appPreferences;
+
   @override
   void initState() {
     super.initState();
+
+    _appPreferences = context.read<AppPreferences>();
 
     _animationController = AnimationController(
       vsync: this,
@@ -45,7 +53,9 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    initPlaces();
+    _initApp();
+
+    _initPlaces();
   }
 
   @override
@@ -54,9 +64,13 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  void _initApp() {
+    InitAppInteractor().initApp(context);
+  }
+
   /// Function for loading the state of these places.
 // /During chunking, displays the animation of the logo rotation by [_animationController].
-  Future<void> initPlaces() async {
+  Future<void> _initPlaces() async {
     try {
       /// We are waiting for the initialization of the application
       /// or 4 seconds if initialization was earlier.
@@ -71,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
       );
 
       // If there was no error, then go to the next screen.
-      navigateToNext();
+      _navigateToNext();
     } catch (error) {
       print('Error $error');
     }
@@ -79,12 +93,16 @@ class _SplashScreenState extends State<SplashScreen>
 
   /// Function to navigate to next screen,
   /// for now defaults to [OnboardingScreen]
-  void navigateToNext() {
+  Future<void> _navigateToNext() async {
+    bool isFirstRun = await _appPreferences.isFirstRun;
+
     Navigator.pushReplacement(
       context,
-      CupertinoPageRoute(
-        builder: (BuildContext context) => OnboardingScreen(),
-      ),
+      isFirstRun
+          ? CupertinoPageRoute(
+              builder: (BuildContext context) => OnboardingScreen(),
+            )
+          : PlaceListScreenRoute(),
     );
   }
 

@@ -11,7 +11,7 @@ import 'package:places/ui/screen/search_screen/search_wm.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
 import 'package:places/ui/widgets/error_stub.dart';
 import 'package:places/ui/widgets/search_bar.dart';
-import 'package:places/ui/widgets/image_loader_builder.dart';
+import 'package:places/ui/widgets/image_network.dart';
 import 'package:places/ui/widgets/app_bars/app_bottom_navigation_bar.dart';
 import 'package:relation/relation.dart';
 
@@ -106,11 +106,8 @@ class _SearchScreenState extends WidgetState<SearchWidgetModel> {
                   color: Theme.of(context).backgroundColor,
                   width: 56,
                   height: 56,
-                  child: Image.network(
+                  child: ImageNetwork(
                     wm.searchResults.value.data[i].urls[0],
-                    fit: BoxFit.cover,
-                    loadingBuilder: imageLoaderBuilder,
-                    errorBuilder: imageErrorBuilder,
                   ),
                 ),
               ),
@@ -248,7 +245,7 @@ class _SearchScreenState extends WidgetState<SearchWidgetModel> {
               ),
             ),
             InkWell(
-              onTap: () => wm.onQueryDeleteAction(index),
+              onTap: () => wm.onQueryDeleteAction(text),
               child: Container(
                 margin: EdgeInsets.only(
                   right: 8,
