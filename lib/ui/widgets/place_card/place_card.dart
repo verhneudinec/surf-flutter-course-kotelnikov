@@ -235,7 +235,7 @@ class PlaceCardBody extends StatelessWidget {
             height: 2,
           ),
 
-          // Brief description of the place
+          // Distance to place
           Container(
             child: Text(
               cardType == CardTypes.general
@@ -317,7 +317,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
             ),
 
           // "Remove from list" button
-          if (widget.cardType != CardTypes.general)
+          if (widget.cardType == CardTypes.unvisited)
             Positioned(
               top: 16,
               right: 16,
@@ -343,7 +343,7 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
           if (widget.cardType == CardTypes.visited)
             Positioned(
               top: 16,
-              right: 56,
+              right: 16,
               child: _iconButton(
                 iconPath: AppIcons.share,
               ),

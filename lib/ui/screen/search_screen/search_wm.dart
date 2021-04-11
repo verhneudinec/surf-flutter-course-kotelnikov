@@ -18,10 +18,9 @@ class SearchWidgetModel extends WidgetModel {
     EntityState.content([]),
   );
 
-  /// Search history state
-  EntityStreamedState<List<String>> searchHistory = EntityStreamedState(
-    EntityState.content([]),
-  );
+  /// Search history from [searchInteractor]
+  EntityStreamedState<List<String>> get searchHistory =>
+      searchInteractor.searchHistory;
 
   SearchWidgetModel(
     WidgetModelDependencies baseDependencies,
@@ -36,6 +35,7 @@ class SearchWidgetModel extends WidgetModel {
   @override
   void onLoad() {
     searchInteractor.initFilter();
+    searchInteractor.initSearchHistoryTable(navigator.context);
     super.onLoad();
   }
 
@@ -53,21 +53,19 @@ class SearchWidgetModel extends WidgetModel {
     );
 
     subscribe(
+      onQueryDeleteAction.stream,
+      (query) => searchInteractor.deleteQueryFromHistory(query),
+    );
+
+    subscribe(
       onClearHistoryAction.stream,
-      (_) => searchHistory.content([]),
+      (_) => searchInteractor.clearSearchHistory(),
     );
 
     subscribe(
       onPlaceClickAction.stream,
       (index) => navigator.push(
         PlaceDetailsRoute(searchResults.value.data[index].id),
-      ),
-    );
-
-    subscribe(
-      onQueryDeleteAction.stream,
-      (index) => searchHistory.content(
-        searchHistory.value.data..removeAt(index),
       ),
     );
   }
@@ -109,9 +107,11 @@ class SearchWidgetModel extends WidgetModel {
     if (isTapFromHistory) searchFieldAction.controller.text = searchQuery;
 
     if (searchQuery.isNotEmpty) {
-      searchHistory.content(
-        searchHistory.stateSubject.value.data..add(searchQuery),
-      );
+      // searchHistory.content(
+      //   searchHistory.stateSubject.value.data..add(searchQuery),
+      // );
+
+      searchInteractor.addQueryToHistory(searchQuery);
     }
 
     /// The [searchResponse] variable stores the response

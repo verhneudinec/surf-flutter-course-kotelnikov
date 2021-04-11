@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
+import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/interactor/settings_interactor.dart';
 import 'package:places/data/repository/storage/app_preferences.dart';
@@ -20,5 +23,6 @@ class InitAppInteractor {
     context.read<SettingsInteractor>().setAppPreferences(appPreferences);
 
     context.read<SettingsInteractor>().settingsInit();
+    context.read<PlacesInteractor>().initFavoritesTable(context);
   }
 }
