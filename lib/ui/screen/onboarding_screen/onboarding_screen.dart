@@ -8,7 +8,7 @@ import 'package:places/res/text_strings.dart';
 import 'package:places/res/decorations.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
-import 'package:places/ui/screen/place_list_screen/places_list_screen.dart';
+import 'package:provider/provider.dart';
 
 /// The [OnboardingScreen] displays hints on how to use the app.
 /// The screen is displayed when you first launch the app or through the settings screen.
@@ -33,9 +33,15 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   /// Zoom animation
   Animation<double> _zoomAnimation;
 
+  /// App shared preferences
+  AppPreferences _appPreferences;
+
   @override
   void initState() {
     super.initState();
+
+    _appPreferences = context.read<AppPreferences>();
+
     _onboardingPageController = new PageController();
     _currentOnboardingPageIndex = 0;
 
@@ -77,7 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   /// Function to go to the next screen
   void _goToTheNextScreen() {
     // So that [OnboardingScreen] is no longer shown
-    AppPreferences.setIsFirstRun(false);
+    _appPreferences.setIsFirstRun(false);
 
     Navigator.pushReplacement(
       context,

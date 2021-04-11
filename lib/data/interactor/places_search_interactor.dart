@@ -25,6 +25,9 @@ class PlacesSearchInteractor with ChangeNotifier {
   /// Filter by type of location and radius
   Filter _filter = Filter.empty();
 
+  /// App shared preferences. Initialized in [InitAppInteractor]
+  AppPreferences _appPreferences;
+
   ///         ///
   /// Getters ///
   ///         ///
@@ -37,6 +40,13 @@ class PlacesSearchInteractor with ChangeNotifier {
       .where((element) => filter.searchTypes[element])
       .toList();
 
+  ///         ///
+  /// Setters ///
+  ///         ///
+
+  /// TODO Переделать в сеттер
+  void setAppPreferences(AppPreferences appPrefs) => _appPreferences = appPrefs;
+
   ///           ///
   /// Functions ///
   ///           ///
@@ -44,13 +54,13 @@ class PlacesSearchInteractor with ChangeNotifier {
   /// Function for initializing the filter from storage
   Future<void> initFilter() async {
     // Get the ending search radius from storage
-    final int filterSearchRangeEnd = await AppPreferences.searchRadius;
+    final int filterSearchRangeEnd = await _appPreferences.searchRadius;
 
     _filter.searchRange.end =
         filterSearchRangeEnd == 0 ? 10000 : filterSearchRangeEnd;
 
     // Get the selected filter types from storage
-    final List<String> filterTypes = await AppPreferences.searchTypes;
+    final List<String> filterTypes = await _appPreferences.searchTypes;
 
     filterTypes.forEach(
       (type) {
@@ -95,8 +105,8 @@ class PlacesSearchInteractor with ChangeNotifier {
     _filter = filter;
 
     // Save the obtained values ​​to the storage
-    AppPreferences.setSearchRadius(filter.searchRange.end);
-    AppPreferences.setSearchTypes(selectedPlaceTypes);
+    _appPreferences.setSearchRadius(filter.searchRange.end);
+    _appPreferences.setSearchTypes(selectedPlaceTypes);
   }
 
   /// [searchPlaces] - is a search request handler.
