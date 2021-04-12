@@ -23,6 +23,8 @@ dependencies:
   sqlite3_flutter_libs: ^0.4.1
   path: ^1.8.0
   path_provider: ^2.0.1
+  image_picker: 0.6.7+22
+  mime_type: ^1.0.0
 
 dev_dependencies:
   flutter_test:

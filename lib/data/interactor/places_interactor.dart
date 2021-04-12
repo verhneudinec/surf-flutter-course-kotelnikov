@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:places/data/database/database.dart';
@@ -17,8 +18,12 @@ class PlacesInteractor with ChangeNotifier {
   /// Initialized in [initFavoritesTable].
   AppDB _db;
 
+  /// Repository for working with API
+  PlaceRepository _placeRepository = PlaceRepository();
+
   /// Loaded places from [PlacesRepository]
   List<Place> _places = [];
+  // TODO Убрать лишние поля в интеракторе
 
   /// Favorite places. Loaded from database.
   final _favoritePlaces = EntityStreamedState<List<Place>>(
@@ -47,7 +52,7 @@ class PlacesInteractor with ChangeNotifier {
   /// Function for loading places from [PlacesRepository]
   Future<void> loadPlaces({int radius, String category}) async {
     try {
-      final response = await PlaceRepository().loadPlaces();
+      final response = await _placeRepository.loadPlaces();
       _places = response;
     } catch (e) {
       rethrow;
@@ -57,7 +62,7 @@ class PlacesInteractor with ChangeNotifier {
   /// Function for loading place details from API
   Future<Place> loadPlaceDetails({@required int id}) async {
     try {
-      final response = await PlaceRepository().getPlaceDetails(id: id);
+      final response = await _placeRepository.getPlaceDetails(id: id);
       return response;
     } catch (e) {
       rethrow;
@@ -130,9 +135,10 @@ class PlacesInteractor with ChangeNotifier {
     refreshFavoritePlaces();
   }
 
+  /// Function for adding a new place.
   Future<Place> addNewPlace(Place place) async {
     try {
-      final newPlace = await PlaceRepository().addNewPlace(place: place);
+      final newPlace = await _placeRepository.addNewPlace(place: place);
 
       _places.add(newPlace);
 
@@ -143,6 +149,17 @@ class PlacesInteractor with ChangeNotifier {
       throw e;
     } catch (e) {
       print(e);
+    }
+  }
+
+  /// Method for uploading [photo] to the server.
+  /// Returns the full url of the image.
+  Future<String> uploadPhoto(File photo) async {
+    try {
+      final String photoUrl = await _placeRepository.uploadPhoto(photo);
+      return photoUrl;
+    } catch (_) {
+      rethrow;
     }
   }
 

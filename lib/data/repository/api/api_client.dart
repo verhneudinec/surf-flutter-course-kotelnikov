@@ -46,17 +46,19 @@ class ApiClient {
     }
   }
 
-  /// Method for making http POST request
-  Future<Object> post(
+  /// Method for making a POST request for a given [url].
+  /// [data] can be of type Map<String, Object> or FormData.
+  Future<Response> post(
     String url, {
-    Map<String, Object> data,
+    Object data,
   }) async {
     try {
       Response response = await _dio.post(url, data: data);
 
-      if (response.statusCode != 200) throw NetworkException();
+      if (response.statusCode != 200 || response.statusCode != 201)
+        throw NetworkException();
 
-      return response.data;
+      return response;
     } on DioError catch (e) {
       throw NetworkException(
         requestUrl: e.request.uri.path,
