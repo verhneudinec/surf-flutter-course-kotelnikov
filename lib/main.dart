@@ -30,6 +30,7 @@ void main() {
 
         /// Moor database
         Provider<AppDB>(create: (_) => AppDB()),
+
         /// App shared preferences
         Provider<AppPreferences>(
           create: (context) => AppPreferences(),

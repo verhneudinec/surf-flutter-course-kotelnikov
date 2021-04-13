@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:places/data/database/database.dart';
 import 'package:places/data/model/filter.dart';
 import 'package:places/data/model/geo_position.dart';
@@ -132,5 +135,40 @@ class PlacesSearchInteractor with ChangeNotifier {
     _searchResults = searchResponse;
 
     return _searchResults;
+  }
+
+  /// Function for getting the user's geolocation
+  Future<Position> getUserPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    /// Testing permissions
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+
+      return Future.error('Location permissions are denied');
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    /// All permissions have been granted, now we can use the user's location
+    final Position userPosition = await Geolocator.getCurrentPosition();
+
+    ///  Save it to the store
+    _appPreferences.setUserGeolocation(userPosition.toString());
+
+    return await Geolocator.getCurrentPosition();
   }
 }

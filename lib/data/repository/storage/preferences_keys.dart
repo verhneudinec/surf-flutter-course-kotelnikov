@@ -3,5 +3,6 @@ class PreferencesKeys {
   static const String searchRadius = 'searchRadius',
       searchTypes = 'searchTypes',
       isDarkTheme = 'isDarkTheme',
-      isFirstRun = 'isFirstRun';
+      isFirstRun = 'isFirstRun',
+      userGeolocation = 'userGeolocation';
 }

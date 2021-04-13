@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart' hide Action;
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/interactor/places_interactor.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_route.dart';
+import 'package:provider/provider.dart';
 import 'package:relation/relation.dart';
 
 /// Place list screen's widget model
@@ -25,6 +27,10 @@ class PlaceListWidgetModel extends WidgetModel {
   @override
   void onLoad() {
     _initStore();
+
+    /// Get the geoposition and set it
+    navigator.context.read<PlacesSearchInteractor>().getUserPosition();
+
     super.onLoad();
   }
 
