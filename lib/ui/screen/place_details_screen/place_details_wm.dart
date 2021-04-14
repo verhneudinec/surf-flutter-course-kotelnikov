@@ -74,6 +74,9 @@ class PlaceDetailsWidgetModel extends WidgetModel {
       getPlaceDetailsAction.stream,
       (_) => _getPlaceDetails(),
     );
+
+    subscribe(onOpenNativeMapAction.stream,
+        (_) => placesInteractor.openNativeDeviceMap(placeState.value.data));
   }
 
   ///         ///
@@ -91,6 +94,9 @@ class PlaceDetailsWidgetModel extends WidgetModel {
 
   /// Remove a place from favorites
   Action<void> onRemoveFromFavoritesAction = Action();
+
+  /// Action to open native device map
+  final onOpenNativeMapAction = Action<void>();
 
   ///            ///
   /// Functions  ///

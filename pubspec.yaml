@@ -27,6 +27,7 @@ dependencies:
   mime_type: ^1.0.0
   geolocator: 6.2.1
   yandex_mapkit: 0.5.1
+  maps_launcher: 2.0.0
 
 dev_dependencies:
   flutter_test:

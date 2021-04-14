@@ -4,7 +4,6 @@ import 'package:mwwm/mwwm.dart';
 import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/interactor/settings_interactor.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/res/durations.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_route.dart';
 import 'package:provider/provider.dart';

@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:places/data/database/database.dart';
 import 'package:places/data/model/filter.dart';
-import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/filtered_places_repository.dart';
 import 'package:places/data/repository/storage/app_preferences.dart';

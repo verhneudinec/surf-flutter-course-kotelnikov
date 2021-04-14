@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:places/data/database/database.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
@@ -161,6 +162,16 @@ class PlacesInteractor with ChangeNotifier {
     } catch (_) {
       rethrow;
     }
+  }
+
+  /// A method for plotting a route to a location using the device's native map.
+  Future<void> openNativeDeviceMap(Place place) async {
+    /// Save it to the database as a visited place
+    _db.favoritesDao.markPlaceAsVisited(place);
+
+    /// Launch the map
+    MapsLauncher.launchQuery(place.name);
+    MapsLauncher.launchCoordinates(place.lat, place.lng);
   }
 
   /// Function for swapping favorite items.
