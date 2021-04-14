@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/res/app_routes.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_route.dart';

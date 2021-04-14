@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/res/text_styles.dart';
 import 'package:places/ui/widgets/app_bars/app_bar_custom.dart';
-import 'package:provider/provider.dart';
 
 /// Screen for selecting a seat category.
 ///Opened when adding place in [AddPlaceScreen].

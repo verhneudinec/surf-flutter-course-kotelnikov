@@ -25,7 +25,7 @@ class MapScreenWidgetModel extends WidgetModel {
   final placeState = StreamedState<Place>();
 
   /// Map controller
-  YandexMapController mapController;
+  YandexMapController _mapController;
 
   @override
   void onLoad() {
@@ -35,9 +35,9 @@ class MapScreenWidgetModel extends WidgetModel {
   @override
   void onBind() {
     subscribe(initMapAction.stream, (yandexMapController) {
-      mapController = yandexMapController;
+      _mapController = yandexMapController;
 
-      mapController.toggleNightMode(
+      _mapController.toggleNightMode(
         enabled: navigator.context.read<SettingsInteractor>().isDarkMode,
       );
 
@@ -48,7 +48,7 @@ class MapScreenWidgetModel extends WidgetModel {
 
     subscribe(loadMapAction.stream, (_) => _loadMap());
 
-    subscribe(showMeAction.stream, (_) => mapController.moveToUser());
+    subscribe(showMeAction.stream, (_) => _mapController.moveToUser());
 
     super.onBind();
   }
@@ -73,7 +73,7 @@ class MapScreenWidgetModel extends WidgetModel {
           .getUserPosition();
 
       /// Show the user on the map
-      mapController.showUserLayer(
+      _mapController.showUserLayer(
         iconName: AppIcons.userOnMap,
         arrowName: AppIcons.userOnMap,
         accuracyCircleFillColor:
@@ -81,7 +81,7 @@ class MapScreenWidgetModel extends WidgetModel {
       );
 
       /// Navigate to the user
-      mapController.move(
+      _mapController.move(
         point: Point(
           latitude: userPosition.latitude,
           longitude: userPosition.longitude,
@@ -120,7 +120,7 @@ class MapScreenWidgetModel extends WidgetModel {
           onTap: (_) => _onPlacemarkTap(place, placeViewingHistory),
         );
 
-        mapController.addPlacemark(placemark);
+        _mapController.addPlacemark(placemark);
       },
     );
   }
@@ -133,7 +133,7 @@ class MapScreenWidgetModel extends WidgetModel {
   ) {
     /// Remove the last active label from the map
     if (placeViewingHistory.isNotEmpty)
-      mapController.removePlacemark(mapController.placemarks.last);
+      _mapController.removePlacemark(_mapController.placemarks.last);
 
     Placemark activePlacemark = Placemark(
       style: PlacemarkStyle(
@@ -153,8 +153,8 @@ class MapScreenWidgetModel extends WidgetModel {
     /// Update the displayed place
     placeState.accept(place);
 
-    mapController.addPlacemark(activePlacemark);
-    mapController.move(
+    _mapController.addPlacemark(activePlacemark);
+    _mapController.move(
       animation: MapAnimation(
         smooth: true,
         duration: 1,

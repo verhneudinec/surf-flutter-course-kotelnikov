@@ -1,5 +1,4 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/api_client.dart';
 import 'package:places/data/repository/api/api_mapping.dart';
