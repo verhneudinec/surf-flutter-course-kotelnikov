@@ -121,13 +121,12 @@ class PlacesSearchInteractor with ChangeNotifier {
 
     searchResults.clear();
 
-    /// Test user location
-    final GeoPosition testGeoPosition = GeoPosition(59.884866, 29.904859);
+    final Position userGeoposition = await getUserPosition();
 
     /// In [searchResponse] will be the data from the server
     List<Place> searchResponse = await FilteredPlaceRepository().searchPlaces(
       searchQuery: searchQuery ?? lastSearchQuery,
-      geoposition: testGeoPosition,
+      geoposition: userGeoposition,
       selectedTypes: selectedPlaceTypes,
       searchRadius: filter.searchRange.end,
     );
@@ -166,9 +165,6 @@ class PlacesSearchInteractor with ChangeNotifier {
     /// All permissions have been granted, now we can use the user's location
     final Position userPosition = await Geolocator.getCurrentPosition();
 
-    ///  Save it to the store
-    _appPreferences.setUserGeolocation(userPosition.toString());
-
-    return await Geolocator.getCurrentPosition();
+    return userPosition;
   }
 }

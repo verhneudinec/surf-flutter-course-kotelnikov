@@ -69,6 +69,7 @@ class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
                       margin: EdgeInsets.only(top: 84),
                       child: PlaceDetailsWidget(
                         wm.place.id,
+                        placeImages: wm.place.urls,
                       ),
                     );
 
@@ -175,79 +176,114 @@ class PlaceCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Indent
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Indent
+                const SizedBox(
+                  height: 18,
+                ),
+
+                // Place name
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth:
+                        cardType == CardTypes.general ? 290 : double.infinity,
+                  ),
+                  child: Text(
+                    place.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.placeCardTitle.copyWith(
+                      color: Theme.of(context).textTheme.headline4.color,
+                    ),
+                  ),
+                ),
+
+                if (cardType != CardTypes.general)
+                  const SizedBox(
+                    height: 2,
+                  ),
+
+                // Scheduled date
+                if (cardType == CardTypes.unvisited)
+                  Container(
+                    height: 28,
+                    child: Text(
+                      AppTextStrings.scheduledDate,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.placeCardScheduledDate.copyWith(
+                        color: Theme.of(context).textTheme.subtitle1.color,
+                      ),
+                    ),
+                  ),
+
+                // Goal achieved
+                if (cardType == CardTypes.visited)
+                  Container(
+                    height: 28,
+                    child: Text(
+                      AppTextStrings.goalAchieved,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.placeCardGoalAchieved.copyWith(
+                        color: Theme.of(context).textTheme.subtitle2.color,
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(
+                  height: 2,
+                ),
+
+                // Distance to place
+                Container(
+                  child: Text(
+                    cardType == CardTypes.general
+                        ? place.description
+                        : (place.distance / 1000).toStringAsFixed(2) +
+                            AppTextStrings.cardWidgetDistanceToPlace,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.placeCardWorkingTime.copyWith(
+                      color: Theme.of(context).textTheme.subtitle1.color,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
+          ),
           const SizedBox(
-            height: 18,
+            height: 16,
           ),
 
-          // Place name
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: cardType == CardTypes.general ? 296 : double.infinity,
-            ),
-            child: Text(
-              place.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.placeCardTitle.copyWith(
-                color: Theme.of(context).textTheme.headline4.color,
-              ),
-            ),
-          ),
-
-          if (cardType != CardTypes.general)
-            const SizedBox(
-              height: 2,
-            ),
-
-          // Scheduled date
-          if (cardType == CardTypes.unvisited)
+          /// Route plotting button
+          if (cardType == CardTypes.mapCard)
             Container(
-              height: 28,
-              child: Text(
-                AppTextStrings.scheduledDate,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.placeCardScheduledDate.copyWith(
-                  color: Theme.of(context).textTheme.subtitle1.color,
+              decoration: BoxDecoration(
+                color: Theme.of(context).accentColor,
+                borderRadius: AppDecorations.buttonShape.borderRadius,
+              ),
+              child: Center(
+                child: IconButton(
+                  onPressed: () => {},
+                  padding: EdgeInsets.zero,
+                  icon: SvgPicture.asset(
+                    AppIcons.go,
+                    color:
+                        Theme.of(context).colorScheme.placeCardHeartButtonColor,
+                  ),
                 ),
               ),
             ),
-
-          // Goal achieved
-          if (cardType == CardTypes.visited)
-            Container(
-              height: 28,
-              child: Text(
-                AppTextStrings.goalAchieved,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.placeCardGoalAchieved.copyWith(
-                  color: Theme.of(context).textTheme.subtitle2.color,
-                ),
-              ),
-            ),
-
-          const SizedBox(
-            height: 2,
-          ),
-
-          // Distance to place
-          Container(
-            child: Text(
-              cardType == CardTypes.general
-                  ? place.description
-                  : (place.distance / 1000).toStringAsFixed(2) +
-                      AppTextStrings.cardWidgetDistanceToPlace,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.placeCardWorkingTime.copyWith(
-                color: Theme.of(context).textTheme.subtitle1.color,
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:places/data/model/geo_position.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/api_client.dart';
@@ -15,7 +16,7 @@ class FilteredPlaceRepository {
   /// Returns list of places.
   Future<List> searchPlaces({
     String searchQuery,
-    GeoPosition geoposition,
+    Position geoposition,
     List<String> selectedTypes,
     int searchRadius,
   }) async {
@@ -24,14 +25,11 @@ class FilteredPlaceRepository {
       final response = await _client.dio.post(
         ApiUrls.filteredPlaces,
         data: {
-          // пока что реализован поиск только по имени (вроде по заданию так).
-          // хотя все данные из контроллеров и приходят,
-          // но запросы еще не тестировались + нет обработки ошибок.
           "nameFilter": searchQuery,
-          // "lat": geoposition.lat,
-          // "lng": geoposition.lng,
-          // "radius": searchRadius,
-          // "typeFilter": selectedTypes,
+          "lat": geoposition.latitude,
+          "lng": geoposition.longitude,
+          "radius": searchRadius +
+              0.1, // TODO Сервер не ищет, если после точки указан 0. Думаю нужно бэк поправить
         },
       );
 

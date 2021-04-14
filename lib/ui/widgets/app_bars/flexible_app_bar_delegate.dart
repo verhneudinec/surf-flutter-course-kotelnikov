@@ -9,8 +9,14 @@ import 'package:places/ui/widgets/search_bar.dart';
 /// and the small one is [AppTextStrings.appBarMiniTitle].
 /// [isPortraitOrientation] - true, if the screen orientation is portrait.
 class FlexibleAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final bool isPortraitOrientation;
-  FlexibleAppBarDelegate({this.isPortraitOrientation});
+  final bool isBigTitle;
+  final bool isCenterTitle;
+  final String title;
+  FlexibleAppBarDelegate({
+    this.title,
+    this.isBigTitle,
+    this.isCenterTitle = false,
+  });
 
   /// The multiplier [_minExtentMultiplier] is used for the condition
   /// of the app bar output depending on the size
@@ -25,7 +31,7 @@ class FlexibleAppBarDelegate extends SliverPersistentHeaderDelegate {
     return SafeArea(
       child: Column(
         children: [
-          isPortraitOrientation
+          isBigTitle
               ? Expanded(
                   /// Display different app bars depending on [shrinkOffset]
                   child: shrinkOffset < minExtent * _minExtentMultiplier
@@ -46,7 +52,7 @@ class FlexibleAppBarDelegate extends SliverPersistentHeaderDelegate {
                             children: [
                               // Title of big app bar
                               Text(
-                                AppTextStrings.appBarTitle,
+                                title ?? AppTextStrings.appBarTitle,
                                 style: AppTextStyles.appBarTitle.copyWith(
                                   color: Theme.of(context)
                                       .textTheme
@@ -105,9 +111,11 @@ class FlexibleAppBarDelegate extends SliverPersistentHeaderDelegate {
                         Container(
                           height: minExtent,
                           child: Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: isCenterTitle
+                                ? Alignment.center
+                                : Alignment.centerLeft,
                             child: Text(
-                              AppTextStrings.appBarMiniTitle,
+                              title ?? AppTextStrings.appBarMiniTitle,
                               style: AppTextStyles.appBarMiniTitle.copyWith(
                                 color:
                                     Theme.of(context).textTheme.headline3.color,
@@ -134,7 +142,7 @@ class FlexibleAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => isPortraitOrientation ? 216 : 122;
+  double get maxExtent => isBigTitle ? 216 : 122;
 
   @override
   double get minExtent => 56;

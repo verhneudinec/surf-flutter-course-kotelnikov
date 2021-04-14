@@ -19,10 +19,12 @@ class ImageNetwork extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
+          height: double.infinity,
           child: _placeholder(),
         ),
         Container(
           width: double.infinity,
+          height: double.infinity,
           child: Image.network(
             url,
             fit: BoxFit.cover,

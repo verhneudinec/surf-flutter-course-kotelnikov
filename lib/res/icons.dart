@@ -15,6 +15,9 @@ class AppIcons {
       search = "assets/icons/Search.svg",
       list = "assets/icons/List.svg",
       map = "assets/icons/Map.svg",
+      userOnMap = "assets/images/map/user.png",
+      inactivePlaceOnMap = "assets/images/map/place.png",
+      activePlaceOnMap = "assets/images/map/active_place.png",
       heartFull = "assets/icons/Heart_full.svg",
       settings = "assets/icons/Settings.svg",
       card = "assets/icons/Card.svg",
@@ -34,5 +37,7 @@ class AppIcons {
       splashIcon = "assets/icons/SplashIcon.svg",
       file = "assets/icons/File.svg",
       camera = "assets/icons/Camera.svg",
-      photo = "assets/icons/Photo.svg";
+      photo = "assets/icons/Photo.svg",
+      geolocation = "assets/icons/Geolocation.svg",
+      refresh = "assets/icons/Refresh.svg";
 }

@@ -209,8 +209,11 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
             decoration: AppDecorations.placeCardImageGradient,
             child: Hero(
               tag: index == 0 ? widget.placeId : index,
-              child: ImageNetwork(
-                widget.placesPhotogallery.elementAt(index),
+              child: Container(
+                height: 360,
+                child: ImageNetwork(
+                  widget.placesPhotogallery.elementAt(index),
+                ),
               ),
             ),
           );
