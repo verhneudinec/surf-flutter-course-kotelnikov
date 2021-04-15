@@ -243,7 +243,8 @@ class PlaceCardBody extends StatelessWidget {
             Container(
               height: 28,
               child: Text(
-                AppTextStrings.goalAchieved,
+                AppTextStrings.goalAchieved +
+                    " ${place.visitDate.day}.${place.visitDate.month}.${place.visitDate.year}",
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.placeCardGoalAchieved.copyWith(
                   color: Theme.of(context).textTheme.subtitle2.color,

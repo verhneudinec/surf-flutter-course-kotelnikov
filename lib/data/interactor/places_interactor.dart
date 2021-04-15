@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:places/data/database/database.dart';
-import 'package:places/data/model/geo_position.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/exceptions/network_exception.dart';
 import 'package:places/data/repository/place_repository.dart';
@@ -87,19 +88,30 @@ class PlacesInteractor with ChangeNotifier {
     final List<Place> visitedPlacesFromDB =
         await _db.favoritesDao.getVisitedPlaces;
 
-    _favoritePlaces.content(sortFavoritePlaces(favoritePlacesFromDB));
+    _favoritePlaces.content(
+      await sortFavoritePlaces(favoritePlacesFromDB),
+    );
 
-    _visitedPlaces.content(sortFavoritePlaces(visitedPlacesFromDB));
+    _visitedPlaces.content(
+      await sortFavoritePlaces(visitedPlacesFromDB),
+    );
   }
 
   /// Function for sorting [_favoritePlaces] list
-  List<Place> sortFavoritePlaces(List<Place> places) {
-    final GeoPosition userGeoposition = GeoPosition(59.914455, 29.770945);
+  Future<List<Place>> sortFavoritePlaces(List<Place> places) async {
+    final placesSearchInteractor = PlacesSearchInteractor();
+
+    /// Get the user's geolocation
+    final Position userGeoposition =
+        await placesSearchInteractor.getUserPosition();
 
     places.forEach((element) {
       element.distance = DistanceToPlace().check(
         userPoint: userGeoposition,
-        checkPoint: GeoPosition(element.lat, element.lng),
+        checkPoint: Position(
+          latitude: element.lat,
+          longitude: element.lng,
+        ),
       );
     });
 

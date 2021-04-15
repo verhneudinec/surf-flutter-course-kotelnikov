@@ -11,7 +11,7 @@ class AppTextStrings {
       visitingScreenTitle = "Избранное",
       delete = "Удалить",
       scheduledDate = "Запланировано на 15 окт. 2020",
-      goalAchieved = "Цель достигнута 12 окт. 2020",
+      goalAchieved = "Цель достигнута",
       toVisitTab = "Посетил",
       visitedTab = "Хочу посетить",
       emptyPageTitle = "Пусто",
