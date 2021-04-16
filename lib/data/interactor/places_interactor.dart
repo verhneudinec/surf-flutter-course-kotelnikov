@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:places/data/database/database.dart';
-import 'package:places/data/model/geo_position.dart';
+import 'package:places/data/interactor/places_search_interactor.dart';
 import 'package:places/data/model/place.dart';
 import 'package:places/data/repository/api/exceptions/network_exception.dart';
 import 'package:places/data/repository/place_repository.dart';
@@ -17,8 +20,12 @@ class PlacesInteractor with ChangeNotifier {
   /// Initialized in [initFavoritesTable].
   AppDB _db;
 
+  /// Repository for working with API
+  PlaceRepository _placeRepository = PlaceRepository();
+
   /// Loaded places from [PlacesRepository]
   List<Place> _places = [];
+  // TODO Убрать лишние поля в интеракторе
 
   /// Favorite places. Loaded from database.
   final _favoritePlaces = EntityStreamedState<List<Place>>(
@@ -47,7 +54,7 @@ class PlacesInteractor with ChangeNotifier {
   /// Function for loading places from [PlacesRepository]
   Future<void> loadPlaces({int radius, String category}) async {
     try {
-      final response = await PlaceRepository().loadPlaces();
+      final response = await _placeRepository.loadPlaces();
       _places = response;
     } catch (e) {
       rethrow;
@@ -57,7 +64,7 @@ class PlacesInteractor with ChangeNotifier {
   /// Function for loading place details from API
   Future<Place> loadPlaceDetails({@required int id}) async {
     try {
-      final response = await PlaceRepository().getPlaceDetails(id: id);
+      final response = await _placeRepository.getPlaceDetails(id: id);
       return response;
     } catch (e) {
       rethrow;
@@ -81,19 +88,30 @@ class PlacesInteractor with ChangeNotifier {
     final List<Place> visitedPlacesFromDB =
         await _db.favoritesDao.getVisitedPlaces;
 
-    _favoritePlaces.content(sortFavoritePlaces(favoritePlacesFromDB));
+    _favoritePlaces.content(
+      await sortFavoritePlaces(favoritePlacesFromDB),
+    );
 
-    _visitedPlaces.content(sortFavoritePlaces(visitedPlacesFromDB));
+    _visitedPlaces.content(
+      await sortFavoritePlaces(visitedPlacesFromDB),
+    );
   }
 
   /// Function for sorting [_favoritePlaces] list
-  List<Place> sortFavoritePlaces(List<Place> places) {
-    final GeoPosition userGeoposition = GeoPosition(59.914455, 29.770945);
+  Future<List<Place>> sortFavoritePlaces(List<Place> places) async {
+    final placesSearchInteractor = PlacesSearchInteractor();
+
+    /// Get the user's geolocation
+    final Position userGeoposition =
+        await placesSearchInteractor.getUserPosition();
 
     places.forEach((element) {
       element.distance = DistanceToPlace().check(
         userPoint: userGeoposition,
-        checkPoint: GeoPosition(element.lat, element.lng),
+        checkPoint: Position(
+          latitude: element.lat,
+          longitude: element.lng,
+        ),
       );
     });
 
@@ -130,9 +148,10 @@ class PlacesInteractor with ChangeNotifier {
     refreshFavoritePlaces();
   }
 
+  /// Function for adding a new place.
   Future<Place> addNewPlace(Place place) async {
     try {
-      final newPlace = await PlaceRepository().addNewPlace(place: place);
+      final newPlace = await _placeRepository.addNewPlace(place: place);
 
       _places.add(newPlace);
 
@@ -144,6 +163,27 @@ class PlacesInteractor with ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  /// Method for uploading [photo] to the server.
+  /// Returns the full url of the image.
+  Future<String> uploadPhoto(File photo) async {
+    try {
+      final String photoUrl = await _placeRepository.uploadPhoto(photo);
+      return photoUrl;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  /// A method for plotting a route to a location using the device's native map.
+  Future<void> openNativeDeviceMap(Place place) async {
+    /// Save it to the database as a visited place
+    _db.favoritesDao.markPlaceAsVisited(place);
+
+    /// Launch the map
+    MapsLauncher.launchQuery(place.name);
+    MapsLauncher.launchCoordinates(place.lat, place.lng);
   }
 
   /// Function for swapping favorite items.

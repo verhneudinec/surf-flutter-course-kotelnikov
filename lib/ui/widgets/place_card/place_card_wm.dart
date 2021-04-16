@@ -4,7 +4,6 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/model/place.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_route.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
 import 'package:places/ui/widgets/date_pickers.dart';
 import 'package:relation/relation.dart';
@@ -46,12 +45,15 @@ class PlaceCardWidgetModel extends WidgetModel {
     });
 
     subscribe(onPlaceClickAction.stream,
-        (placeDetailsContainer) => _showPlaceDetails(placeDetailsContainer));
+        (placeDetailsContainer) => _showPlaceDetails());
 
     subscribe(onAddingToFavoritesAction.stream, (_) => _addToFavorites());
 
-    subscribe(onRemoveFromFavoritesAction.stream,
-        (placeDetailsContainer) => _removeFromFavorites());
+    subscribe(
+        onRemoveFromFavoritesAction.stream, (_) => _removeFromFavorites());
+
+    subscribe(onOpenNativeMapAction.stream,
+        (_) => placesInteractor.openNativeDeviceMap(place));
   }
 
   @override
@@ -78,6 +80,9 @@ class PlaceCardWidgetModel extends WidgetModel {
   /// Action for remove item from favorites
   final onRemoveFromFavoritesAction = Action<void>();
 
+  /// Action to open native device map
+  final onOpenNativeMapAction = Action<void>();
+
   ///
   /// Functions
   ///
@@ -97,7 +102,7 @@ class PlaceCardWidgetModel extends WidgetModel {
 
   /// Open a window with details of the place,
   /// if there was a click on the card
-  void _showPlaceDetails(Widget placeDetailsContainer) {
+  void _showPlaceDetails() {
     /// Ранее мы делали BottomSheet...
     /// для анимации переделываю на обычный роутинг
     // showModalBottomSheet(

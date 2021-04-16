@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 /// This file describes the radius of the blocks
 /// and sometimes the gradients and backgrounds.
 class AppDecorations {
+  /// Default shadow
+  static final defaultBoxShadow = [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.15),
+      spreadRadius: 0,
+      blurRadius: 4,
+      offset: Offset(0, 4), // changes position of shadow
+    ),
+  ];
+
   /// Place card container in the [PlaceCard] widget
   static final placeCardContainer = BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -111,4 +121,13 @@ class AppDecorations {
   /// Styles for the [AppBackButton] widget
   static final appBackButtonRadius = Radius.circular(10),
       appCancelButtonRadius = Radius.circular(40);
+
+  /// Map buttons radius
+  static final mapButtonsRadius = BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+      ),
+      mapCicrleButtonDecoration = BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: AppDecorations.defaultBoxShadow,
+      );
 }

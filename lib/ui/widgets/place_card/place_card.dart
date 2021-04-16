@@ -11,7 +11,6 @@ import 'package:places/res/text_styles.dart';
 import 'package:places/res/themes.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/decorations.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_widget_builder.dart';
 import 'package:places/ui/widgets/image_network.dart';
 import 'package:places/ui/widgets/place_card/place_card_wm.dart';
 import 'package:relation/relation.dart';
@@ -44,18 +43,20 @@ class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
         child: Stack(
           children: [
             // Header and body of card
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PlaceCardHeader(
-                  place: wm.place,
-                  cardType: wm.cardType ?? CardTypes.general,
-                ),
-                PlaceCardBody(
-                  place: wm.place,
-                  cardType: wm.cardType ?? CardTypes.general,
-                ),
-              ],
+            InkWell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PlaceCardHeader(
+                    place: wm.place,
+                    cardType: wm.cardType ?? CardTypes.general,
+                  ),
+                  PlaceCardBody(
+                    place: wm.place,
+                    cardType: wm.cardType ?? CardTypes.general,
+                  ),
+                ],
+              ),
             ),
 
             // On pressed ripple effect
@@ -64,16 +65,7 @@ class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
                 type: MaterialType.transparency,
                 child: InkWell(
                   splashColor: Theme.of(context).splashColor,
-                  onTap: () {
-                    Widget placeDetailsContainer = Container(
-                      margin: EdgeInsets.only(top: 84),
-                      child: PlaceDetailsWidget(
-                        wm.place.id,
-                      ),
-                    );
-
-                    wm.onPlaceClickAction(placeDetailsContainer);
-                  },
+                  onTap: () => wm.onPlaceClickAction(),
                 ),
               ),
             ),
@@ -88,6 +80,31 @@ class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
                   wm.onRemoveFromFavoritesAction,
               onChangeVisitTime: wm.onChangeVisitTimeAction,
             ),
+
+            /// Button to open the native map
+            if (wm.cardType == CardTypes.mapCard)
+              Positioned(
+                right: 16,
+                bottom: 16,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    borderRadius: AppDecorations.buttonShape.borderRadius,
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () => wm.onOpenNativeMapAction(),
+                      padding: EdgeInsets.zero,
+                      icon: SvgPicture.asset(
+                        AppIcons.go,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .placeCardHeartButtonColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -123,6 +140,7 @@ class _PlaceCardState extends WidgetState<PlaceCardWidgetModel> {
 class PlaceCardHeader extends StatelessWidget {
   final Place place;
   final String cardType;
+
   const PlaceCardHeader({
     Key key,
     this.place,
@@ -175,8 +193,10 @@ class PlaceCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+    return Padding(
+      padding: cardType == CardTypes.mapCard
+          ? EdgeInsets.only(left: 16, right: 72)
+          : EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -188,7 +208,7 @@ class PlaceCardBody extends StatelessWidget {
           // Place name
           Container(
             constraints: BoxConstraints(
-              maxWidth: cardType == CardTypes.general ? 296 : double.infinity,
+              maxWidth: cardType == CardTypes.general ? 290 : double.infinity,
             ),
             child: Text(
               place.name,
@@ -223,7 +243,8 @@ class PlaceCardBody extends StatelessWidget {
             Container(
               height: 28,
               child: Text(
-                AppTextStrings.goalAchieved,
+                AppTextStrings.goalAchieved +
+                    " ${place.visitDate.day}.${place.visitDate.month}.${place.visitDate.year}",
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.placeCardGoalAchieved.copyWith(
                   color: Theme.of(context).textTheme.subtitle2.color,
@@ -238,7 +259,7 @@ class PlaceCardBody extends StatelessWidget {
           // Distance to place
           Container(
             child: Text(
-              cardType == CardTypes.general
+              cardType == CardTypes.general || cardType == CardTypes.mapCard
                   ? place.description
                   : (place.distance / 1000).toStringAsFixed(2) +
                       AppTextStrings.cardWidgetDistanceToPlace,
@@ -247,6 +268,10 @@ class PlaceCardBody extends StatelessWidget {
                 color: Theme.of(context).textTheme.subtitle1.color,
               ),
             ),
+          ),
+
+          const SizedBox(
+            height: 16,
           ),
         ],
       ),
@@ -286,7 +311,8 @@ class _PlaceCardActionButtonsState extends State<PlaceCardActionButtons> {
       child: Stack(
         children: [
           // "Add to favorites" button
-          if (widget.cardType == CardTypes.general)
+          if (widget.cardType == CardTypes.general ||
+              widget.cardType == CardTypes.mapCard)
             StreamedStateBuilder<bool>(
               streamedState: widget.isPlaceinFavoritesState,
               builder: (context, isPlaceinFavorites) {

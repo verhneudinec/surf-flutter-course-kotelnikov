@@ -23,6 +23,11 @@ dependencies:
   sqlite3_flutter_libs: ^0.4.1
   path: ^1.8.0
   path_provider: ^2.0.1
+  image_picker: 0.6.7+22
+  mime_type: ^1.0.0
+  geolocator: 6.2.1
+  yandex_mapkit: 0.5.1
+  maps_launcher: 2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +43,7 @@ flutter:
     - assets/icons/categories/
     - assets/icons/tutorial/
     - assets/images/
+    - assets/images/map/
 
   fonts:
     - family: Roboto

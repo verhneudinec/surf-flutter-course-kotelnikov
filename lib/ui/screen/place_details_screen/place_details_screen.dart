@@ -71,6 +71,7 @@ class _PlaceDetailsScreenState extends WidgetState<PlaceDetailsWidgetModel> {
                               onAddingToFavorites: wm.onAddingToFavoritesAction,
                               onRemoveFromFavorites:
                                   wm.onRemoveFromFavoritesAction,
+                              onOpenNativeMapAction: wm.onOpenNativeMapAction,
                             ),
                           ),
                         ]),
@@ -209,8 +210,11 @@ class _PlaceDetailsHeaderState extends State<PlaceDetailsHeader> {
             decoration: AppDecorations.placeCardImageGradient,
             child: Hero(
               tag: index == 0 ? widget.placeId : index,
-              child: ImageNetwork(
-                widget.placesPhotogallery.elementAt(index),
+              child: Container(
+                height: 360,
+                child: ImageNetwork(
+                  widget.placesPhotogallery.elementAt(index),
+                ),
               ),
             ),
           );
@@ -260,6 +264,7 @@ class PlaceDetailsBody extends StatefulWidget {
   final EntityStreamedState<bool> isPlaceInFavorites;
   final Action<void> onRemoveFromFavorites;
   final Action<void> onAddingToFavorites;
+  final Action<void> onOpenNativeMapAction;
 
   const PlaceDetailsBody({
     Key key,
@@ -267,6 +272,7 @@ class PlaceDetailsBody extends StatefulWidget {
     @required this.onRemoveFromFavorites,
     @required this.onAddingToFavorites,
     @required this.isPlaceInFavorites,
+    @required this.onOpenNativeMapAction,
   }) : super(key: key);
 
   @override
@@ -336,7 +342,7 @@ class _PlaceDetailsBodyState extends State<PlaceDetailsBody> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 24),
             child: ElevatedButton.icon(
-              onPressed: () => print("plote route button"),
+              onPressed: () => widget.onOpenNativeMapAction(),
               icon: SvgPicture.asset(
                 AppIcons.go,
                 width: 24,

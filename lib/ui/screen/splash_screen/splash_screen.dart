@@ -6,6 +6,7 @@ import 'package:places/data/interactor/places_interactor.dart';
 import 'package:places/data/repository/storage/app_preferences.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/themes.dart';
+import 'package:places/ui/screen/map_screen/map_route.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
         [
           context.read<PlacesInteractor>().loadPlaces(),
           Future.delayed(
-            Duration(seconds: 4),
+            Duration(seconds: 2),
           ),
         ],
         eagerError: true,

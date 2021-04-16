@@ -37,4 +37,12 @@ class AppPreferences {
   /// Setter for [isFirstRun]
   Future<void> setIsFirstRun(bool value) =>
       PreferencesHelper().setBool(PreferencesKeys.isFirstRun, value);
+
+  /// User's geoposition. Contains a json string with latitude and longitude.
+  Future<String> get userGeolocation =>
+      PreferencesHelper().getString(PreferencesKeys.userGeolocation);
+
+  /// Setter for [userGeolocation]
+  Future<void> setUserGeolocation(String value) =>
+      PreferencesHelper().setString(PreferencesKeys.userGeolocation, value);
 }

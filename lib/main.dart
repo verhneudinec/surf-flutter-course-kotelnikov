@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/common/error/error_handler.dart';
 import 'package:places/data/database/database.dart';
-import 'package:places/data/interactor/init_app_interactor.dart';
-import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
-import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/data/repository/storage/app_preferences.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +27,7 @@ void main() {
 
         /// Moor database
         Provider<AppDB>(create: (_) => AppDB()),
+
         /// App shared preferences
         Provider<AppPreferences>(
           create: (context) => AppPreferences(),

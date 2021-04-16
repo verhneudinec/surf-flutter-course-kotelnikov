@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -413,7 +415,7 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
   }
 
   Widget _photogallery(
-    EntityStreamedState<List<String>> placePhotogallery,
+    EntityStreamedState<List<File>> placePhotogallery,
   ) {
     /// Dialog box with options for adding a photo
     void _addPlacePhoto() {
@@ -435,9 +437,9 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
       );
     }
 
-    return EntityStateBuilder<List<String>>(
+    return EntityStateBuilder<List<File>>(
       streamedState: placePhotogallery,
-      child: (BuildContext context, List<String> state) {
+      child: (context, state) {
         return CustomListViewBuilder(
           scrollDirection: Axis.horizontal,
           additionalPadding: false,
@@ -483,16 +485,19 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
                     ),
                     child: GestureDetector(
                       onTap: () => print("Нажатие на карточку с индексом $i"),
-                      child: Container(
-                        width: 72,
-                        height: 72,
-                        decoration: AppDecorations
-                            .addPlaceScreenGallerySecondaryElement
-                            .copyWith(
-                          color: Theme.of(context).accentColor.withOpacity(.70),
-                        ),
+                      child: ClipRRect(
+                        borderRadius: AppDecorations
+                            .addPlaceScreenGallerySecondaryElement.borderRadius,
                         child: Stack(
                           children: [
+                            Container(
+                              width: 72,
+                              height: 72,
+                              child: Image.file(
+                                state[i],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                             Positioned(
                               top: 6,
                               right: 6,
@@ -540,9 +545,9 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
           child: Column(
             children: [
               _dialogActionButton(
-                  icon: AppIcons.camera,
-                  title:
-                      AppTextStrings.addPlaceScreenAddPhotoDialogButtonCamera),
+                icon: AppIcons.camera,
+                title: AppTextStrings.addPlaceScreenAddPhotoDialogButtonCamera,
+              ),
               _dialogActionButton(
                   icon: AppIcons.photo,
                   title:
@@ -596,7 +601,10 @@ class _AddPlaceScreenState extends WidgetState<AddPlaceWidgetModel> {
     return Column(
       children: [
         TextButton(
-          onPressed: () => wm.addPlacePhotoAction(),
+          onPressed: () {
+            final bool isGetFromCamera = icon == AppIcons.camera;
+            wm.addPlacePhotoAction(isGetFromCamera);
+          },
           child: Row(
             children: [
               SvgPicture.asset(

@@ -2,6 +2,6 @@
 class ApiUrls {
   static String place = "/place",
       filteredPlaces = "/filtered_places",
-      uploadFile = "/uploadFile",
+      uploadFile = "/upload_file",
       files = "/files";
 }

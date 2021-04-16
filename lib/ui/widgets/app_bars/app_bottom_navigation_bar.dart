@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:places/res/app_routes.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/res/text_strings.dart';
 import 'package:places/ui/screen/favorites_screen/favorites_route.dart';
+import 'package:places/ui/screen/map_screen/map_route.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_route.dart';
 import 'package:places/ui/screen/settings_screen/settings_route.dart';
 
@@ -25,7 +25,7 @@ class AppBottomNavigationBar extends StatelessWidget {
           Navigator.push(context, PlaceListScreenRoute());
           break;
         case 1:
-          Navigator.pushNamed(context, AppRoutes.map);
+          Navigator.push(context, MapScreenRoute());
           break;
         case 2:
           Navigator.push(context, FavoritesScreenRoute());

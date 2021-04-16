@@ -2,5 +2,6 @@
 class CardTypes {
   static final general = "general",
       visited = "visited",
-      unvisited = "unvisited";
+      unvisited = "unvisited",
+      mapCard = "mapCard";
 }

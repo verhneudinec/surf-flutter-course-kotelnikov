@@ -42,14 +42,14 @@ class _PlaceListScreenState extends WidgetState<PlaceListWidgetModel> {
                   ? const EdgeInsets.all(0.0)
                   : const EdgeInsets.symmetric(horizontal: 16.0),
               child: LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height - 138,
+                maxHeight: MediaQuery.of(context).size.height - 94,
                 maxWidth: double.infinity,
                 child: CustomScrollView(
                   slivers: [
                     /// Flexible header
                     SliverPersistentHeader(
                       delegate: FlexibleAppBarDelegate(
-                          isPortraitOrientation: _isPortraitOrientation),
+                          isBigTitle: _isPortraitOrientation),
                       pinned: _isPortraitOrientation ? true : false,
                     ),
 

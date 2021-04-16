@@ -3,6 +3,7 @@ class AppTextStrings {
   static String appTitle = "Places",
       appBarTitle = "Список\nинтересных мест",
       appBarMiniTitle = "Список интересных мест",
+      mapAppBarTitle = "Карта",
       ploteRouteButton = "построить маршрут",
       planningButton = "Запланировать",
       favoritesButtonInactive = "В избранное",
@@ -10,7 +11,7 @@ class AppTextStrings {
       visitingScreenTitle = "Избранное",
       delete = "Удалить",
       scheduledDate = "Запланировано на 15 окт. 2020",
-      goalAchieved = "Цель достигнута 12 окт. 2020",
+      goalAchieved = "Цель достигнута",
       toVisitTab = "Посетил",
       visitedTab = "Хочу посетить",
       emptyPageTitle = "Пусто",
@@ -80,5 +81,7 @@ class AppTextStrings {
       onBoardingStartButton = "На старт",
       datePickerHelpText = "Выбрать дату",
       datePickerConfrimText = "Подтвердить",
-      datePickerCancelText = "Отмена";
+      datePickerCancelText = "Отмена",
+      mapScreenShowMeButton = "Найти меня",
+      mapScreenRefreshButton = "Обновить";
 }
