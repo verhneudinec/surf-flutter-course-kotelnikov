@@ -15,12 +15,12 @@ void main() {
 void _defineEnvironment({BuildConfig buildConfig}) {
   Environment.init(
     buildConfig: buildConfig,
-    buildType: BuildType.dev,
+    buildType: BuildType.prod,
   );
 }
 
 BuildConfig _setupConfig() {
   return BuildConfig(
-    envString: "Launched in debug mode ",
+    envString: "Launched in production mode",
   );
 }
