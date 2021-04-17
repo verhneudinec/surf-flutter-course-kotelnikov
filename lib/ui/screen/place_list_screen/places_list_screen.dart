@@ -42,7 +42,7 @@ class _PlaceListScreenState extends WidgetState<PlaceListWidgetModel> {
                   ? const EdgeInsets.all(0.0)
                   : const EdgeInsets.symmetric(horizontal: 16.0),
               child: LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height - 94,
+                maxHeight: MediaQuery.of(context).size.height - 106,
                 maxWidth: double.infinity,
                 child: CustomScrollView(
                   slivers: [
