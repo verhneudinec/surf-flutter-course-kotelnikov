@@ -9,4 +9,4 @@
 #include "Generated.xcconfig"
 
 bundle_suffix=.dev
-name=Dev
+name=Places.dev

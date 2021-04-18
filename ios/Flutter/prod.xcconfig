@@ -12,4 +12,4 @@
 #include "Generated.xcconfig"
 
 bundle_suffix=
-name=Prod
+name=Путеводитель
