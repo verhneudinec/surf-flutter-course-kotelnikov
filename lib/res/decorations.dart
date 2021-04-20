@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 /// This file describes the radius of the blocks
 /// and sometimes the gradients and backgrounds.
 class AppDecorations {
+  /// Default border radius for containers
+  static final defaultRectangleBorderRadius = BorderRadius.circular(12);
+
   /// Default shadow
   static final defaultBoxShadow = [
     BoxShadow(

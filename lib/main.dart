@@ -1,60 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:mwwm/mwwm.dart';
-import 'package:places/common/error/error_handler.dart';
-import 'package:places/data/database/database.dart';
-import 'package:places/data/repository/storage/app_preferences.dart';
-import 'package:places/ui/screen/splash_screen/splash_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:places/res/themes.dart';
-import 'package:places/data/interactor/settings_interactor.dart';
-import 'package:places/data/interactor/places_interactor.dart';
-import 'package:places/data/interactor/places_search_interactor.dart';
+import 'package:places/app.dart';
+import 'package:places/environment/build_config.dart';
+import 'package:places/environment/build_type.dart';
+import 'package:places/environment/environment.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        /// Interactors for the business logic of the application
-        ChangeNotifierProvider(create: (_) => SettingsInteractor()),
-        ChangeNotifierProvider(create: (_) => PlacesInteractor()),
-        ChangeNotifierProvider(create: (_) => PlacesSearchInteractor()),
+  _defineEnvironment(
+    buildConfig: _setupConfig(),
+  );
 
-        Provider<WidgetModelDependencies>(
-          create: (context) => WidgetModelDependencies(
-            errorHandler: StandardErrorHandler(),
-          ),
-        ),
+  runApp(App());
+}
 
-        /// Moor database
-        Provider<AppDB>(create: (_) => AppDB()),
-
-        /// App shared preferences
-        Provider<AppPreferences>(
-          create: (context) => AppPreferences(),
-        ),
-      ],
-      child: App(),
-    ),
+void _defineEnvironment({BuildConfig buildConfig}) {
+  Environment.init(
+    buildConfig: buildConfig,
+    buildType: BuildType.dev,
   );
 }
 
-class App extends StatefulWidget {
-  const App({Key key}) : super(key: key);
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  Widget build(BuildContext context) {
-    /// Find out the current theme from [SettingsInteractor]
-    bool _isDarkMode = context.watch<SettingsInteractor>().isDarkMode;
-
-    /// Run the application
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: _isDarkMode ? darkTheme : lightTheme,
-      home: SplashScreen(),
-    );
-  }
+BuildConfig _setupConfig() {
+  return BuildConfig(
+    envString: "Launched in debug mode ",
+  );
 }

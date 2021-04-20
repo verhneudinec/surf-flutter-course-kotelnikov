@@ -34,6 +34,13 @@ dev_dependencies:
     sdk: flutter
   moor_generator: ^4.2.1
   build_runner: ^1.12.2
+  flutter_launcher_icons: ^0.9.0
+
+flutter_icons: 
+  image_path: "assets/icons/launcher_icons/favicon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true
@@ -41,6 +48,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/icons/categories/
+    - assets/icons/launcher_icons/
     - assets/icons/tutorial/
     - assets/images/
     - assets/images/map/

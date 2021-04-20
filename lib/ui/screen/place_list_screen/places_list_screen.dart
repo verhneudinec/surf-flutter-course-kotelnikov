@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/data/model/place.dart';
+import 'package:places/environment/build_type.dart';
+import 'package:places/environment/environment.dart';
 import 'package:places/res/card_types.dart';
 import 'package:places/res/icons.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_wm.dart';
@@ -33,42 +35,64 @@ class _PlaceListScreenState extends WidgetState<PlaceListWidgetModel> {
     final bool _isPortraitOrientation =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
+    /// Environment instance
+    final Environment _envInstance = Environment.instance();
+
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: _isPortraitOrientation
-                  ? const EdgeInsets.all(0.0)
-                  : const EdgeInsets.symmetric(horizontal: 16.0),
-              child: LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height - 106,
-                maxWidth: double.infinity,
-                child: CustomScrollView(
-                  slivers: [
-                    /// Flexible header
-                    SliverPersistentHeader(
-                      delegate: FlexibleAppBarDelegate(
-                          isBigTitle: _isPortraitOrientation),
-                      pinned: _isPortraitOrientation ? true : false,
+        child: Padding(
+          padding: _isPortraitOrientation
+              ? const EdgeInsets.all(0.0)
+              : const EdgeInsets.symmetric(horizontal: 16.0),
+          child: LimitedBox(
+            maxHeight: MediaQuery.of(context).size.height - 106,
+            maxWidth: double.infinity,
+            child: CustomScrollView(
+              slivers: [
+                /// Show the debug banner if the build is in dev mode
+                if (_envInstance.buildType == BuildType.dev)
+                  SliverToBoxAdapter(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 6.0,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.bug_report_outlined),
+                          Text(_envInstance.buildConfig.envString),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            AppDecorations.defaultRectangleBorderRadius,
+                        color: Colors.red[100],
+                      ),
                     ),
+                  ),
 
-                    // Display the places loaded from the API
-                    EntityStateBuilder<List<Place>>(
-                      streamedState: wm.placesState,
-                      loadingBuilder: _buildLoadingState,
-                      child: (BuildContext context, List<Place> places) {
-                        return PlaceList(
-                          places: places,
-                          cardsType: CardTypes.general,
-                        );
-                      },
-                    ),
-                  ],
+                /// Flexible header
+                SliverPersistentHeader(
+                  delegate: FlexibleAppBarDelegate(
+                      isBigTitle: _isPortraitOrientation),
+                  pinned: _isPortraitOrientation ? true : false,
                 ),
-              ),
+
+                // Display the places loaded from the API
+                EntityStateBuilder<List<Place>>(
+                  streamedState: wm.placesState,
+                  loadingBuilder: _buildLoadingState,
+                  child: (BuildContext context, List<Place> places) {
+                    return PlaceList(
+                      places: places,
+                      cardsType: CardTypes.general,
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
