@@ -1,0 +1,12 @@
+//
+//  dev.xcconfig
+//  Runner
+//
+//  Created by Verhneudinec on 18.04.2021.
+//
+
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+#include "Generated.xcconfig"
+
+bundle_suffix=.dev
+name=Places.dev
